@@ -4,7 +4,7 @@ USE `store`;
 --
 -- Host: localhost    Database: store
 -- ------------------------------------------------------
--- Server version	5.7.12-log
+-- Server version	5.7.10-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -185,7 +185,7 @@ CREATE TABLE `lot` (
   CONSTRAINT `lot_good` FOREIGN KEY (`good`) REFERENCES `good` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lot_store` FOREIGN KEY (`store`) REFERENCES `store` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lot_supplier` FOREIGN KEY (`supplier`) REFERENCES `contractor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -354,7 +354,7 @@ CREATE TABLE `set_price_item` (
   PRIMARY KEY (`id`),
   KEY `spi_c_set_price_idx` (`c_set_price`),
   CONSTRAINT `spi_c_set_price` FOREIGN KEY (`c_set_price`) REFERENCES `set_price` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -377,7 +377,7 @@ DROP TABLE IF EXISTS `store`;
 CREATE TABLE `store` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `adress` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `address` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -409,4 +409,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-06 16:48:26
+-- Dump completed on 2016-05-07 17:32:01
