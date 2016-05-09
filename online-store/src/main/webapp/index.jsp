@@ -16,7 +16,9 @@
 </head>
 <body>
 
-<jsp:include page="WEB-INF/top_line.jsp" />
+<%--<jsp:include page="WEB-INF/top_line.jsp" />--%>
+<%@ include file="WEB-INF/top_line.jsp"%>
+
 <%--<form action="localizator" method="post">--%>
     <%--<input type="hidden" name="local" value="ru" /> <input type="submit" value="${ru_button}" /><br />--%>
 <%--</form>--%>
