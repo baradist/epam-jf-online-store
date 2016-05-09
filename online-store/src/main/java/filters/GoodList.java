@@ -1,7 +1,8 @@
 package filters;
 
 import common.servlets.HttpFilter;
-import dao.interfaces.GoodDao;
+import dao.interfaces.LotDao;
+import listeners.DbInitializer;
 import model.Lot;
 
 import javax.servlet.FilterChain;
@@ -12,16 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
-import static listeners.DbInitializer.LOT_DAO;
-
 @WebFilter({"/", "/index.jsp"})
 public class GoodList implements HttpFilter {
-    private GoodDao goodDao;
+    private LotDao lotDao;
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        goodDao = (GoodDao) request.getServletContext().getAttribute(LOT_DAO);
-        Collection<Lot> lots = goodDao.getLot();
+//        lotDao = (GoodDao) request.getServletContext().getAttribute(LOT_DAO);
+        lotDao = (LotDao) DbInitializer.getDaoByClass(Lot.class);
+        Collection<Lot> lots = lotDao.getList();
         request.setAttribute("lots", lots);
 
         chain.doFilter(request, response);

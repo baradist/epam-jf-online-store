@@ -1,18 +1,19 @@
 package dao.mysql;
 
+import common.functions.Helper;
 import dao.interfaces.GoodDao;
-import model.*;
+import dao.interfaces.ProducerDao;
+import listeners.DbInitializer;
+import model.Good;
+import model.Producer;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 @FunctionalInterface
 public interface MySqlGoodDao extends GoodDao {
 
     @Override
-    default Optional<Good> getGoodById(int id) { // TODO
+    default Optional<Good> getById(int id) { // TODO
         return executeQuery(
                 "SELECT name, caliber FROM Gun WHERE id = " + id,
                 rs -> rs.next()
@@ -22,47 +23,35 @@ public interface MySqlGoodDao extends GoodDao {
     }
 
     @Override
-    default Collection<Lot> getLot() { // TODO
-        return executeQuery(
-                "SELECT \n" +
-                        "L.ID AS ID,\n" +
-                        "ST.ID AS ST_ID,\n" +
-                        "ST.NAME AS ST_NAME,\n" +
-                        "ST.ADDRESS AS ST_ADDRESS,\n" +
-                        "G.ID AS G_ID,\n" +
-                        "G.NAME AS G_NAME,\n" +
-                        "P.ID AS G_P_ID,\n" +
-                        "P.NAME AS G_P_NAME,\n" +
-                        "C.ID AS G_P_C_ID,\n" +
-                        "C.NAME AS G_P_C_NAME,\n" +
-                        "L.QUANTITY_REST AS QUANTITY_REST,\n" +
-                        "L.PRICE_SAL AS PRICE_SAL\n" +
-                        "FROM LOT L\n" +
-                        "INNER JOIN STORE ST ON L.STORE = ST.ID\n" +
-                        "INNER JOIN GOOD G ON L.GOOD = G.ID\n" +
-                        "INNER JOIN CONTRACTOR S ON L.SUPPLIER = S.ID\n" +
-                        "INNER JOIN PRODUCER P ON G.PRODUCER = P.ID\n" +
-                        "INNER JOIN COUNTRY C ON P.COUNTRY = C.ID\n" +
-                        "WHERE L.QUANTITY_REST > 0",
-                rs -> {
-                    Collection<Lot> lots = new HashSet<>();
-                    while (rs.next())
-                        lots.add(new Lot(
-                                rs.getInt("ID"),
-                                new Store(rs.getInt("ST_ID"), rs.getString("ST_NAME"), rs.getString("ST_ADDRESS")),
-                                new Good(rs.getInt("G_ID"), rs.getString("G_NAME"),
-                                        new Producer(rs.getInt("G_P_ID"), rs.getString("G_P_NAME"),
-                                                new Country(rs.getInt("G_P_C_ID"), rs.getString("G_P_C_NAME"))), null),
-                                null, // invoice
-                                null, // invoiceItem
-                                0d, // quantity
-                                rs.getDouble("QUANTITY_REST"),
-                                null, //new Contractor()
-                                0d, // price_sup
-                                rs.getDouble("PRICE_SAL")
-                        ));
+    default Collection<Good> getListByIds(Collection<Integer> ids) { // TODO
+        return getMapByIds(ids).values();
+    }
 
-                    return lots;
-                }).toOptional().orElse(Collections.emptySet());
+    @Override
+    default Map<Integer, Good> getMapByIds(Collection<Integer> ids) {
+        return executeQuery(
+                "SELECT ID, NAME, PRODUCER, DESCRIPTION FROM GOOD " +
+                        "WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
+                rs -> {
+                    Map<Integer, Good> goodMap = new HashMap<>();
+                    Set<Integer> producerIds = new HashSet<>();
+                    while (rs.next()) {
+                        producerIds.add(rs.getInt("PRODUCER"));
+                    }
+                    ProducerDao producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
+                    Map<Integer, Producer> producerMap = producerDao.getMapByIds(producerIds);
+
+                    rs.beforeFirst();
+                    while (rs.next())
+                        goodMap.put(rs.getInt("ID"),
+                                new Good(
+                                        rs.getInt("ID"),
+                                        rs.getString("NAME"),
+                                        producerMap.get(rs.getInt("PRODUCER")),
+                                        rs.getString("DESCRIPTION")
+                                ));
+
+                    return goodMap;
+                }).toOptional().orElse(Collections.emptyMap());
     }
 }
