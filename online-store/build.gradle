@@ -31,7 +31,8 @@ dependencies {
 
     compile 'org.projectlombok:lombok:+'
 
-    compile 'ch.qos.logback:logback-classic:+'
+//    compile 'ch.qos.logback:logback-classic:+'
+    compile 'log4j:log4j:+'
 
     testCompile 'junit:junit:+'
     testCompile 'com.h2database:h2:+'
