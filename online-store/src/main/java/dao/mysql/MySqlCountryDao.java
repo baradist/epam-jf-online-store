@@ -25,6 +25,24 @@ public interface MySqlCountryDao extends CountryDao {
     }
 
     @Override
+    default Collection<Country> getList() {
+        return executeQuery(
+                "SELECT ID, NAME FROM COUNTRY ",
+                rs -> {
+                    Map<Integer, Country> countryMap = new HashMap<>();
+
+                    while (rs.next())
+                        countryMap.put(rs.getInt("ID"),
+                                new Country(
+                                        rs.getInt("ID"),
+                                        rs.getString("NAME")
+                                ));
+
+                    return countryMap;
+                }).toOptional().orElse(Collections.emptyMap()).values();
+    }
+
+    @Override
     default Map<Integer, Country> getMapByIds(Collection<Integer> ids) {
         return executeQuery(
                 "SELECT ID, NAME FROM COUNTRY " +

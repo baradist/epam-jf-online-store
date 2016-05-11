@@ -1,9 +1,9 @@
 package filters;
 
 import common.servlets.HttpFilter;
-import dao.interfaces.GoodDao;
+import dao.interfaces.ProducerDao;
 import listeners.DbInitializer;
-import model.Good;
+import model.Producer;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,17 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
-@WebFilter({"/catalog/goods", "/catalog/goods/index.jsp"})
-public class GoodList implements HttpFilter {
-    private GoodDao goodDao;
+@WebFilter({"/catalog/producers", "/catalog/producers/index.jsp"})
+public class ProducerList implements HttpFilter {
+    private ProducerDao producerDao;
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (goodDao == null) {
-            goodDao = (GoodDao) DbInitializer.getDaoByClass(Good.class);
+        if (producerDao == null) {
+            producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
         }
-        Collection<Good> goods = goodDao.getList();
-        request.setAttribute("goods", goods);
+        Collection<Producer> producers = producerDao.getList();
+        request.setAttribute("producers", producers);
 
         chain.doFilter(request, response);
     }

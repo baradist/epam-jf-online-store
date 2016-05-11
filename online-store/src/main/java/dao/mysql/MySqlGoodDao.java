@@ -23,6 +23,33 @@ public interface MySqlGoodDao extends GoodDao {
     }
 
     @Override
+    default Collection<Good> getList() {
+        return executeQuery(
+                "SELECT ID, NAME, PRODUCER, DESCRIPTION FROM GOOD ",
+                rs -> {
+                    Map<Integer, Good> goodMap = new HashMap<>();
+                    Set<Integer> producerIds = new HashSet<>();
+                    while (rs.next()) {
+                        producerIds.add(rs.getInt("PRODUCER"));
+                    }
+                    ProducerDao producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
+                    Map<Integer, Producer> producerMap = producerDao.getMapByIds(producerIds);
+
+                    rs.beforeFirst();
+                    while (rs.next())
+                        goodMap.put(rs.getInt("ID"),
+                                new Good(
+                                        rs.getInt("ID"),
+                                        rs.getString("NAME"),
+                                        producerMap.get(rs.getInt("PRODUCER")),
+                                        rs.getString("DESCRIPTION")
+                                ));
+
+                    return goodMap;
+                }).toOptional().orElse(Collections.emptyMap()).values();
+    }
+
+    @Override
     default Collection<Good> getListByIds(Collection<Integer> ids) { // TODO
         return getMapByIds(ids).values();
     }

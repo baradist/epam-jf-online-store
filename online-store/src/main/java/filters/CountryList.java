@@ -1,9 +1,9 @@
 package filters;
 
 import common.servlets.HttpFilter;
-import dao.interfaces.GoodDao;
+import dao.interfaces.CountryDao;
 import listeners.DbInitializer;
-import model.Good;
+import model.Country;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,17 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
-@WebFilter({"/catalog/goods", "/catalog/goods/index.jsp"})
-public class GoodList implements HttpFilter {
-    private GoodDao goodDao;
+@WebFilter({"/catalog/countries", "/catalog/countries/index.jsp"})
+public class CountryList implements HttpFilter {
+    private CountryDao countryDao;
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (goodDao == null) {
-            goodDao = (GoodDao) DbInitializer.getDaoByClass(Good.class);
+        if (countryDao == null) {
+            countryDao = (CountryDao) DbInitializer.getDaoByClass(Country.class);
         }
-        Collection<Good> goods = goodDao.getList();
-        request.setAttribute("goods", goods);
+        Collection<Country> countries = countryDao.getList();
+        request.setAttribute("countries", countries);
 
         chain.doFilter(request, response);
     }

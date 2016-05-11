@@ -14,4 +14,6 @@ public interface ProducerDao extends Dao {
     Map<Integer, Producer> getMapByIds(Collection<Integer> ids);
 
     Collection<Producer> getListByIds(Collection<Integer> ids);
+
+    Collection<Producer> getList();
 }

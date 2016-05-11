@@ -14,4 +14,6 @@ public interface CountryDao extends Dao {
     Map<Integer, Country> getMapByIds(Collection<Integer> ids);
 
     Collection<Country> getListByIds(Collection<Integer> ids);
+
+    Collection<Country> getList();
 }

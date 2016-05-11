@@ -14,4 +14,6 @@ public interface GoodDao extends Dao {
     Map<Integer, Good> getMapByIds(Collection<Integer> ids);
 
     Collection<Good> getListByIds(Collection<Integer> ids);
+
+    Collection<Good> getList();
 }

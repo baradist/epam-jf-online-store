@@ -23,6 +23,32 @@ public interface MySqlProducerDao extends ProducerDao {
     }
 
     @Override
+    default Collection<Producer> getList() {
+        return executeQuery(
+                "SELECT ID, NAME, COUNTRY FROM PRODUCER ",
+                rs -> {
+                    Map<Integer, Producer> producerMap = new HashMap<>();
+                    Set<Integer> countryIds = new HashSet<>();
+                    while (rs.next()) {
+                        countryIds.add(rs.getInt("COUNTRY"));
+                    }
+                    CountryDao countryDao = (CountryDao) DbInitializer.getDaoByClass(Country.class);
+                    Map<Integer, Country> countryMap = countryDao.getMapByIds(countryIds);
+
+                    rs.beforeFirst();
+                    while (rs.next())
+                        producerMap.put(rs.getInt("ID"),
+                                new Producer(
+                                        rs.getInt("ID"),
+                                        rs.getString("NAME"),
+                                        countryMap.get(rs.getInt("COUNTRY"))
+                                ));
+
+                    return producerMap;
+                }).toOptional().orElse(Collections.emptyMap()).values();
+    }
+
+    @Override
     default Collection<Producer> getListByIds(Collection<Integer> ids) { // TODO
         return getMapByIds(ids).values();
     }
