@@ -15,10 +15,17 @@ public interface MySqlProducerDao extends ProducerDao {
     @Override
     default Optional<Producer> getById(int id) { // TODO
         return executeQuery(
-                "SELECT name, caliber FROM Gun WHERE id = " + id,
-                rs -> rs.next()
-                        ? new Producer(id, rs.getString("NAME"), null)
-                        : null
+                "SELECT ID, NAME, COUNTRY FROM PRODUCER WHERE ID = " + id,
+                rs -> {
+                    rs.next();
+                    CountryDao countryDao = (CountryDao) DbInitializer.getDaoByClass(Country.class);
+                    Optional<Country> countryOptional = countryDao.getById(rs.getInt("COUNTRY"));
+                    rs.beforeFirst();
+
+                    return rs.next()
+                            ? new Producer(id, rs.getString("NAME"), countryOptional.get())
+                            : null;
+                }
         ).toOptional();
     }
 

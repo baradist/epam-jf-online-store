@@ -12,7 +12,7 @@ public interface MySqlCountryDao extends CountryDao {
     @Override
     default Optional<Country> getById(int id) { // TODO
         return executeQuery(
-                "SELECT name, caliber FROM Gun WHERE id = " + id,
+                "SELECT ID, NAME FROM COUNTRY WHERE ID = " + id,
                 rs -> rs.next()
                         ? new Country(id, rs.getString("NAME"))
                         : null

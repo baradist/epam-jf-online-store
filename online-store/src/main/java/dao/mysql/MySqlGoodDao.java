@@ -15,10 +15,17 @@ public interface MySqlGoodDao extends GoodDao {
     @Override
     default Optional<Good> getById(int id) { // TODO
         return executeQuery(
-                "SELECT name, caliber FROM Gun WHERE id = " + id,
-                rs -> rs.next()
-                        ? new Good(id, rs.getString("name"), new Producer(0, "", null), rs.getString("description"))
-                        : null
+                "SELECT ID, NAME, PRODUCER, DESCRIPTION FROM GOOD WHERE ID = " + id,
+                rs -> {
+                    rs.next();
+                    ProducerDao producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
+                    Optional<Producer> producerOptional = producerDao.getById(rs.getInt("PRODUCER"));
+                    rs.beforeFirst();
+
+                    return rs.next()
+                            ? new Good(id, rs.getString("name"), producerOptional.get(), rs.getString("description"))
+                            : null;
+                }
         ).toOptional();
     }
 
