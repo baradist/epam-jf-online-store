@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-         pageEncoding="utf-8"%>
+<%--<%@ page language="java" contentType="text/html; charset=utf-8"--%>
+         <%--pageEncoding="utf-8"%>--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
@@ -10,13 +10,6 @@
 <fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
 <fmt:message bundle="${loc}" key="title.documents" var="title_documents" />
 <fmt:message bundle="${loc}" key="title.catalogs" var="title_catalogs"/>
-
-<form action="/localizator" method="post">
-    <input type="hidden" name="local" value="ru" /> <input type="submit" value="${ru_button}" /><br />
-</form>
-<form action="/localizator" method="post">
-    <input type="hidden" name="local" value="en" /> <input type="submit" value="${en_button}" /><br />
-</form>
 
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -45,6 +38,19 @@
                             <li><a href="#">Separated link</a></li>
                         </ul>
                     </li>
+                    <%--<input type="hidden" name="local" value="ru" /> <input type="submit" value="${ru_button}" /><br />--%>
+                <li>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <form action="/localizator" method="post" class="horizontal">
+                            <input type="hidden" name="local" value="ru" />
+                            <input type="submit" value="${ru_button}" class="btn btn-default">
+                        </form>
+                        <form action="/localizator" method="post" class="horizontal">
+                            <input type="hidden" name="local" value="en" />
+                            <input type="submit" value="${en_button}" class="btn btn-default">
+                        </form>
+                    </div>
+                </li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->

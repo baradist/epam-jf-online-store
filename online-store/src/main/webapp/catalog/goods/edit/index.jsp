@@ -5,30 +5,23 @@
 
 <html>
 <head>
+    <%@ include file="/WEB-INF/import.html"%>
     <title>Edit ${good.name}</title>
 </head>
 <body>
+<%@ include file="/WEB-INF/top_line.jsp"%>
 
-<%--<%--%>
-    <%--Boolean isNew = (boolean) request.getAttribute("isNew");--%>
-    <%--pageContext.setAttribute("isNew", isNew);--%>
-
-<%--%>--%>
-<%--<c:out value="${requestScope.get('new')}" />--%>
-
-<%--<c:set var="salary" scope="request" value="${40}" />--%>
-<%----%>
-<%--<c:out value="${requestScope.salary}" />--%>
-<%--<c:out value="${requestScope.new}" />--%>
-${requestScope.isNew}
-<%--${pageScope.isNew}--%>
+<c:set var="isNew" scope="page" value="${requestScope.isNew}"/>
 
 <form method="POST" action="/catalog/goods/edit">
     <table border="0" cellspacing="5">
-        <tr>
-            <th align="right">Артикул:</th>
-            <td align="left"><input type="text" name="id" value="${good.id}" readonly></td>
-        </tr>
+        <c:if test="${!isNew}">
+            <tr>
+                <th align="right">Артикул:</th>
+                <td align="left"><input type="text" name="id" value="${good.id}" readonly></td>
+            </tr>
+        </c:if>
+
         <tr>
             <th align="right">Название:</th>
             <td align="left"><input type="text" name="name" value="${good.name}"></td>
@@ -49,5 +42,5 @@ ${requestScope.isNew}
     <input type="hidden" name="isNew" value="${requestScope.isNew}">
 </form>
 
-</body>
+    </body>
 </html>

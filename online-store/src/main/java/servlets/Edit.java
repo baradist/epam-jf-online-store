@@ -30,7 +30,14 @@ public class Edit extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (!Boolean.parseBoolean(request.getParameter("isNew"))) {
+        if (Boolean.parseBoolean(request.getParameter("isNew"))) {
+            request.setAttribute("good", new Good(-1, "", null, ""));
+            request.setAttribute("isNew", true);
+        } else if (Boolean.parseBoolean(request.getParameter("delete"))) {
+            // TODO: delete
+            request.getRequestDispatcher("/catalog/goods/index.jsp").forward(request, response);
+            return;
+        } else {
             final int id = parseInt(request.getParameter("id"));
             final Optional<Good> goodOptional = goodDao.getById(id); //.orElseThrow(RuntimeException::new);
 
@@ -39,10 +46,7 @@ public class Edit extends HttpServlet{
             editingGoods.put(request.getSession().getId(), good);
 
             request.setAttribute("good", good);
-            request.setAttribute("isNew", false); // TODO: attribute "new" doesn't work
-        } else {
-            request.setAttribute("good", new Good(-1, "", null, ""));
-            request.setAttribute("isNew", true); // TODO: attribute "new" doesn't work
+            request.setAttribute("isNew", false);
         }
 
         // noinspection InjectedReferences
@@ -53,10 +57,9 @@ public class Edit extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (Boolean.parseBoolean(request.getParameter("isNew"))) {
             // TODO: make new Good
-//            int i = goodDao.add(good); // TODO: add
+//            int i = goodDao.add(good);
 
         } else {
-            //        Good good = new Good(Integer.parseInt(request.getParameter("id")),
             String sessionId = request.getSession().getId();
             Good good = editingGoods.get(sessionId);
             editingGoods.remove(sessionId);

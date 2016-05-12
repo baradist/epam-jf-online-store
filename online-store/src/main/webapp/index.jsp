@@ -6,28 +6,24 @@
 
 <html>
 <head>
-    <link rel="stylesheet" href="css/bootstrap-3.3.6-dist/css/bootstrap.min.css">
-    <script src="js/jquery-1.12.3.min.js"></script>
-    <script src="css/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <%@ include file="/WEB-INF/import.html"%>
+    <%--<link rel="stylesheet" href="css/bootstrap-3.3.6-dist/css/bootstrap.min.css">--%>
+    <%--&lt;%&ndash;<link rel="stylesheet" href="/css/styles.css">&ndash;%&gt;--%>
+    <%--<script src="js/jquery-1.12.3.min.js"></script>--%>
+    <%--<script src="css/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>--%>
+    <%--<meta http-equiv="Content-Type" content="text/html; charset=utf-8">--%>
     <fmt:setLocale value="${sessionScope.local}" />
     <fmt:setBundle basename="locale" var="loc" />
     <fmt:message bundle="${loc}" key="main.title" var="title" />
     <fmt:message bundle="${loc}" key="head.listOfLots" var="listOfGoods" />
     <%--<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />--%>
     <title>${title}</title>
+
 </head>
 <body>
 
 <%--<jsp:include page="WEB-INF/top_line.jsp" />--%>
 <%@ include file="WEB-INF/top_line.jsp"%>
-
-<%--<form action="localizator" method="post">--%>
-    <%--<input type="hidden" name="local" value="ru" /> <input type="submit" value="${ru_button}" /><br />--%>
-<%--</form>--%>
-<%--<form action="localizator" method="post">--%>
-    <%--<input type="hidden" name="local" value="en" /> <input type="submit" value="${en_button}" /><br />--%>
-<%--</form>--%>
 
 <h1>${listOfGoods}</h1>
 <table style="border: 1px solid #000;">
