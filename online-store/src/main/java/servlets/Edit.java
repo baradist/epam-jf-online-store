@@ -1,7 +1,8 @@
 package servlets;
 
-import dao.interfaces.GunDao;
-import model.Gun;
+import dao.interfaces.GoodDao;
+import listeners.DbInitializer;
+import model.Good;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -10,48 +11,61 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
-import static listeners.DbInitializer.GUN_DAO;
 
-@WebServlet("/guns/edit")
+@WebServlet({"/catalog/goods/edit"})
 public class Edit extends HttpServlet{
 
-    public static final String GUN = "gun";
-    private GunDao gunDao;
+    private GoodDao goodDao;
+    private static Map<String, Good> editingGoods = new HashMap<>();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        gunDao = (GunDao) config.getServletContext().getAttribute(GUN_DAO);
+        goodDao = (GoodDao) DbInitializer.getDaoByClass(Good.class);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (!Boolean.parseBoolean(request.getParameter("new"))) {
+        if (!Boolean.parseBoolean(request.getParameter("isNew"))) {
             final int id = parseInt(request.getParameter("id"));
-            final Gun gun = gunDao.getGunById(id).orElseThrow(RuntimeException::new);
+            final Optional<Good> goodOptional = goodDao.getById(id); //.orElseThrow(RuntimeException::new);
 
-            request.setAttribute(GUN, gun);
+            Good good = goodOptional.get();
+
+            editingGoods.put(request.getSession().getId(), good);
+
+            request.setAttribute("good", good);
+            request.setAttribute("isNew", false); // TODO: attribute "new" doesn't work
         } else {
-            request.setAttribute(GUN, new Gun(-1, null, 0d));
-            request.setAttribute("new", 1); // TODO: attribute "new" doesn't work
+            request.setAttribute("good", new Good(-1, "", null, ""));
+            request.setAttribute("isNew", true); // TODO: attribute "new" doesn't work
         }
 
         // noinspection InjectedReferences
-        request.getRequestDispatcher("/guns/edit/index.jsp").forward(request, response);
+        request.getRequestDispatcher("/catalog/goods/edit/index.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Gun gun = new Gun(Integer.parseInt(request.getParameter("id")),
-                request.getParameter("name"),
-                Double.parseDouble(request.getParameter("caliber")));
-        if (gun.getId() == -1) {
-//            int i = gunDao.addGun(gun); // TODO: gunDao.addGun(gun);
+        if (Boolean.parseBoolean(request.getParameter("isNew"))) {
+            // TODO: make new Good
+//            int i = goodDao.add(good); // TODO: add
+
         } else {
-            boolean b = gunDao.updateGun(gun);
+            //        Good good = new Good(Integer.parseInt(request.getParameter("id")),
+            String sessionId = request.getSession().getId();
+            Good good = editingGoods.get(sessionId);
+            editingGoods.remove(sessionId);
+
+            good.setName(request.getParameter("name"));
+            good.setDescription(request.getParameter("description"));
+//            boolean b = goodDao.update(good); TODO
         }
 
-        response.sendRedirect("/guns");
+        response.sendRedirect("/catalog/goods");
     }
 }

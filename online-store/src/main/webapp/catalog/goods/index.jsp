@@ -19,13 +19,18 @@
 
 <%@ include file="/WEB-INF/top_line.jsp"%>
 
-<h1>${Goods}</h1>
+<h1>${Goods}</h1> <form method="GET" id="add_good">
+    <button name="isNew" form="add_good" formaction="/catalog/goods/edit" value=true>
+        Add new
+    </button>
+</form>
 <table style="border: 1px solid #000;">
     <tr>
         <th style="border: 1px solid #000;">Артикул</th>
         <th style="border: 1px solid #000;">Название</th>
         <th style="border: 1px solid #000;">Производитель</th>
-        <th style="border: 1px solid #000;">Описание</th>
+        <%--<th style="border: 1px solid #000;">Описание</th>--%>
+        <th style="border: 1px solid #000;">Редактировать</th>
     </tr>
 
     <c:forEach var="good" items="${goods}">
@@ -33,7 +38,15 @@
             <td style="border: 1px solid #000;">${good.id}</td>
             <td style="border: 1px solid #000;">${good.name}</td>
             <td style="border: 1px solid #000;">${good.producer.name} / ${good.producer.country.name}</td>
-            <td style="border: 1px solid #000;">${good.description}</td>
+        <%--<td style="border: 1px solid #000;">${good.description}</td>--%>
+            <td style="border: 1px solid #000;">
+                <a href="/catalog/goods/edit?id=${good.id}">edit</a>
+                <form method="post" id="delete">
+                    <button name="id" form="delete" formaction="/catalog/goods/delete" value="${good.id}">
+                        remove
+                    </button>
+                </form>
+            </td>
         </tr>
     </c:forEach>
 
