@@ -2,10 +2,7 @@ package dao.mysql;
 
 import common.functions.Helper;
 import dao.interfaces.OrderDao;
-import dao.interfaces.ProducerDao;
-import listeners.DbInitializer;
 import model.Order;
-import model.Producer;
 
 import java.sql.Date;
 import java.util.*;
@@ -28,11 +25,10 @@ public interface MySqlOrderDao extends OrderDao {
                             ? new Order(
                                 id,
                                 rs.getString("NUMBER"),
-                                ((Date) rs.getDate("DATE")).toInstant(),
+                                rs.getDate("DATE").toInstant(),
                                 null, // rs.getInt("CUSTOMER") // TODO Person
                                 Order.State.valueOf(rs.getString("STATE")),
-                                ((Date) rs.getDate("DELETED")).toInstant()
-                    )
+                                rs.getDate("DELETED").toInstant())
                             : null;
                 }
         ).toOptional();
@@ -44,12 +40,12 @@ public interface MySqlOrderDao extends OrderDao {
                 "SELECT ID, NUMBER, DATE, CUSTOMER, STATE, DELETED FROM STORE.ORDER ",
                 rs -> {
                     Map<Integer, Order> orderMap = new HashMap<>();
-                    Set<Integer> producerIds = new HashSet<>();
-                    while (rs.next()) {
-                        producerIds.add(rs.getInt("PRODUCER"));
-                    }
-                    ProducerDao producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
-                    Map<Integer, Producer> producerMap = producerDao.getMapByIds(producerIds);
+//                    Set<Integer> producerIds = new HashSet<>();
+//                    while (rs.next()) {
+//                        producerIds.add(rs.getInt("PRODUCER"));
+//                    }
+//                    ProducerDao producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
+//                    Map<Integer, Producer> producerMap = producerDao.getMapByIds(producerIds);
 
                     rs.beforeFirst();
                     while (rs.next())
@@ -79,12 +75,12 @@ public interface MySqlOrderDao extends OrderDao {
                         "WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
                 rs -> {
                     Map<Integer, Order> orderMap = new HashMap<>();
-                    Set<Integer> producerIds = new HashSet<>();
-                    while (rs.next()) {
-                        producerIds.add(rs.getInt("PRODUCER"));
-                    }
-                    ProducerDao producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
-                    Map<Integer, Producer> producerMap = producerDao.getMapByIds(producerIds);
+//                    Set<Integer> producerIds = new HashSet<>();
+//                    while (rs.next()) {
+//                        producerIds.add(rs.getInt("PRODUCER"));
+//                    }
+//                    ProducerDao producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
+//                    Map<Integer, Producer> producerMap = producerDao.getMapByIds(producerIds);
 
                     rs.beforeFirst();
                     while (rs.next())

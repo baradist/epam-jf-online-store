@@ -1,19 +1,17 @@
 package dao.interfaces;
 
-import model.Producer;
+import dao.dto.ProducerDto;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
 public interface ProducerDao extends Dao {
-    Optional<Producer> getById(int id);
+    Optional<ProducerDto> getById(int id);
 
-//    Collection<Good> getList();
+    Collection<ProducerDto> getList();
 
-    Map<Integer, Producer> getMapByIds(Collection<Integer> ids);
+    Collection<ProducerDto> getListByIds(Collection<Integer> ids);
 
-    Collection<Producer> getListByIds(Collection<Integer> ids);
-
-    Collection<Producer> getList();
+    Map<Integer, ProducerDto> getMapByIds(Collection<Integer> ids);
 }

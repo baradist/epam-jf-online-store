@@ -1,6 +1,7 @@
 package filters;
 
 import common.servlets.HttpFilter;
+import dao.dto.converters.LotConverter;
 import dao.interfaces.LotDao;
 import listeners.DbInitializer;
 import model.Lot;
@@ -11,7 +12,6 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
 
 @WebFilter({"/", "/index.jsp"})
 public class LotList implements HttpFilter {
@@ -22,8 +22,7 @@ public class LotList implements HttpFilter {
         if (lotDao == null) {
             lotDao = (LotDao) DbInitializer.getDaoByClass(Lot.class);
         }
-        Collection<Lot> lots = lotDao.getList();
-        request.setAttribute("lots", lots);
+        request.setAttribute("lots", LotConverter.convert(lotDao.getList()));
 
         chain.doFilter(request, response);
     }

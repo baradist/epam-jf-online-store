@@ -1,6 +1,8 @@
 package filters;
 
 import common.servlets.HttpFilter;
+import dao.dto.ProducerDto;
+import dao.dto.converters.ProducerConverter;
 import dao.interfaces.ProducerDao;
 import listeners.DbInitializer;
 import model.Producer;
@@ -22,8 +24,9 @@ public class ProducerList implements HttpFilter {
         if (producerDao == null) {
             producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
         }
-        Collection<Producer> producers = producerDao.getList();
-        request.setAttribute("producers", producers);
+        Collection<ProducerDto> producersDto = producerDao.getList();
+
+        request.setAttribute("producers", ProducerConverter.convert(producersDto));
 
         chain.doFilter(request, response);
     }

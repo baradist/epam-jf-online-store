@@ -9,9 +9,9 @@ import java.util.Optional;
 public interface OrderDao extends Dao {
     Optional<Order> getById(int id);
 
+    Collection<Order> getList();
+
     Map<Integer, Order> getMapByIds(Collection<Integer> ids);
 
     Collection<Order> getListByIds(Collection<Integer> ids);
-
-    Collection<Order> getList();
 }

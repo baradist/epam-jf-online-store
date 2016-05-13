@@ -37,9 +37,7 @@ public interface MySqlStoreDao extends StoreDao {
                                 new Store(
                                         rs.getInt("ID"),
                                         rs.getString("NAME"),
-                                        rs.getString("ADDRESS")
-                                ));
-
+                                        rs.getString("ADDRESS")));
                     return storeMap;
                 }).toOptional().orElse(Collections.emptyMap());
     }

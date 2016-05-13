@@ -1,6 +1,7 @@
 package filters;
 
 import common.servlets.HttpFilter;
+import dao.dto.CountryDto;
 import dao.interfaces.CountryDao;
 import listeners.DbInitializer;
 import model.Country;
@@ -22,7 +23,7 @@ public class CountryList implements HttpFilter {
         if (countryDao == null) {
             countryDao = (CountryDao) DbInitializer.getDaoByClass(Country.class);
         }
-        Collection<Country> countries = countryDao.getList();
+        Collection<CountryDto> countries = countryDao.getList();
         request.setAttribute("countries", countries);
 
         chain.doFilter(request, response);

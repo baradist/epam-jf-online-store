@@ -1,19 +1,17 @@
 package dao.interfaces;
 
-import model.Country;
+import dao.dto.CountryDto;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
 public interface CountryDao extends Dao {
-    Optional<Country> getById(int id);
+    Optional<CountryDto> getById(int id);
 
-//    Collection<Good> getList();
+    Collection<CountryDto> getList();
 
-    Map<Integer, Country> getMapByIds(Collection<Integer> ids);
+    Collection<CountryDto> getListByIds(Collection<Integer> ids);
 
-    Collection<Country> getListByIds(Collection<Integer> ids);
-
-    Collection<Country> getList();
+    Map<Integer, CountryDto> getMapByIds(Collection<Integer> ids);
 }

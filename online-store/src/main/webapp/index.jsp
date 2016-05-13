@@ -35,7 +35,7 @@
             <td style="border: 1px solid #000;">${lot.good.id}</td>
             <td style="border: 1px solid #000;">${lot.good.name}</td>
             <td style="border: 1px solid #000;">${lot.good.producer.name} / ${lot.good.producer.country.name}</td>
-            <td style="border: 1px solid #000;">${lot.price_sal}</td>
+            <td style="border: 1px solid #000;">${lot.priceSal}</td>
         </tr>
     </c:forEach>
 

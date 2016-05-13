@@ -1,6 +1,8 @@
 package filters;
 
 import common.servlets.HttpFilter;
+import dao.dto.GoodDto;
+import dao.dto.converters.GoodConverter;
 import dao.interfaces.GoodDao;
 import listeners.DbInitializer;
 import model.Good;
@@ -22,8 +24,8 @@ public class GoodList implements HttpFilter {
         if (goodDao == null) {
             goodDao = (GoodDao) DbInitializer.getDaoByClass(Good.class);
         }
-        Collection<Good> goods = goodDao.getList();
-        request.setAttribute("goods", goods);
+        Collection<GoodDto> goods = goodDao.getList();
+        request.setAttribute("goods", GoodConverter.convert(goods));
 
         chain.doFilter(request, response);
     }

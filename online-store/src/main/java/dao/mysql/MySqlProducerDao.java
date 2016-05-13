@@ -1,11 +1,8 @@
 package dao.mysql;
 
 import common.functions.Helper;
-import dao.interfaces.CountryDao;
+import dao.dto.ProducerDto;
 import dao.interfaces.ProducerDao;
-import listeners.DbInitializer;
-import model.Country;
-import model.Producer;
 
 import java.util.*;
 
@@ -13,74 +10,49 @@ import java.util.*;
 public interface MySqlProducerDao extends ProducerDao {
 
     @Override
-    default Optional<Producer> getById(int id) {
+    default Optional<ProducerDto> getById(int id) {
         return executeQuery(
                 "SELECT ID, NAME, COUNTRY FROM PRODUCER WHERE ID = " + id,
-                rs -> {
-                    rs.next();
-                    CountryDao countryDao = (CountryDao) DbInitializer.getDaoByClass(Country.class);
-                    Optional<Country> countryOptional = countryDao.getById(rs.getInt("COUNTRY"));
-                    rs.beforeFirst();
-
-                    return rs.next()
-                            ? new Producer(id, rs.getString("NAME"), countryOptional.get())
-                            : null;
-                }
+                rs -> rs.next()
+                        ? new ProducerDto(id, rs.getString("NAME"), rs.getInt("COUNTRY"))
+                        : null
         ).toOptional();
     }
 
     @Override
-    default Collection<Producer> getList() {
+    default Collection<ProducerDto> getList() {
         return executeQuery(
                 "SELECT ID, NAME, COUNTRY FROM PRODUCER ",
                 rs -> {
-                    Map<Integer, Producer> producerMap = new HashMap<>();
-                    Set<Integer> countryIds = new HashSet<>();
-                    while (rs.next()) {
-                        countryIds.add(rs.getInt("COUNTRY"));
-                    }
-                    CountryDao countryDao = (CountryDao) DbInitializer.getDaoByClass(Country.class);
-                    Map<Integer, Country> countryMap = countryDao.getMapByIds(countryIds);
-
-                    rs.beforeFirst();
+                    Map<Integer, ProducerDto> producerMap = new HashMap<>();
                     while (rs.next())
                         producerMap.put(rs.getInt("ID"),
-                                new Producer(
+                                new ProducerDto(
                                         rs.getInt("ID"),
                                         rs.getString("NAME"),
-                                        countryMap.get(rs.getInt("COUNTRY"))
-                                ));
-
+                                        rs.getInt("COUNTRY")));
                     return producerMap;
                 }).toOptional().orElse(Collections.emptyMap()).values();
     }
 
     @Override
-    default Collection<Producer> getListByIds(Collection<Integer> ids) { // TODO
+    default Collection<ProducerDto> getListByIds(Collection<Integer> ids) { // TODO
         return getMapByIds(ids).values();
     }
 
     @Override
-    default Map<Integer, Producer> getMapByIds(Collection<Integer> ids) {
+    default Map<Integer, ProducerDto> getMapByIds(Collection<Integer> ids) {
         return executeQuery(
                 "SELECT ID, NAME, COUNTRY FROM PRODUCER " +
                         "WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
                 rs -> {
-                    Map<Integer, Producer> producerMap = new HashMap<>();
-                    Set<Integer> countryIds = new HashSet<>();
-                    while (rs.next()) {
-                        countryIds.add(rs.getInt("COUNTRY"));
-                    }
-                    CountryDao countryDao = (CountryDao) DbInitializer.getDaoByClass(Country.class);
-                    Map<Integer, Country> countryMap = countryDao.getMapByIds(countryIds);
-
-                    rs.beforeFirst();
+                    Map<Integer, ProducerDto> producerMap = new HashMap<>();
                     while (rs.next())
                         producerMap.put(rs.getInt("ID"),
-                                new Producer(
+                                new ProducerDto(
                                         rs.getInt("ID"),
                                         rs.getString("NAME"),
-                                        countryMap.get(rs.getInt("COUNTRY"))
+                                        rs.getInt("COUNTRY")
                                 ));
 
                     return producerMap;

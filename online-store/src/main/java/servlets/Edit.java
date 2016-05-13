@@ -1,5 +1,6 @@
 package servlets;
 
+import dao.dto.converters.GoodConverter;
 import dao.interfaces.GoodDao;
 import listeners.DbInitializer;
 import model.Good;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 
@@ -39,10 +39,7 @@ public class Edit extends HttpServlet{
             return;
         } else {
             final int id = parseInt(request.getParameter("id"));
-            final Optional<Good> goodOptional = goodDao.getById(id); //.orElseThrow(RuntimeException::new);
-
-            Good good = goodOptional.get();
-
+            Good good = GoodConverter.convert(goodDao.getById(id).get());
             editingGoods.put(request.getSession().getId(), good);
 
             request.setAttribute("good", good);

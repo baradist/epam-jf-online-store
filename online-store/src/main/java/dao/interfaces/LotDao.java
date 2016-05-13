@@ -1,13 +1,12 @@
 package dao.interfaces;
 
-import model.Good;
-import model.Lot;
+import dao.dto.LotDto;
 
 import java.util.Collection;
 import java.util.Optional;
 
 public interface LotDao extends Dao {
-    Optional<Good> getById(int id);
+    Optional<LotDto> getById(int id);
 
-    Collection<Lot> getList();
+    Collection<LotDto> getList();
 }

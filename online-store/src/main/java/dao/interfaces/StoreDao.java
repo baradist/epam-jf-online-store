@@ -9,8 +9,6 @@ import java.util.Optional;
 public interface StoreDao extends Dao {
     Optional<Store> getById(int id);
 
-//    Collection<Store> getList();
-
     Map<Integer, Store> getMapByIds(Collection<Integer> ids);
 
     Collection<Store> getListByIds(Collection<Integer> ids);

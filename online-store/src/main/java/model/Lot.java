@@ -14,10 +14,10 @@ public class Lot {
     private Store store;
     private Good good;
     private Invoice invoice;
-    private InvoiceItem item;
+    private InvoiceItem invoiceItem;
     private double quantity;
     private double quantityRest;
     private Contractor supplier;
-    private double price_sup;
-    private double price_sal;
+    private double priceSup;
+    private double priceSal;
 }

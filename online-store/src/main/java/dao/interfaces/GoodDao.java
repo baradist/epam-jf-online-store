@@ -1,19 +1,17 @@
 package dao.interfaces;
 
-import model.Good;
+import dao.dto.GoodDto;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
 public interface GoodDao extends Dao {
-    Optional<Good> getById(int id);
+    Optional<GoodDto> getById(int id);
 
-//    Collection<Good> getList();
+    Collection<GoodDto> getList();
 
-    Map<Integer, Good> getMapByIds(Collection<Integer> ids);
+    Collection<GoodDto> getListByIds(Collection<Integer> ids);
 
-    Collection<Good> getListByIds(Collection<Integer> ids);
-
-    Collection<Good> getList();
+    Map<Integer, GoodDto> getMapByIds(Collection<Integer> ids);
 }
