@@ -13,7 +13,7 @@ import java.util.*;
 public interface MySqlProducerDao extends ProducerDao {
 
     @Override
-    default Optional<Producer> getById(int id) { // TODO
+    default Optional<Producer> getById(int id) {
         return executeQuery(
                 "SELECT ID, NAME, COUNTRY FROM PRODUCER WHERE ID = " + id,
                 rs -> {

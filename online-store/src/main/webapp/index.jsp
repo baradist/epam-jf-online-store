@@ -7,11 +7,7 @@
 <html>
 <head>
     <%@ include file="/WEB-INF/import.html"%>
-    <%--<link rel="stylesheet" href="css/bootstrap-3.3.6-dist/css/bootstrap.min.css">--%>
-    <%--&lt;%&ndash;<link rel="stylesheet" href="/css/styles.css">&ndash;%&gt;--%>
-    <%--<script src="js/jquery-1.12.3.min.js"></script>--%>
-    <%--<script src="css/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>--%>
-    <%--<meta http-equiv="Content-Type" content="text/html; charset=utf-8">--%>
+
     <fmt:setLocale value="${sessionScope.local}" />
     <fmt:setBundle basename="locale" var="loc" />
     <fmt:message bundle="${loc}" key="main.title" var="title" />
