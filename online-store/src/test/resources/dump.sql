@@ -236,8 +236,10 @@ DROP TABLE IF EXISTS `order_item`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `order_item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order` int(11) NOT NULL,
   `good` int(11) NOT NULL,
   `quantity` double NOT NULL,
+  `price` double NOT NULL,
   PRIMARY KEY (`id`),
   KEY `order_good_idx` (`good`),
   CONSTRAINT `order_good` FOREIGN KEY (`good`) REFERENCES `good` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -409,4 +411,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-07 17:32:01
+-- Dump completed on 2016-05-14  4:27:15
