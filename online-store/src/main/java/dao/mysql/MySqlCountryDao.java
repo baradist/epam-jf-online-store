@@ -4,17 +4,21 @@ import common.functions.Helper;
 import dao.dto.CountryDto;
 import dao.interfaces.CountryDao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 @FunctionalInterface
 public interface MySqlCountryDao extends CountryDao {
 
+    String SELECT = "SELECT ID, NAME FROM COUNTRY ";
+
     @Override
     default Optional<CountryDto> getById(int id) {
         return executeQuery(
-                "SELECT ID, NAME FROM COUNTRY WHERE ID = " + id,
+                SELECT + " WHERE ID = " + id,
                 rs -> rs.next()
-                        ? new CountryDto(id, rs.getString("NAME"))
+                        ? getValue(rs)
                         : null
         ).toOptional();
     }
@@ -27,33 +31,33 @@ public interface MySqlCountryDao extends CountryDao {
     @Override
     default Collection<CountryDto> getList() {
         return executeQuery(
-                "SELECT ID, NAME FROM COUNTRY ",
+                SELECT,
                 rs -> {
-                    Map<Integer, CountryDto> countryMap = new HashMap<>();
+                    Map<Integer, CountryDto> map = new HashMap<>();
                     while (rs.next())
-                        countryMap.put(rs.getInt("ID"),
-                                new CountryDto(
-                                        rs.getInt("ID"),
-                                        rs.getString("NAME")
-                                ));
-                    return countryMap;
+                        map.put(rs.getInt("ID"),
+                                getValue(rs));
+                    return map;
                 }).toOptional().orElse(Collections.emptyMap()).values();
     }
 
     @Override
     default Map<Integer, CountryDto> getMapByIds(Collection<Integer> ids) {
         return executeQuery(
-                "SELECT ID, NAME FROM COUNTRY " +
-                        "WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
+                SELECT + " WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
                 rs -> {
-                    Map<Integer, CountryDto> countryMap = new HashMap<>();
+                    Map<Integer, CountryDto> map = new HashMap<>();
                     while (rs.next())
-                        countryMap.put(rs.getInt("ID"),
-                                new CountryDto(
-                                        rs.getInt("ID"),
-                                        rs.getString("NAME")
-                                ));
-                    return countryMap;
+                        map.put(rs.getInt("ID"),
+                                getValue(rs));
+                    return map;
                 }).toOptional().orElse(Collections.emptyMap());
+    }
+
+    default CountryDto getValue(ResultSet rs) throws SQLException {
+        return new CountryDto(
+                rs.getInt("ID"),
+                rs.getString("NAME")
+        );
     }
 }

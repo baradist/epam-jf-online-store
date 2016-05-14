@@ -4,17 +4,21 @@ import common.functions.Helper;
 import dao.dto.ProducerDto;
 import dao.interfaces.ProducerDao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 @FunctionalInterface
 public interface MySqlProducerDao extends ProducerDao {
 
+    String SELECT = "SELECT ID, NAME, COUNTRY FROM PRODUCER ";
+
     @Override
     default Optional<ProducerDto> getById(int id) {
         return executeQuery(
-                "SELECT ID, NAME, COUNTRY FROM PRODUCER WHERE ID = " + id,
+                SELECT + " WHERE ID = " + id,
                 rs -> rs.next()
-                        ? new ProducerDto(id, rs.getString("NAME"), rs.getInt("COUNTRY"))
+                        ? getValue(rs)
                         : null
         ).toOptional();
     }
@@ -22,16 +26,13 @@ public interface MySqlProducerDao extends ProducerDao {
     @Override
     default Collection<ProducerDto> getList() {
         return executeQuery(
-                "SELECT ID, NAME, COUNTRY FROM PRODUCER ",
+                SELECT,
                 rs -> {
-                    Map<Integer, ProducerDto> producerMap = new HashMap<>();
+                    Map<Integer, ProducerDto> map = new HashMap<>();
                     while (rs.next())
-                        producerMap.put(rs.getInt("ID"),
-                                new ProducerDto(
-                                        rs.getInt("ID"),
-                                        rs.getString("NAME"),
-                                        rs.getInt("COUNTRY")));
-                    return producerMap;
+                        map.put(rs.getInt("ID"),
+                                getValue(rs));
+                    return map;
                 }).toOptional().orElse(Collections.emptyMap()).values();
     }
 
@@ -43,19 +44,21 @@ public interface MySqlProducerDao extends ProducerDao {
     @Override
     default Map<Integer, ProducerDto> getMapByIds(Collection<Integer> ids) {
         return executeQuery(
-                "SELECT ID, NAME, COUNTRY FROM PRODUCER " +
-                        "WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
+                SELECT + "WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
                 rs -> {
-                    Map<Integer, ProducerDto> producerMap = new HashMap<>();
+                    Map<Integer, ProducerDto> map = new HashMap<>();
                     while (rs.next())
-                        producerMap.put(rs.getInt("ID"),
-                                new ProducerDto(
-                                        rs.getInt("ID"),
-                                        rs.getString("NAME"),
-                                        rs.getInt("COUNTRY")
-                                ));
+                        map.put(rs.getInt("ID"),
+                                getValue(rs));
 
-                    return producerMap;
+                    return map;
                 }).toOptional().orElse(Collections.emptyMap());
+    }
+
+    default ProducerDto getValue(ResultSet rs) throws SQLException {
+        return new ProducerDto(
+                rs.getInt("ID"),
+                rs.getString("NAME"),
+                rs.getInt("COUNTRY"));
     }
 }

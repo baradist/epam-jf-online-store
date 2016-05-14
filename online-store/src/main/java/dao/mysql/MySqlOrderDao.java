@@ -37,7 +37,7 @@ public interface MySqlOrderDao extends OrderDao {
     @Override
     default Collection<Order> getList() {
         return executeQuery(
-                "SELECT ID, NUMBER, DATE, CUSTOMER, STATE, DELETED FROM STORE.ORDER ",
+                "SELECT ID, NUMBER, DATE, CUSTOMER, STATE, DELETED FROM ORDER ",
                 rs -> {
                     Map<Integer, Order> orderMap = new HashMap<>();
 //                    Set<Integer> producerIds = new HashSet<>();

@@ -4,18 +4,21 @@ import common.functions.Helper;
 import dao.dto.GoodDto;
 import dao.interfaces.GoodDao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 @FunctionalInterface
 public interface MySqlGoodDao extends GoodDao {
 
+    String SELECT = "SELECT ID, NAME, PRODUCER, DESCRIPTION FROM GOOD";
+
     @Override
     default Optional<GoodDto> getById(int id) {
         return executeQuery(
-                "SELECT NAME, PRODUCER, DESCRIPTION FROM GOOD WHERE ID = " + id,
+                SELECT + " WHERE ID = " + id,
                 rs -> rs.next()
-                        ? new GoodDto(
-                            id, rs.getString("NAME"), rs.getInt("PRODUCER"), rs.getString("DESCRIPTION"))
+                        ? getValue(rs)
                         : null
         ).toOptional();
     }
@@ -23,15 +26,13 @@ public interface MySqlGoodDao extends GoodDao {
     @Override
     default Collection<GoodDto> getList() {
         return executeQuery(
-                "SELECT ID, NAME, PRODUCER, DESCRIPTION FROM GOOD ",
+                SELECT,
                 rs -> {
-                    Map<Integer, GoodDto> goodMap = new HashMap<>();
+                    Map<Integer, GoodDto> map = new HashMap<>();
                     while (rs.next())
-                        goodMap.put(rs.getInt("ID"),
-                                new GoodDto(
-                                        rs.getInt("ID"), rs.getString("NAME"), rs.getInt("PRODUCER"), rs.getString("DESCRIPTION")
-                                ));
-                    return goodMap;
+                        map.put(rs.getInt("ID"),
+                                getValue(rs));
+                    return map;
                 }).toOptional().orElse(Collections.emptyMap()).values();
     }
 
@@ -43,16 +44,19 @@ public interface MySqlGoodDao extends GoodDao {
     @Override
     default Map<Integer, GoodDto> getMapByIds(Collection<Integer> ids) {
         return executeQuery(
-                "SELECT ID, NAME, PRODUCER, DESCRIPTION FROM GOOD " +
-                        "WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
+                SELECT + " WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
                 rs -> {
-                    Map<Integer, GoodDto> goodMap = new HashMap<>();
+                    Map<Integer, GoodDto> map = new HashMap<>();
                     while (rs.next())
-                        goodMap.put(rs.getInt("ID"),
-                                new GoodDto(
-                                        rs.getInt("ID"), rs.getString("NAME"), rs.getInt("PRODUCER"), rs.getString("DESCRIPTION")
-                                ));
-                    return goodMap;
+                        map.put(rs.getInt("ID"),
+                                getValue(rs));
+                    return map;
                 }).toOptional().orElse(Collections.emptyMap());
+    }
+
+    default GoodDto getValue(ResultSet rs) throws SQLException {
+        return new GoodDto(
+                rs.getInt("ID"), rs.getString("NAME"), rs.getInt("PRODUCER"), rs.getString("DESCRIPTION")
+        );
     }
 }

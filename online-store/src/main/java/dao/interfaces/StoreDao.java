@@ -1,15 +1,17 @@
 package dao.interfaces;
 
-import model.Store;
+import dao.dto.StoreDto;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
 public interface StoreDao extends Dao {
-    Optional<Store> getById(int id);
+    Optional<StoreDto> getById(int id);
 
-    Map<Integer, Store> getMapByIds(Collection<Integer> ids);
+    Collection<StoreDto> getList();
 
-    Collection<Store> getListByIds(Collection<Integer> ids);
+    Collection<StoreDto> getListByIds(Collection<Integer> ids);
+
+    Map<Integer, StoreDto> getMapByIds(Collection<Integer> ids);
 }
