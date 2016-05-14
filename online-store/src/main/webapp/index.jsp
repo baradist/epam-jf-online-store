@@ -21,6 +21,8 @@
 <%--<jsp:include page="WEB-INF/top_line.jsp" />--%>
 <%@ include file="WEB-INF/top_line.jsp"%>
 
+
+
 <h1>${listOfGoods}</h1>
 <table style="border: 1px solid #000;">
     <tr>
@@ -28,6 +30,7 @@
         <th style="border: 1px solid #000;">Название</th>
         <th style="border: 1px solid #000;">Производитель</th>
         <th style="border: 1px solid #000;">Цена</th>
+        <th style="border: 1px solid #000;">В корзину</th>
     </tr>
 
     <c:forEach var="lot" items="${lots}">
@@ -36,6 +39,13 @@
             <td style="border: 1px solid #000;">${lot.good.name}</td>
             <td style="border: 1px solid #000;">${lot.good.producer.name} / ${lot.good.producer.country.name}</td>
             <td style="border: 1px solid #000;">${lot.priceSal}</td>
+            <td style="border: 1px solid #000;">
+                <form action="/basket" method="post" class="horizontal">
+                    <input type="hidden" name="id" value="${lot.good.id}" />
+                    <input type="hidden" name="add" value="${true}" />
+                    <input type="submit" value="В корзину" class="btn btn-default">
+                </form>
+            </td>
         </tr>
     </c:forEach>
 

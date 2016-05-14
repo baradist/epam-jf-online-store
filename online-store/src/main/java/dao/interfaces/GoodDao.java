@@ -14,4 +14,10 @@ public interface GoodDao extends Dao {
     Collection<GoodDto> getListByIds(Collection<Integer> ids);
 
     Map<Integer, GoodDto> getMapByIds(Collection<Integer> ids);
+
+    boolean add(GoodDto goodDto);
+
+    boolean update(GoodDto goodDto);
+
+    boolean delete(int id);
 }

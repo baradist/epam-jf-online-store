@@ -1,5 +1,6 @@
 package servlets;
 
+import dao.dto.GoodDto;
 import dao.dto.converters.GoodConverter;
 import dao.interfaces.GoodDao;
 import listeners.DbInitializer;
@@ -17,8 +18,8 @@ import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
-@WebServlet({"/catalog/goods/edit"})
-public class Edit extends HttpServlet{
+@WebServlet({"/catalogs/goods/edit"})
+public class GoodEdit extends HttpServlet{
 
     private GoodDao goodDao;
     private static Map<String, Good> editingGoods = new HashMap<>();
@@ -31,15 +32,11 @@ public class Edit extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (Boolean.parseBoolean(request.getParameter("isNew"))) {
-            request.setAttribute("good", new Good(-1, "", null, ""));
+            // new
             request.setAttribute("isNew", true);
-        } else if (Boolean.parseBoolean(request.getParameter("delete"))) {
-            // TODO: delete
-            request.getRequestDispatcher("/catalog/goods/index.jsp").forward(request, response);
-            return;
         } else {
-            final int id = parseInt(request.getParameter("id"));
-            Good good = GoodConverter.convert(goodDao.getById(id).get());
+            // edit
+            Good good = GoodConverter.convert(goodDao.getById(parseInt(request.getParameter("id"))).get());
             editingGoods.put(request.getSession().getId(), good);
 
             request.setAttribute("good", good);
@@ -47,25 +44,35 @@ public class Edit extends HttpServlet{
         }
 
         // noinspection InjectedReferences
-        request.getRequestDispatcher("/catalog/goods/edit/index.jsp").forward(request, response);
+        request.getRequestDispatcher("/catalogs/goods/edit/index.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (Boolean.parseBoolean(request.getParameter("isNew"))) {
-            // TODO: make new Good
-//            int i = goodDao.add(good);
+        if (Boolean.parseBoolean(request.getParameter("delete"))) {
+            // delete
+            goodDao.delete(parseInt(request.getParameter("id")));
+        } else if (Boolean.parseBoolean(request.getParameter("isNew"))) {
+            // new
+            GoodDto goodDto = new GoodDto(
+                    request.getParameter("name"),
+                    Integer.parseInt(request.getParameter("producer")), // TODO: choose producer
+                    request.getParameter("description")
+            );
+            goodDao.add(goodDto);
 
         } else {
+            // edit
             String sessionId = request.getSession().getId();
             Good good = editingGoods.get(sessionId);
             editingGoods.remove(sessionId);
 
             good.setName(request.getParameter("name"));
             good.setDescription(request.getParameter("description"));
-//            boolean b = goodDao.update(good); TODO
+
+            goodDao.update(GoodConverter.convert(good));
         }
 
-        response.sendRedirect("/catalog/goods");
+        response.sendRedirect("/catalogs/goods");
     }
 }

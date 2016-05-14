@@ -1,100 +1,123 @@
 package dao.mysql;
 
 import common.functions.Helper;
+import dao.dto.OrderDto;
 import dao.interfaces.OrderDao;
-import model.Order;
 
-import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 @FunctionalInterface
 public interface MySqlOrderDao extends OrderDao {
+    String SELECT = "SELECT NUMBER, DATE, CUSTOMER, STATE, DELETED FROM ORDER_ ";
 
     @Override
-    default Optional<Order> getById(int id) {
+    default Optional<OrderDto> getById(int id) {
         return executeQuery(
-                "SELECT  NUMBER, DATE, CUSTOMER, STATE, DELETED FROM STORE.ORDER WHERE ID = " + id,
-                rs -> {
-                    rs.next();
-                    // TODO: personDao
-//                    ProducerDao producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
-//                    Optional<Producer> producerOptional = producerDao.getById(rs.getInt("PRODUCER"));
-                    rs.beforeFirst();
-
-                    return rs.next()
-                            ? new Order(
-                                id,
-                                rs.getString("NUMBER"),
-                                rs.getDate("DATE").toInstant(),
-                                null, // rs.getInt("CUSTOMER") // TODO Person
-                                Order.State.valueOf(rs.getString("STATE")),
-                                rs.getDate("DELETED").toInstant())
-                            : null;
-                }
+                SELECT + " WHERE ID = " + id,
+                rs -> rs.next()
+                        ? getValue(rs)
+                        : null
         ).toOptional();
     }
 
     @Override
-    default Collection<Order> getList() {
+    default Collection<OrderDto> getList() {
         return executeQuery(
-                "SELECT ID, NUMBER, DATE, CUSTOMER, STATE, DELETED FROM ORDER ",
+                SELECT,
                 rs -> {
-                    Map<Integer, Order> orderMap = new HashMap<>();
-//                    Set<Integer> producerIds = new HashSet<>();
-//                    while (rs.next()) {
-//                        producerIds.add(rs.getInt("PRODUCER"));
-//                    }
-//                    ProducerDao producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
-//                    Map<Integer, Producer> producerMap = producerDao.getMapByIds(producerIds);
-
-                    rs.beforeFirst();
+                    Map<Integer, OrderDto> map = new HashMap<>();
                     while (rs.next())
-                        orderMap.put(rs.getInt("ID"),
-                                new Order(
-                                        rs.getInt("ID"),
-                                        rs.getString("NUMBER"),
-                                        ((Date) rs.getDate("DATE")).toInstant(),
-                                        null, // rs.getInt("CUSTOMER") // TODO Person
-                                        Order.State.valueOf(rs.getString("STATE")),
-                                        ((Date) rs.getDate("DELETED")).toInstant()
-                                ));
-
-                    return orderMap;
+                        map.put(rs.getInt("ID"),
+                                getValue(rs));
+                    return map;
                 }).toOptional().orElse(Collections.emptyMap()).values();
     }
 
     @Override
-    default Collection<Order> getListByIds(Collection<Integer> ids) { // TODO
+    default Collection<OrderDto> getListByIds(Collection<Integer> ids) { // TODO
         return getMapByIds(ids).values();
     }
 
     @Override
-    default Map<Integer, Order> getMapByIds(Collection<Integer> ids) {
+    default Map<Integer, OrderDto> getMapByIds(Collection<Integer> ids) {
         return executeQuery(
-                "SELECT ID, NUMBER, DATE, CUSTOMER, STATE, DELETED FROM STORE.ORDER " +
-                        "WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
+                SELECT + " WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
                 rs -> {
-                    Map<Integer, Order> orderMap = new HashMap<>();
-//                    Set<Integer> producerIds = new HashSet<>();
-//                    while (rs.next()) {
-//                        producerIds.add(rs.getInt("PRODUCER"));
-//                    }
-//                    ProducerDao producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
-//                    Map<Integer, Producer> producerMap = producerDao.getMapByIds(producerIds);
-
-                    rs.beforeFirst();
+                    Map<Integer, OrderDto> map = new HashMap<>();
                     while (rs.next())
-                        orderMap.put(rs.getInt("ID"),
-                                new Order(
-                                        rs.getInt("ID"),
-                                        rs.getString("NUMBER"),
-                                        ((Date) rs.getDate("DATE")).toInstant(),
-                                        null, // rs.getInt("CUSTOMER") // TODO Person
-                                        Order.State.valueOf(rs.getString("STATE")),
-                                        ((Date) rs.getDate("DELETED")).toInstant()
-                                ));
-
-                    return orderMap;
+                        map.put(rs.getInt("ID"),
+                                getValue(rs));
+                    return map;
                 }).toOptional().orElse(Collections.emptyMap());
+    }
+
+    default OrderDto getValue(ResultSet rs) throws SQLException {
+        return new OrderDto(
+                rs.getInt("ID"),
+                rs.getString("NUMBER"),
+                rs.getDate("DATE").toInstant(),
+                0, // rs.getInt("CUSTOMER") // TODO Person
+                rs.getString("STATE"),
+                rs.getDate("DELETED").toInstant()
+        );
+    }
+
+    @Override
+    default boolean add(OrderDto dto) {
+        return withPreparedStatement(
+                "INSERT INTO order_ (number, date, customer, state, deleted) " +
+                        "VALUES (?, ?, ?, ?, ?)"
+//                "INSERT INTO GOOD (NAME, PRODUCER, DESCRIPTION) " +
+//                        "VALUES (?, ?, ?)"
+                ,
+                preparedStatement -> {
+                    preparedStatement.setString(1, dto.getNumber());
+                    // TODO: dateTime???
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String dateTime = sdf.format(dto.getDate());
+                    preparedStatement.setString(2, dateTime);
+
+                    preparedStatement.setInt(3, dto.getCustomer());
+                    preparedStatement.setString(4, dto.getState());
+
+                    dateTime = sdf.format(dto.getDeleted());
+                    preparedStatement.setString(5, dateTime);
+
+                    return preparedStatement.executeUpdate() == 1;
+                }).getOrThrowUnchecked();
+    }
+
+    @Override
+    default boolean update(OrderDto dto) {
+        return withPreparedStatement(
+                "UPDATE order_ SET number = ?, date = ?, customer = ?, state = ?, deleted = ? " +
+                        "WHERE id = ?"
+                , preparedStatement -> {
+                    preparedStatement.setString(1, dto.getNumber());
+                    // TODO: dateTime???
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String dateTime = sdf.format(dto.getDate());
+                    preparedStatement.setString(2, dateTime);
+
+                    preparedStatement.setInt(3, dto.getCustomer());
+                    preparedStatement.setString(4, dto.getState());
+
+                    dateTime = sdf.format(dto.getDeleted());
+                    preparedStatement.setString(5, dateTime);
+
+                    preparedStatement.setInt(6, dto.getId());
+
+                    return preparedStatement.executeUpdate() == 1;
+                }).getOrThrowUnchecked();
+    }
+
+    @Override
+    default boolean delete(int id) {
+        return withPreparedStatement("DELETE FROM ORDER_ WHERE ID = ?", preparedStatement -> {
+            preparedStatement.setInt(1, id);
+            return preparedStatement.executeUpdate() == 1;
+        }).getOrThrowUnchecked();
     }
 }

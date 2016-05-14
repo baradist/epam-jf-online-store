@@ -1,17 +1,23 @@
 package dao.interfaces;
 
-import model.Order;
+import dao.dto.OrderDto;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
 public interface OrderDao extends Dao {
-    Optional<Order> getById(int id);
+    Optional<OrderDto> getById(int id);
 
-    Collection<Order> getList();
+    Collection<OrderDto> getList();
 
-    Map<Integer, Order> getMapByIds(Collection<Integer> ids);
+    Map<Integer, OrderDto> getMapByIds(Collection<Integer> ids);
 
-    Collection<Order> getListByIds(Collection<Integer> ids);
+    Collection<OrderDto> getListByIds(Collection<Integer> ids);
+
+    boolean add(OrderDto orderDto);
+
+    boolean update(OrderDto orderDto);
+
+    boolean delete(int id);
 }

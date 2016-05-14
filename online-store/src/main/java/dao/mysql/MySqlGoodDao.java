@@ -59,4 +59,39 @@ public interface MySqlGoodDao extends GoodDao {
                 rs.getInt("ID"), rs.getString("NAME"), rs.getInt("PRODUCER"), rs.getString("DESCRIPTION")
         );
     }
+
+    @Override
+    default boolean add(GoodDto goodDto) {
+        return withPreparedStatement(
+                "INSERT INTO GOOD (NAME, PRODUCER, DESCRIPTION) " +
+                        "VALUES (?, ?, ?)",
+                preparedStatement -> {
+                    preparedStatement.setString(1, goodDto.getName());
+                    preparedStatement.setInt(2, goodDto.getProducer());
+                    preparedStatement.setString(3, goodDto.getDescription());
+                    return preparedStatement.executeUpdate() == 1;
+                }).getOrThrowUnchecked();
+    }
+
+    @Override
+    default boolean update(GoodDto goodDto) {
+        return withPreparedStatement(
+                "UPDATE GOOD SET NAME = ?, PRODUCER = ?, DESCRIPTION = ? " +
+                        "WHERE ID = ?"
+                , preparedStatement -> {
+                    preparedStatement.setString(1, goodDto.getName());
+                    preparedStatement.setInt(2, goodDto.getProducer());
+                    preparedStatement.setString(3, goodDto.getDescription());
+                    preparedStatement.setInt(4, goodDto.getId());
+                    return preparedStatement.executeUpdate() == 1;
+                }).getOrThrowUnchecked();
+    }
+
+    @Override
+    default boolean delete(int id) {
+        return withPreparedStatement("DELETE FROM GOOD WHERE ID = ?", preparedStatement -> {
+            preparedStatement.setInt(1, id);
+            return preparedStatement.executeUpdate() == 1;
+        }).getOrThrowUnchecked();
+    }
 }

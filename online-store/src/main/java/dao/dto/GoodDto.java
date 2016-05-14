@@ -20,4 +20,10 @@ public class GoodDto {
     private int producer;
     @Size(min = 0, max = 512)
     private String description;
+
+    public GoodDto(String name, int producer, String description) {
+        this.name = name;
+        this.producer = producer;
+        this.description = description;
+    }
 }
