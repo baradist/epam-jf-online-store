@@ -51,7 +51,7 @@ public class Either<L, R> {
     }
 
     public L left() {
-        requireNonNull(LEFT);
+//        requireNonNull(LEFT);
         return LEFT;
     }
 
