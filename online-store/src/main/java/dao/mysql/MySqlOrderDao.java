@@ -8,16 +8,12 @@ import dao.interfaces.OrderDao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
 
 @FunctionalInterface
 public interface MySqlOrderDao extends OrderDao {
     String SELECT = "SELECT ID, NUMBER, DATE, CUSTOMER, STATE, DELETED FROM ORDER_ ";
-    String PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     @Override
     default Optional<OrderDto> getById(int id) {
@@ -32,7 +28,7 @@ public interface MySqlOrderDao extends OrderDao {
     @Override
     default Collection<OrderDto> getList() {
         return executeQuery(
-                SELECT,
+                SELECT /*+ " WHERE deleted IS NULL "*/,
                 rs -> {
                     Map<Integer, OrderDto> map = new HashMap<>();
                     while (rs.next())
@@ -61,23 +57,16 @@ public interface MySqlOrderDao extends OrderDao {
     }
 
     default OrderDto getValue(ResultSet rs) throws SQLException {
-        DateFormat format = new SimpleDateFormat(PATTERN);
-        Instant date;
         Instant deleted = null;
-        try {
-            date = format.parse(rs.getString("DATE")).toInstant();
-            java.sql.Date rsDeleted = rs.getDate("DELETED");
+            String rsDeleted = rs.getString("DELETED");
             if (rsDeleted != null) {
-                deleted = format.parse(String.valueOf(rsDeleted)).toInstant();
+                deleted = Helper.convertDateTime(rsDeleted);
             }
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
 
         OrderDto orderDto = new OrderDto(
                 rs.getInt("ID"),
                 rs.getString("NUMBER"),
-                date,
+                Helper.convertDateTime(rs.getString("DATE")),
                 0, // rs.getInt("CUSTOMER") // TODO Person
                 rs.getString("STATE"),
                 deleted
@@ -92,20 +81,14 @@ public interface MySqlOrderDao extends OrderDao {
                         "VALUES (?, ?, ?, ?, ?)",
                 preparedStatement -> {
                     preparedStatement.setString(1, dto.getNumber());
-                    // TODO: dateTime???
-                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(PATTERN);
-                    Instant date = dto.getDate();
-                    Date dt = Date.from(date);
-                    String dateTime = sdf.format(dt);
-                    preparedStatement.setString(2, dateTime);
+                    preparedStatement.setString(2, Helper.convertDateTime(dto.getDate()));
 
                     preparedStatement.setInt(3, dto.getCustomer());
                     preparedStatement.setString(4, dto.getState());
 
                     Instant deleted = dto.getDeleted();
                     if (deleted != null) {
-                        dateTime = sdf.format(Date.from(deleted));
-                        preparedStatement.setString(5, dateTime);
+                        preparedStatement.setString(5, Helper.convertDateTime(deleted));
                     } else {
                         preparedStatement.setNull(5, Types.NULL);
                     }
@@ -121,19 +104,11 @@ public interface MySqlOrderDao extends OrderDao {
                         "WHERE id = ?"
                 , preparedStatement -> {
                     preparedStatement.setString(1, dto.getNumber());
-                    // TODO: dateTime???
-                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(PATTERN);
-                    String dateTime = sdf.format(dto.getDate());
-                    preparedStatement.setString(2, dateTime);
-
+                    preparedStatement.setString(2, Helper.convertDateTime(dto.getDate()));
                     preparedStatement.setInt(3, dto.getCustomer());
                     preparedStatement.setString(4, dto.getState());
-
-                    dateTime = sdf.format(dto.getDeleted());
-                    preparedStatement.setString(5, dateTime);
-
+                    preparedStatement.setString(5, Helper.convertDateTime(dto.getDeleted()));
                     preparedStatement.setInt(6, dto.getId());
-
                     return preparedStatement.executeUpdate() == 1;
                 }).getOrThrowUnchecked();
     }
@@ -149,7 +124,7 @@ public interface MySqlOrderDao extends OrderDao {
     @Override
     default Optional<OrderDto> getPersonsBasket(int personId) {
         Exceptional<OrderDto, SQLException> orderDtoSQLExceptionExceptional = executeQuery(
-                SELECT + " WHERE CUSTOMER = " + personId,
+                SELECT + " WHERE deleted IS NULL AND CUSTOMER = " + personId + " ORDER BY id DESC",
                 rs -> rs.next()
                         ? MySqlOrderDao.this.getValue(rs)
                         : null
@@ -171,5 +146,18 @@ public interface MySqlOrderDao extends OrderDao {
             preparedStatement.setInt(1, orderId);
             return preparedStatement.executeUpdate() == 1;
         }).getOrThrowUnchecked();
+    }
+
+    @Override
+    default boolean markDeleted(int orderId) {
+        return withPreparedStatement(
+                "UPDATE order_ SET deleted = ? " +
+                        "WHERE id = ?"
+                , preparedStatement -> {
+
+                    preparedStatement.setString(1, Helper.convertDateTime(Instant.now()));
+                    preparedStatement.setInt(2, orderId);
+                    return preparedStatement.executeUpdate() == 1;
+                }).getOrThrowUnchecked();
     }
 }

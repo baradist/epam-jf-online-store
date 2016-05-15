@@ -30,14 +30,15 @@ public interface MySqlPriceItemDao extends PriceItemDao {
     default Collection<PriceItemDto> getList() {
         return executeQuery(
                 // TODO: o.customer = 7 AND o.state = 'NEW'
-                "SELECT  " +
-                        "    l.good, " +
-                        "    l.quantity_rest AS quantity, " +
-                        "    oi.quantity AS quantity_ordered, " +
-                        "    l.price_sal AS price " +
-                        "FROM store.lot l " +
-                        "LEFT OUTER JOIN order_item oi ON l.good = oi.good " +
-                        "LEFT OUTER JOIN order_ o ON oi.order_ = o.id AND o.customer = 7 AND o.state = 'NEW' " +
+                "SELECT \n" +
+                        "l.good,\n" +
+                        "l.quantity_rest AS quantity,\n" +
+                        "oi.quantity AS quantity_ordered,\n" +
+                        "l.price_sal AS price\n" +
+                        "FROM lot l\n" +
+                        "LEFT OUTER JOIN (SELECT good, quantity\n" +
+                        "   FROM order_item WHERE order_ = (SELECT id FROM order_ WHERE deleted IS NULL AND customer = 7 AND state = 'NEW' ORDER BY id DESC LIMIT 1)\n" +
+                        "   ) oi ON l.good = oi.good\n" +
                         "WHERE l.quantity_rest > 0",
                 rs -> {
                     Collection<PriceItemDto> map = new ArrayList<>();

@@ -1,7 +1,12 @@
 package dao.dto.converters;
 
-import dao.dto.OrderDto;
+import dao.dto.OrderItemDto;
+import dao.interfaces.GoodDao;
+import dao.interfaces.OrderDao;
+import listeners.DbInitializer;
+import model.Good;
 import model.Order;
+import model.OrderItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,33 +15,31 @@ import java.util.Collection;
  * Created by Oleg Grigorjev on 13.05.2016.
  */
 public interface OrderItemConverter {
-    static Order convert(OrderDto orderDto) {
-        return new Order(
-                orderDto.getId(),
-                orderDto.getNumber(),
-                orderDto.getDate(),
-                null, // customer
-                Order.State.valueOf(orderDto.getState()),
-                orderDto.getDeleted()
+    static OrderItem convert(OrderItemDto orderItemDto) {
+        return new OrderItem(
+                orderItemDto.getId(),
+                OrderConverter.convert(((OrderDao) DbInitializer.getDaoByClass(Order.class)).getById(orderItemDto.getOrder()).get()),
+                GoodConverter.convert(((GoodDao) DbInitializer.getDaoByClass(Good.class)).getById(orderItemDto.getGood()).get()),
+                orderItemDto.getQuantity(),
+                orderItemDto.getPrice()
         );
     }
 
-    static Collection<Order> convert(Collection<OrderDto> orderDtos) { // TODO
-        Collection<Order> orders = new ArrayList<>();
-        for (OrderDto producerDto : orderDtos) {
-            orders.add(convert(producerDto));
+    static Collection<OrderItem> convert(Collection<OrderItemDto> orderItemDtos) { // TODO
+        Collection<OrderItem> orderItems = new ArrayList<>();
+        for (OrderItemDto producerDto : orderItemDtos) {
+            orderItems.add(convert(producerDto));
         }
-        return orders;
+        return orderItems;
     }
 
-    static OrderDto convert(Order order) {
-        return new OrderDto(
-                order.getId(),
-                order.getNumber(),
-                order.getDate(),
-                7, // customer // TODO
-                order.getState().toString(),
-                order.getDeleted()
+    static OrderItemDto convert(OrderItem orderItem) {
+        return new OrderItemDto(
+                orderItem.getId(),
+                orderItem.getOrder().getId(),
+                orderItem.getGood().getId(),
+                orderItem.getQuantity(),
+                orderItem.getPrice()
         );
     }
 }

@@ -58,7 +58,7 @@ public interface MySqlOrderItemDao extends OrderItemDao {
     default OrderItemDto getValue(ResultSet rs) throws SQLException {
         return new OrderItemDto(
                 rs.getInt("id"),
-                rs.getInt("invoice"),
+                rs.getInt("order_"),
                 rs.getInt("good"),
                 rs.getDouble("quantity"),
                 rs.getDouble("price"));
@@ -108,5 +108,19 @@ public interface MySqlOrderItemDao extends OrderItemDao {
             preparedStatement.setInt(2, goodId);
             return preparedStatement.executeUpdate() == 1;
         }).getOrThrowUnchecked();
+    }
+
+    @Override
+    default Collection<OrderItemDto> getByOrder(int orderId) {
+        return executeQuery(
+                SELECT + " WHERE order_ = " + orderId,
+                rs -> {
+                    Map<Integer, OrderItemDto> map = new HashMap<>();
+                    while (rs.next())
+                        map.put(rs.getInt("ID"),
+                                getValue(rs));
+
+                    return map;
+                }).toOptional().orElse(Collections.emptyMap()).values();
     }
 }

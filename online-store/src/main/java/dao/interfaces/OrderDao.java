@@ -24,4 +24,6 @@ public interface OrderDao extends Dao {
     Optional<OrderDto> getPersonsBasket(int personId);
 
     boolean deleteIfEmpty(int orderId);
+
+    boolean markDeleted(int orderId);
 }

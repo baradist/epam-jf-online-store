@@ -22,4 +22,6 @@ public interface OrderItemDao extends Dao {
     boolean delete(int id);
 
     boolean deleteFromBasket(int orderId, int goodId);
+
+    Collection<OrderItemDto> getByOrder(int orderId);
 }

@@ -20,6 +20,6 @@ public class Order {
     private Instant deleted;
 
     public enum State {
-        NEW, DONE
+        NEW, SENT, DONE
     }
 }
