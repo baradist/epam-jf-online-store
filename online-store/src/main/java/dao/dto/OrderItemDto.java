@@ -22,4 +22,11 @@ public class OrderItemDto {
     @NotNull
     private double quantity;
     private double price;
+
+    public OrderItemDto(int order, int good, double quantity, double price) {
+        this.order = order;
+        this.good = good;
+        this.quantity = quantity;
+        this.price = price;
+    }
 }

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
-@WebFilter({"/catalog/goods", "/catalog/goods/index.jsp"})
+@WebFilter({"/catalogs/goods", "/catalogs/goods/index.jsp"})
 public class GoodList implements HttpFilter {
     private GoodDao goodDao;
 

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
-@WebFilter({"/catalog/producers", "/catalog/producers/index.jsp"})
+@WebFilter({"/catalogs/producers", "/catalogs/producers/index.jsp"})
 public class ProducerList implements HttpFilter {
     private ProducerDao producerDao;
 

@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 
 @WebFilter({"/", "/index.jsp"})
 public class PriceItemList implements HttpFilter {
@@ -22,7 +23,9 @@ public class PriceItemList implements HttpFilter {
         if (priceItemDao == null) {
             priceItemDao = (PriceItemDao) DbInitializer.getDaoByClass(PriceItem.class);
         }
-        request.setAttribute("list", PriceItemConverter.convert(priceItemDao.getList()));
+        Collection<PriceItem> priceItems = PriceItemConverter.convert(priceItemDao.getList());
+        request.setAttribute("list", priceItems);
+        // TODO: put basket info
 
         chain.doFilter(request, response);
     }

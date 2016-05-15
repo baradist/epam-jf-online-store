@@ -20,4 +20,6 @@ public interface OrderItemDao extends Dao {
     boolean update(OrderItemDto orderItemDto);
 
     boolean delete(int id);
+
+    boolean deleteFromBasket(int orderId, int goodId);
 }

@@ -35,17 +35,30 @@
 
     <c:forEach var="item" items="${list}">
         <tr>
-            <td style="border: 1px solid #000;">${item.good.id}</td>
-            <td style="border: 1px solid #000;">${item.good.name}</td>
-            <td style="border: 1px solid #000;">${item.good.producer.name} / ${item.good.producer.country.name}</td>
-            <td style="border: 1px solid #000;">${item.price}</td>
-            <td style="border: 1px solid #000;">
+        <td style="border: 1px solid #000;">${item.good.id}</td>
+        <td style="border: 1px solid #000;">${item.good.name}</td>
+        <td style="border: 1px solid #000;">${item.good.producer.name} / ${item.good.producer.country.name}</td>
+        <td style="border: 1px solid #000;">${item.price}</td>
+        <td style="border: 1px solid #000;">
+        <c:choose>
+            <c:when test="${item.quantityOrdered > 0}">
                 <form action="/basket" method="post" class="horizontal">
-                    <input type="hidden" name="id" value="${item.good.id}" />
-                    <input type="hidden" name="add" value="${true}" />
+                    <input type="hidden" name="good" value="${item.good.id}"/>
+                    <input type="hidden" name="delete" value="${true}"/>
+                    <input type="submit" value="Удалить из корзины" class="btn btn-default">
+                </form>
+            </c:when>
+            <c:otherwise>
+                <form action="/basket" method="post" class="horizontal">
+                    <input type="hidden" name="good" value="${item.good.id}"/>
+                    <input type="hidden" name="quantity" value="${1}"/>
+                    <input type="hidden" name="price" value="${item.price}"/>
+                    <input type="hidden" name="add" value="${true}"/>
                     <input type="submit" value="В корзину" class="btn btn-default">
                 </form>
-            </td>
+            </c:otherwise>
+        </c:choose>
+        </td>
         </tr>
     </c:forEach>
 
