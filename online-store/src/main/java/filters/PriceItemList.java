@@ -1,10 +1,10 @@
 package filters;
 
 import common.servlets.HttpFilter;
-import dao.dto.converters.LotConverter;
-import dao.interfaces.LotDao;
+import dao.dto.converters.PriceItemConverter;
+import dao.interfaces.PriceItemDao;
 import listeners.DbInitializer;
-import model.Lot;
+import model.PriceItem;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -14,15 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebFilter({"/", "/index.jsp"})
-public class LotList implements HttpFilter {
-    private LotDao lotDao;
+public class PriceItemList implements HttpFilter {
+    private PriceItemDao priceItemDao;
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (lotDao == null) {
-            lotDao = (LotDao) DbInitializer.getDaoByClass(Lot.class);
+        if (priceItemDao == null) {
+            priceItemDao = (PriceItemDao) DbInitializer.getDaoByClass(PriceItem.class);
         }
-        request.setAttribute("lots", LotConverter.convert(lotDao.getList()));
+        request.setAttribute("list", PriceItemConverter.convert(priceItemDao.getList()));
 
         chain.doFilter(request, response);
     }

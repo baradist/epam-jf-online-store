@@ -33,15 +33,15 @@
         <th style="border: 1px solid #000;">В корзину</th>
     </tr>
 
-    <c:forEach var="lot" items="${lots}">
+    <c:forEach var="item" items="${list}">
         <tr>
-            <td style="border: 1px solid #000;">${lot.good.id}</td>
-            <td style="border: 1px solid #000;">${lot.good.name}</td>
-            <td style="border: 1px solid #000;">${lot.good.producer.name} / ${lot.good.producer.country.name}</td>
-            <td style="border: 1px solid #000;">${lot.priceSal}</td>
+            <td style="border: 1px solid #000;">${item.good.id}</td>
+            <td style="border: 1px solid #000;">${item.good.name}</td>
+            <td style="border: 1px solid #000;">${item.good.producer.name} / ${item.good.producer.country.name}</td>
+            <td style="border: 1px solid #000;">${item.price}</td>
             <td style="border: 1px solid #000;">
                 <form action="/basket" method="post" class="horizontal">
-                    <input type="hidden" name="id" value="${lot.good.id}" />
+                    <input type="hidden" name="id" value="${item.good.id}" />
                     <input type="hidden" name="add" value="${true}" />
                     <input type="submit" value="В корзину" class="btn btn-default">
                 </form>
