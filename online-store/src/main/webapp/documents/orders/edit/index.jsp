@@ -54,7 +54,7 @@
             <th align="right">Покупатель:</th>
             <td align="left"><input type="text" name="description"
                 <c:if test="${!isNew}">
-                    value="${order.customer}"
+                    value="${order.customer.email}"
                 </c:if>
             ></td>
         </tr>

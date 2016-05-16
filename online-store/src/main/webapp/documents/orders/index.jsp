@@ -29,6 +29,7 @@
         <th style="border: 1px solid #000;">Код</th>
         <th style="border: 1px solid #000;">Номер</th>
         <th style="border: 1px solid #000;">Статус</th>
+        <th style="border: 1px solid #000;">Пользователь</th>
         <th style="border: 1px solid #000;">Удален</th>
         <%--<th style="border: 1px solid #000;">Производитель</th>--%>
         <%--<th style="border: 1px solid #000;">Описание</th>--%>
@@ -41,6 +42,7 @@
             <td style="border: 1px solid #000;">${order.id}</td>
             <td style="border: 1px solid #000;"><a href="/documents/orders/edit?order=${order.id}">${order.number} / ${order.date} </a></td>
             <td style="border: 1px solid #000;">${order.state}</td>
+            <td style="border: 1px solid #000;">${order.customer.email}</td>
             <td style="border: 1px solid #000;">${order.deleted}</td>
             <td style="border: 1px solid #000;">
                 <form action="/documents/orders/edit" method="get" class="horizontal">

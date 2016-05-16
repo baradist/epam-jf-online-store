@@ -67,7 +67,7 @@ public interface MySqlOrderDao extends OrderDao {
                 rs.getInt("ID"),
                 rs.getString("NUMBER"),
                 Helper.convertDateTime(rs.getString("DATE")),
-                0, // rs.getInt("CUSTOMER") // TODO Person
+                rs.getInt("CUSTOMER"),
                 rs.getString("STATE"),
                 deleted
         );

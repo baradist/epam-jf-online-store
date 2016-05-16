@@ -1,7 +1,10 @@
 package dao.dto.converters;
 
 import dao.dto.OrderDto;
+import dao.interfaces.PersonDao;
+import listeners.DbInitializer;
 import model.Order;
+import model.Person;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +18,7 @@ public interface OrderConverter {
                 orderDto.getId(),
                 orderDto.getNumber(),
                 orderDto.getDate(),
-                null,
+                PersonConverter.convert(((PersonDao) DbInitializer.getDaoByClass(Person.class)).getById(orderDto.getCustomer()).get()),
                 Order.State.valueOf(orderDto.getState()),
                 orderDto.getDeleted()
         );
