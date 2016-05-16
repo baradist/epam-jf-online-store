@@ -30,6 +30,7 @@ public class DbInitializer implements ServletContextListener {
         daoMap.put(Order.class, (MySqlOrderDao) ds::getConnection);
         daoMap.put(OrderItem.class, (MySqlOrderItemDao) ds::getConnection);
         daoMap.put(PriceItem.class, (MySqlPriceItemDao) ds::getConnection);
+        daoMap.put(Person.class, (MySqlPersonDao) ds::getConnection);
     }
 
     public static Dao getDaoByClass(Class clazz) {

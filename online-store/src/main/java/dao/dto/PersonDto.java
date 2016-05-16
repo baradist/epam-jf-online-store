@@ -1,4 +1,4 @@
-package model;
+package dao.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Person {
+public class PersonDto {
     private int id;
     private String email;
     private String firstName;
@@ -22,10 +22,4 @@ public class Person {
     private String password;
     private String address;
     private String phone;
-
-    public class Role {
-        public static final String VISITOR = "visitor";
-        public static final String MANAGER = "manager";
-        public static final String ADMINISTRATOR = "administrator";
-    }
 }

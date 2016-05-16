@@ -1,5 +1,8 @@
 package common.functions;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,5 +39,25 @@ public interface Helper {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static Cookie getCookie(HttpServletRequest request, String key) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; i++) {
+                Cookie c = cookies[i];
+                if (c.getName().equals(key) && c.getPath() != null && c.getPath().equalsIgnoreCase("/")) {
+                    return c;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void putCookie(HttpServletResponse response, String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(86400); // TODO ??
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 }
