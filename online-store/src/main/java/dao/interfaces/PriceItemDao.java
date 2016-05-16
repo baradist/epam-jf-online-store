@@ -9,4 +9,6 @@ public interface PriceItemDao extends Dao {
     Optional<PriceItemDto> getById(int id);
 
     Collection<PriceItemDto> getList();
+
+    Collection<PriceItemDto> getListForPersonsEmail(String email);
 }

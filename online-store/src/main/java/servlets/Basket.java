@@ -2,11 +2,14 @@ package servlets;
 
 import dao.dto.OrderDto;
 import dao.dto.OrderItemDto;
+import dao.dto.PersonDto;
 import dao.interfaces.OrderDao;
 import dao.interfaces.OrderItemDao;
+import dao.interfaces.PersonDao;
 import listeners.DbInitializer;
 import model.Order;
 import model.OrderItem;
+import model.Person;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Principal;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -24,7 +28,7 @@ import java.util.Optional;
 public class Basket extends HttpServlet {
     private OrderDao orderDao;
     private OrderItemDao orderItemDao;
-
+    private PersonDao personDao;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         super.doGet(request, response);
@@ -38,11 +42,17 @@ public class Basket extends HttpServlet {
         if (orderItemDao == null) {
             orderItemDao = (OrderItemDao) DbInitializer.getDaoByClass(OrderItem.class);
         }
-        Optional<OrderDto> basket = orderDao.getPersonsBasket(7);
+        if (personDao == null) {
+            personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
+        }
+
+        Principal userPrincipal = request.getUserPrincipal();
+        PersonDto personDto = personDao.getByEmail(userPrincipal.getName()).get();
+        Optional<OrderDto> basket = orderDao.getPersonsBasket(personDto.getId());
         if (!basket.isPresent()) {
-            OrderDto orderDto = new OrderDto("number", Instant.now(), 7, Order.State.NEW.toString(), null);
+            OrderDto orderDto = new OrderDto("number", Instant.now(), personDto.getId(), Order.State.NEW.toString(), null);
             orderDao.add(orderDto); // TODO return orderDto
-            basket = orderDao.getPersonsBasket(7);
+            basket = orderDao.getPersonsBasket(personDto.getId());
         }
         OrderDto orderDto = basket.get();
 

@@ -13,7 +13,7 @@ import java.util.*;
 @FunctionalInterface
 public interface MySqlPersonDao extends PersonDao {
 
-    String SELECT = "SELECT id, email, first_name, last_name, dob, password, address, telephone FROM person ";
+    String SELECT = "SELECT id, email, first_name, last_name, dob, password, address, phone FROM person ";
 
     @Override
     default Optional<PersonDto> getById(int id) {
@@ -28,7 +28,7 @@ public interface MySqlPersonDao extends PersonDao {
     @Override
     default Optional<PersonDto> getByEmail(String email) {
         return executeQuery(
-                SELECT + " WHERE email = " + email,
+                SELECT + " WHERE email = '" + email + "'",
                 rs -> rs.next()
                         ? getValue(rs)
                         : null
@@ -75,7 +75,7 @@ public interface MySqlPersonDao extends PersonDao {
                 rs.getDate("dob").toLocalDate(),
                 rs.getString("password"), // TODO
                 rs.getString("address"),
-                rs.getString("telephone")
+                rs.getString("phone")
         );
     }
 
@@ -98,7 +98,7 @@ public interface MySqlPersonDao extends PersonDao {
     @Override
     default boolean update(PersonDto personDto) {
         return withPreparedStatement(
-                "UPDATE person SET email = ?, first_name = ?, last_name = ?, dob = ?, password = ?, address = ?, telephone = ? " +
+                "UPDATE person SET email = ?, first_name = ?, last_name = ?, dob = ?, password = ?, address = ?, phone = ? " +
                         "WHERE id = ?"
                 , preparedStatement -> {
                     preparedStatement.setString(1, personDto.getEmail());

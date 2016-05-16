@@ -10,3 +10,11 @@ CHANGE COLUMN `telephone` `phone` VARCHAR(100) NULL DEFAULT NULL ;
 ALTER TABLE `store`.`person` 
 CHANGE COLUMN `first_name` `first_name` VARCHAR(255) NULL ,
 CHANGE COLUMN `password` `password` VARCHAR(255) NULL ;
+
+CREATE TABLE `store`.`user_roles` (
+  `email` VARCHAR(50) NOT NULL,
+  `role_name` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`email`, `role_name`));
+
+ALTER TABLE `store`.`person` 
+CHANGE COLUMN `email` `email` VARCHAR(50) NOT NULL ;

@@ -51,6 +51,27 @@
                         </form>
                     </div>
                 </li>
+                    <li>
+                        <form action="/auth" method="post" class="horizontal">
+                            <input type="hidden" name="login" value="${true}" />
+                            <input type="submit" value="Log In" class="btn btn-default">
+                        </form>
+                        <form action="/register.html" method="post" class="horizontal">
+                            <input type="submit" value="Register" class="btn btn-default">
+                        </form>
+                    </li>
+                    <li>
+                        <%--<div class="btn-group" role="group" aria-label="...">--%>
+                            <form action="/auth" method="post" class="horizontal">
+                                <input type="hidden" name="logout" value="${true}" />
+                                <input type="submit" value="Log Out" class="btn btn-default">
+                            </form>
+                            <%--<form action="/localizator" method="post" class="horizontal">--%>
+                                <%--<input type="hidden" name="local" value="en" />--%>
+                                <%--<input type="submit" value="${en_button}" class="btn btn-default">--%>
+                            <%--</form>--%>
+                        <%--</div>--%>
+                    </li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->

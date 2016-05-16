@@ -29,16 +29,37 @@ public interface MySqlPriceItemDao extends PriceItemDao {
     @Override
     default Collection<PriceItemDto> getList() {
         return executeQuery(
-                // TODO: o.customer = 7 AND o.state = 'NEW'
                 "SELECT \n" +
-                        "l.good,\n" +
-                        "l.quantity_rest AS quantity,\n" +
-                        "oi.quantity AS quantity_ordered,\n" +
-                        "l.price_sal AS price\n" +
+                        "    l.good,\n" +
+                        "    l.quantity_rest AS quantity,\n" +
+                        "    0 AS quantity_ordered,\n" +
+                        "    l.price_sal AS price\n" +
+                        "FROM lot l\n" +
+                        "WHERE l.quantity_rest > 0",
+                rs -> {
+                    Collection<PriceItemDto> map = new ArrayList<>();
+                    while (rs.next())
+                        map.add(getValue(rs));
+                    return map;
+                }).toOptional().orElse(Collections.emptySet());
+    }
+
+    @Override
+    default Collection<PriceItemDto> getListForPersonsEmail(String email) {
+        return executeQuery(
+                "SELECT \n" +
+                        "    l.good,\n" +
+                        "    l.quantity_rest AS quantity,\n" +
+                        "    oi.quantity AS quantity_ordered,\n" +
+                        "    l.price_sal AS price\n" +
                         "FROM lot l\n" +
                         "LEFT OUTER JOIN (SELECT good, quantity\n" +
-                        "   FROM order_item WHERE order_ = (SELECT id FROM order_ WHERE deleted IS NULL AND customer = 7 AND state = 'NEW' ORDER BY id DESC LIMIT 1)\n" +
-                        "   ) oi ON l.good = oi.good\n" +
+                        "    FROM order_item WHERE order_ = (\n" +
+                        "            SELECT o.id FROM order_ o\n" +
+                        "            INNER JOIN person p on p.id = o.customer\n" +
+                        "            WHERE deleted IS NULL AND p.email = '" + email + "' AND state = 'NEW' LIMIT 1\n" +
+                        "        )\n" +
+                        "    ) oi ON l.good = oi.good\n" +
                         "WHERE l.quantity_rest > 0",
                 rs -> {
                     Collection<PriceItemDto> map = new ArrayList<>();

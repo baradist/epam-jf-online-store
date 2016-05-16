@@ -23,9 +23,7 @@ public class Person {
     private String address;
     private String phone;
 
-    public class Role {
-        public static final String VISITOR = "visitor";
-        public static final String MANAGER = "manager";
-        public static final String ADMINISTRATOR = "administrator";
+    public enum Role {
+        VISITOR, CUSTOMER, MANAGER, ADMINISTRATOR
     }
 }
