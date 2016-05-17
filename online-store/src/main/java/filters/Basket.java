@@ -2,6 +2,7 @@ package filters;
 
 import common.servlets.HttpFilter;
 import dao.dto.OrderDto;
+import dao.dto.OrderItemDto;
 import dao.dto.converters.OrderItemConverter;
 import dao.interfaces.OrderDao;
 import dao.interfaces.OrderItemDao;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Created by o_grigorev on 17.05.2016.
@@ -35,13 +37,33 @@ public class Basket implements HttpFilter {
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // editing basket
+        String orderItemIdString = request.getParameter("orderItemId");
+        if (orderItemIdString != null) {
+            int orderItemId = Integer.parseInt(orderItemIdString);
+            Optional<OrderItemDto> orderItemDtoOptional = orderItemDao.getById(orderItemId);
+            if (orderItemDtoOptional.isPresent()) {
+                OrderItemDto orderItemDto = orderItemDtoOptional.get();
+                if (Boolean.parseBoolean(request.getParameter("decrease"))) {
+                    if (orderItemDto.getQuantity() <= 1) {
+                        orderItemDao.delete(orderItemDto.getId());
+                    } else {
+                        orderItemDto.setQuantity(orderItemDto.getQuantity() - 1);
+                        orderItemDao.update(orderItemDto);
+                    }
+                } else if (Boolean.parseBoolean(request.getParameter("increase"))) {
+                    orderItemDto.setQuantity(orderItemDto.getQuantity() + 1);
+                    orderItemDao.update(orderItemDto);
+                } else if (Boolean.parseBoolean(request.getParameter("delete"))) {
+                    orderItemDao.delete(orderItemDto.getId());
+                }
+            }
+        }
         Principal userPrincipal = request.getUserPrincipal();
-
         if (userPrincipal == null) {
             return;
         }
         OrderDto orderDto = orderDao.getPersonsBasket(userPrincipal.getName()).get();
-
         Collection<OrderItem> orderItems = OrderItemConverter.convert(orderItemDao.getByOrder(orderDto.getId()));
         request.setAttribute("list", orderItems);
 

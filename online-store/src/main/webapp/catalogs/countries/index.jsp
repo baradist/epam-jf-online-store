@@ -20,11 +20,13 @@
 <h1>${Countries}</h1>
 <table style="border: 1px solid #000;">
     <tr>
+        <th style="border: 1px solid #000;">Код</th>
         <th style="border: 1px solid #000;">Страна</th>
     </tr>
 
     <c:forEach var="country" items="${countries}">
         <tr>
+            <td style="border: 1px solid #000;">${country.id}</td>
             <td style="border: 1px solid #000;">${country.name}</td>
         </tr>
     </c:forEach>

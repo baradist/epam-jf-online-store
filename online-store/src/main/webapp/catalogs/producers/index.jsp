@@ -20,12 +20,14 @@
 <h1>${Producers}</h1>
 <table style="border: 1px solid #000;">
     <tr>
+        <th style="border: 1px solid #000;">Код</th>
         <th style="border: 1px solid #000;">Производитель</th>
         <th style="border: 1px solid #000;">Страна</th>
     </tr>
 
     <c:forEach var="producer" items="${producers}">
         <tr>
+            <td style="border: 1px solid #000;">${producer.id}</td>
             <td style="border: 1px solid #000;">${producer.name}</td>
             <td style="border: 1px solid #000;">${producer.country.name}</td>
         </tr>

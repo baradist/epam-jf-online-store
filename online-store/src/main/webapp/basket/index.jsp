@@ -38,31 +38,43 @@
             <td style="border: 1px solid #000;">${item.price}</td>
                 <%--quantity--%>
             <td style="border: 1px solid #000;">
-                <form action="/basket" method="post" class="horizontal">
+                <form action="/basket/" method="post" class="horizontal">
                     <input type="hidden" name="decrease" value="${true}"/>
+                    <input type="hidden" name="orderItemId" value="${item.id}"/>
                     <input type="submit" value="-" class="btn btn-default">
                 </form>
-                <ul class="nav navbar-nav navbar-fixed-bottom">
-                    <li>
-                        <form action="/basket" method="post" class="horizontal">
-                            <input type="hidden" name="decrease" value="${true}"/>
-                            <input type="submit" value="-" class="btn btn-default">
-                        </form>
-                    </li>
-                    <li>${item.quantity}</li>
-                    <li>
-                        <form action="/basket" method="post" class="horizontal">
-                            <input type="hidden" name="increase" value="${true}"/>
-                            <input type="submit" value="+" class="btn btn-default">
-                        </form>
-                    </li>
-                    <li>
-                        <form action="/basket" method="post" class="horizontal">
-                            <input type="hidden" name="delete" value="${true}"/>
-                            <input type="submit" value="+" class="btn btn-default">
-                        </form>
-                    </li>
-                </ul>
+                    ${item.quantity}
+                <form action="/basket/" method="post" class="horizontal">
+                    <input type="hidden" name="increase" value="${true}"/>
+                    <input type="hidden" name="orderItemId" value="${item.id}"/>
+                    <input type="submit" value="+" class="btn btn-default">
+                </form>
+                <form action="/basket/" method="post" class="horizontal">
+                    <input type="hidden" name="delete" value="${true}"/>
+                    <input type="hidden" name="orderItemId" value="${item.id}"/>
+                    <input type="submit" value="x" class="btn btn-default">
+                </form>
+                    <%--<ul class="nav navbar-nav navbar-fixed-bottom">--%>
+                    <%--<li>--%>
+                    <%--<form action="/basket" method="post" class="horizontal">--%>
+                    <%--<input type="hidden" name="decrease" value="${true}"/>--%>
+                    <%--<input type="submit" value="-" class="btn btn-default">--%>
+                    <%--</form>--%>
+                    <%--</li>--%>
+                    <%--<li>${item.quantity}</li>--%>
+                    <%--<li>--%>
+                    <%--<form action="/basket" method="post" class="horizontal">--%>
+                    <%--<input type="hidden" name="increase" value="${true}"/>--%>
+                    <%--<input type="submit" value="+" class="btn btn-default">--%>
+                    <%--</form>--%>
+                    <%--</li>--%>
+                    <%--<li>--%>
+                    <%--<form action="/basket" method="post" class="horizontal">--%>
+                    <%--<input type="hidden" name="delete" value="${true}"/>--%>
+                    <%--<input type="submit" value="+" class="btn btn-default">--%>
+                    <%--</form>--%>
+                    <%--</li>--%>
+                    <%--</ul>--%>
             </td>
         </tr>
     </c:forEach>
