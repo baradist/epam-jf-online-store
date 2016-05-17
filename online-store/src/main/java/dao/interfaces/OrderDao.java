@@ -23,6 +23,8 @@ public interface OrderDao extends Dao {
 
     Optional<OrderDto> getPersonsBasket(int personId);
 
+    Optional<OrderDto> getPersonsBasket(String email);
+
     boolean deleteIfEmpty(int orderId);
 
     boolean markDeleted(int orderId);

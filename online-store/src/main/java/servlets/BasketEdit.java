@@ -24,15 +24,11 @@ import java.util.Optional;
 /**
  * Created by Oleg Grigorjev on 15.05.2016.
  */
-@WebServlet({"/basket"})
-public class Basket extends HttpServlet {
+@WebServlet({"/basket/edit"})
+public class BasketEdit extends HttpServlet {
     private OrderDao orderDao;
     private OrderItemDao orderItemDao;
     private PersonDao personDao;
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        super.doGet(request, response);
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

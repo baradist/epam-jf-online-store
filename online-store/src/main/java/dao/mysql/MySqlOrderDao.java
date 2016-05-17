@@ -13,7 +13,7 @@ import java.util.*;
 
 @FunctionalInterface
 public interface MySqlOrderDao extends OrderDao {
-    String SELECT = "SELECT ID, NUMBER, DATE, CUSTOMER, STATE, DELETED FROM ORDER_ ";
+    String SELECT = "SELECT id, number, date, customer, state, deleted FROM order_ ";
 
     @Override
     default Optional<OrderDto> getById(int id) {
@@ -125,6 +125,22 @@ public interface MySqlOrderDao extends OrderDao {
     default Optional<OrderDto> getPersonsBasket(int personId) {
         Exceptional<OrderDto, SQLException> orderDtoSQLExceptionExceptional = executeQuery(
                 SELECT + " WHERE deleted IS NULL AND CUSTOMER = " + personId + " ORDER BY id DESC",
+                rs -> rs.next()
+                        ? MySqlOrderDao.this.getValue(rs)
+                        : null
+        );
+        if (orderDtoSQLExceptionExceptional == null) {
+
+        }
+        return orderDtoSQLExceptionExceptional.toOptional();
+    }
+
+    @Override
+    default Optional<OrderDto> getPersonsBasket(String email) {
+        Exceptional<OrderDto, SQLException> orderDtoSQLExceptionExceptional = executeQuery(
+                "SELECT o.id, o.number, o.date, o.customer, o.state, o.deleted FROM order_ o " +
+                        "INNER JOIN person p on o.customer = p.id WHERE deleted IS NULL AND p.email = '"
+                + email + "' ORDER BY o.id DESC",
                 rs -> rs.next()
                         ? MySqlOrderDao.this.getValue(rs)
                         : null
