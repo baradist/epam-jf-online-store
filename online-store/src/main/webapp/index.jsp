@@ -39,14 +39,14 @@
             <td style="border: 1px solid #000;">
                 <c:choose>
                     <c:when test="${item.quantityOrdered > 0}">
-                        <form action="/basket/edit" method="post" class="horizontal">
+                        <form action="/basket/edit/" method="post" class="horizontal">
                             <input type="hidden" name="good" value="${item.good.id}"/>
                             <input type="hidden" name="delete" value="${true}"/>
                             <input type="submit" value="Удалить из корзины" class="btn btn-default">
                         </form>
                     </c:when>
                     <c:otherwise>
-                        <form action="/basket/edit" method="post" class="horizontal">
+                        <form action="/basket/edit/" method="post" class="horizontal">
                             <input type="hidden" name="good" value="${item.good.id}"/>
                             <input type="hidden" name="quantity" value="${1}"/>
                             <input type="hidden" name="price" value="${item.price}"/>
@@ -69,7 +69,6 @@
         <form action="/" method="get" class="horizontal">
             <input type="hidden" name="offset" value="${i}"/>
             <input type="hidden" name="pageNumber" value="${n}"/>
-            <input type="hidden" name="rowsOnPage" value="${requestScope.rowsOnPage}"/>
             <input type="submit" value="${n}"
             <c:if test="${requestScope.pageNumber eq n}">
                    disabled="true"
@@ -78,16 +77,21 @@
         </form>
     </li>
 </c:forEach>
+<li>Записей на странице: <b>${requestScope.rowsOnPage}</b>  </li>
 
 <li>
     <form action="/" method="get" id="pagesTune" class="horizontal">
+        <input form="pagesTune" type="submit" value="Установить:">
         <select required name="rowsOnPage">
-            <option <c:if test="${requestScope.rowsOnPage == 5}"> selected </c:if> value="5">5</option>
-            <option <c:if test="${requestScope.rowsOnPage == 10}"> selected </c:if> value="10">10</option>
-            <option <c:if test="${requestScope.rowsOnPage == 20}"> selected </c:if> value="20">20</option>
-            <option <c:if test="${requestScope.rowsOnPage == 50}"> selected </c:if> value="50">50</option>
+            <%--<option <c:if test="${requestScope.rowsOnPage ==  5}"> selected disabled </c:if> value= "5" >5</option>--%>
+            <%--<option <c:if test="${requestScope.rowsOnPage == 10}"> selected disabled </c:if> value="10">10</option>--%>
+            <%--<option <c:if test="${requestScope.rowsOnPage == 20}"> selected disabled </c:if> value="20">20</option>--%>
+            <%--<option <c:if test="${requestScope.rowsOnPage == 50}"> selected disabled </c:if> value="50">50</option>--%>
+                <c:if test="${requestScope.rowsOnPage !=  5}"> <option value= "5"> 5</option> </c:if>
+                <c:if test="${requestScope.rowsOnPage != 10}"> <option value="10">10</option> </c:if>
+                <c:if test="${requestScope.rowsOnPage != 20}"> <option value="20">20</option> </c:if>
+                <c:if test="${requestScope.rowsOnPage != 50}"> <option value="50">50</option> </c:if>
         </select>
-        <input form="pagesTune" type="submit" value="Обновить">
     </form>
 </li>
 </ul>

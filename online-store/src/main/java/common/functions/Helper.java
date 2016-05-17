@@ -41,23 +41,23 @@ public interface Helper {
         }
     }
 
-    public static Cookie getCookie(HttpServletRequest request, String key) {
+    public static String getCookieValue(HttpServletRequest request, String path, String key) { // TODO
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
                 Cookie c = cookies[i];
-                if (c.getName().equals(key) && c.getPath() != null && c.getPath().equalsIgnoreCase("/")) {
-                    return c;
+                if (c.getName().equals(key) && ((path.equals("/") && c.getPath() == null) || (c.getPath() != null && c.getPath().equalsIgnoreCase(path)))) {
+                    return c.getValue();
                 }
             }
         }
         return null;
     }
 
-    public static void putCookie(HttpServletResponse response, String key, String value) {
+    public static void putCookie(HttpServletResponse response, String path, String key, String value) {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(86400); // TODO ??
-        cookie.setPath("/");
+        cookie.setPath(path);
         response.addCookie(cookie);
     }
 }

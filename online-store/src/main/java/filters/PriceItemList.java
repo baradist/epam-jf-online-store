@@ -1,5 +1,6 @@
 package filters;
 
+import common.functions.Helper;
 import common.servlets.HttpFilter;
 import dao.dto.PriceItemDto;
 import dao.dto.converters.PriceItemConverter;
@@ -26,15 +27,28 @@ public class PriceItemList implements HttpFilter {
             priceItemDao = (PriceItemDao) DbInitializer.getDaoByClass(PriceItem.class);
         }
 
-        int quantity = priceItemDao.getQuantity();
+        rowsByPages(request, response, priceItemDao);
+
+        // TODO: put basket info
+
+        chain.doFilter(request, response);
+    }
+
+    public static void rowsByPages(HttpServletRequest request, HttpServletResponse response, PriceItemDao dao) {
+        int quantity = dao.getQuantity();
         request.setAttribute("quantity", quantity);
 
         String rowsOnPageString = request.getParameter("rowsOnPage");
-        int rowsOnPage;
+        int rowsOnPage = 10;
+
         if (rowsOnPageString != null) {
+            Helper.putCookie(response, "/", "rowsOnPage", rowsOnPageString);
             rowsOnPage = Integer.parseInt(rowsOnPageString);
         } else {
-            rowsOnPage = 10;
+            rowsOnPageString = Helper.getCookieValue(request, "/", "rowsOnPage");
+            if (rowsOnPageString != null) {
+                rowsOnPage = Integer.parseInt(rowsOnPageString);
+            }
         }
         request.setAttribute("rowsOnPage", rowsOnPage);
 
@@ -49,30 +63,17 @@ public class PriceItemList implements HttpFilter {
             offset = 0;
             pageNumber = 1;
         }
-        request.setAttribute("offset", offset); // TODO: ??
+//        request.setAttribute("offset", offset);
         request.setAttribute("pageNumber", pageNumber);
-
-        // TODO: put values into cookies
-        // TODO: go on
-//        List<Integer> startRowList = new ArrayList<>();
-//        for (int i = 1; i < quantity; i+= rowsOnPage) {
-//            startRowList.add(i);
-//        }
-//        request.setAttribute("startRowList", startRowList);
-
-
+        // TODO ??? go on
         Principal userPrincipal = request.getUserPrincipal();
-        Collection<PriceItemDto> priceItemDtos;
+        Collection<PriceItemDto> itemDtos;
         if (userPrincipal == null) {
-            priceItemDtos = priceItemDao.getList(offset, rowsOnPage);
+            itemDtos = dao.getList(offset, rowsOnPage);
         } else {
-            priceItemDtos = priceItemDao.getListForPersonsEmail(userPrincipal.getName(), offset, rowsOnPage);
+            itemDtos = dao.getListForPersonsEmail(userPrincipal.getName(), offset, rowsOnPage);
         }
-        Collection<PriceItem> priceItems = PriceItemConverter.convert(priceItemDtos);
-        request.setAttribute("list", priceItems);
-
-        // TODO: put basket info
-
-        chain.doFilter(request, response);
+        Collection<PriceItem> items = PriceItemConverter.convert(itemDtos);
+        request.setAttribute("list", items);
     }
 }

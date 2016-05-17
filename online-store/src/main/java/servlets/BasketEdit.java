@@ -24,7 +24,7 @@ import java.util.Optional;
 /**
  * Created by Oleg Grigorjev on 15.05.2016.
  */
-@WebServlet({"/basket/edit"})
+@WebServlet({"/basket/edit/"})
 public class BasketEdit extends HttpServlet {
     private OrderDao orderDao;
     private OrderItemDao orderItemDao;
