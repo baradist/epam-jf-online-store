@@ -16,6 +16,16 @@ public interface MySqlPriceItemDao extends PriceItemDao {
     String SELECT = "SELECT ID, STORE, GOOD, DOCUMENT_IN, DOCUMENT_IN_ITEM, QUANTITY, QUANTITY_REST, SUPPLIER, PRICE_SUP, PRICE_SAL FROM LOT ";
 
     @Override
+    default int getQuantity() {
+        return executeQuery(
+                "SELECT count(*) AS count from lot WHERE quantity_rest > 0",
+                rs -> rs.next()
+                        ? Integer.valueOf(rs.getInt("count"))
+                        : 0
+        ).toOptional().get();
+    }
+
+    @Override
     default Optional<PriceItemDto> getById(int id) {
         return executeQuery(
                 SELECT +
@@ -28,14 +38,25 @@ public interface MySqlPriceItemDao extends PriceItemDao {
 
     @Override
     default Collection<PriceItemDto> getList() {
+        return getList(-1, 0);
+    }
+
+    @Override
+    default Collection<PriceItemDto> getList(int offset, int rows) {
+        String sql = "SELECT \n" +
+                "  l.good,\n" +
+                "  l.quantity_rest AS quantity,\n" +
+                "  0 AS quantity_ordered,\n" +
+                "  l.price_sal AS price\n" +
+                "FROM lot l\n" +
+                "INNER JOIN good g ON l.good = g.id\n" +
+                "WHERE l.quantity_rest > 0\n" +
+                "ORDER BY g.name ";
+        if (offset >= 0 && rows > 0) {
+            sql += " LIMIT " + offset + ", " + rows;
+        }
         return executeQuery(
-                "SELECT \n" +
-                        "    l.good,\n" +
-                        "    l.quantity_rest AS quantity,\n" +
-                        "    0 AS quantity_ordered,\n" +
-                        "    l.price_sal AS price\n" +
-                        "FROM lot l\n" +
-                        "WHERE l.quantity_rest > 0",
+                sql,
                 rs -> {
                     Collection<PriceItemDto> map = new ArrayList<>();
                     while (rs.next())
@@ -46,21 +67,32 @@ public interface MySqlPriceItemDao extends PriceItemDao {
 
     @Override
     default Collection<PriceItemDto> getListForPersonsEmail(String email) {
+        return getListForPersonsEmail(email, -1, 0);
+    }
+
+    @Override
+    default Collection<PriceItemDto> getListForPersonsEmail(String email, int offset, int rows) {
+        String sql = "SELECT \n" +
+                "  l.good,\n" +
+                "  l.quantity_rest AS quantity,\n" +
+                "  oi.quantity AS quantity_ordered,\n" +
+                "  l.price_sal AS price\n" +
+                "FROM lot l\n" +
+                "INNER JOIN good g ON l.good = g.id\n" +
+                "LEFT OUTER JOIN (SELECT good, quantity\n" +
+                "  FROM order_item WHERE order_ = (\n" +
+                "      SELECT o.id FROM order_ o\n" +
+                "      INNER JOIN person p on p.id = o.customer\n" +
+                "      WHERE deleted IS NULL AND p.email = '" + email + "' AND state = 'NEW' ORDER BY o.id DESC LIMIT 1\n" +
+                "    )\n" +
+                "  ) oi ON l.good = oi.good\n" +
+                "WHERE l.quantity_rest > 0\n" +
+                "ORDER BY g.name\n";
+        if (offset >= 0 && rows > 0) {
+            sql += " LIMIT " + offset + ", " + rows;
+        }
         return executeQuery(
-                "SELECT \n" +
-                        "    l.good,\n" +
-                        "    l.quantity_rest AS quantity,\n" +
-                        "    oi.quantity AS quantity_ordered,\n" +
-                        "    l.price_sal AS price\n" +
-                        "FROM lot l\n" +
-                        "LEFT OUTER JOIN (SELECT good, quantity\n" +
-                        "    FROM order_item WHERE order_ = (\n" +
-                        "            SELECT o.id FROM order_ o\n" +
-                        "            INNER JOIN person p on p.id = o.customer\n" +
-                        "            WHERE deleted IS NULL AND p.email = '" + email + "' AND state = 'NEW' LIMIT 1\n" +
-                        "        )\n" +
-                        "    ) oi ON l.good = oi.good\n" +
-                        "WHERE l.quantity_rest > 0",
+                sql,
                 rs -> {
                     Collection<PriceItemDto> map = new ArrayList<>();
                     while (rs.next())

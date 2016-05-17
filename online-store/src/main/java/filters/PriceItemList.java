@@ -26,16 +26,51 @@ public class PriceItemList implements HttpFilter {
             priceItemDao = (PriceItemDao) DbInitializer.getDaoByClass(PriceItem.class);
         }
 
+        int quantity = priceItemDao.getQuantity();
+        request.setAttribute("quantity", quantity);
+
+        String rowsOnPageString = request.getParameter("rowsOnPage");
+        int rowsOnPage;
+        if (rowsOnPageString != null) {
+            rowsOnPage = Integer.parseInt(rowsOnPageString);
+        } else {
+            rowsOnPage = 10;
+        }
+        request.setAttribute("rowsOnPage", rowsOnPage);
+
+        String offsetString = request.getParameter("offset");
+        String pageNumberString = request.getParameter("pageNumber");
+        int offset;
+        int pageNumber;
+        if (offsetString != null && pageNumberString != null) {
+            offset = Integer.parseInt(offsetString);
+            pageNumber = Integer.parseInt(pageNumberString);
+        } else {
+            offset = 0;
+            pageNumber = 1;
+        }
+        request.setAttribute("offset", offset); // TODO: ??
+        request.setAttribute("pageNumber", pageNumber);
+
+        // TODO: put values into cookies
+        // TODO: go on
+//        List<Integer> startRowList = new ArrayList<>();
+//        for (int i = 1; i < quantity; i+= rowsOnPage) {
+//            startRowList.add(i);
+//        }
+//        request.setAttribute("startRowList", startRowList);
+
+
         Principal userPrincipal = request.getUserPrincipal();
         Collection<PriceItemDto> priceItemDtos;
         if (userPrincipal == null) {
-            priceItemDtos = priceItemDao.getList();
+            priceItemDtos = priceItemDao.getList(offset, rowsOnPage);
         } else {
-            priceItemDtos = priceItemDao.getListForPersonsEmail(userPrincipal.getName());
+            priceItemDtos = priceItemDao.getListForPersonsEmail(userPrincipal.getName(), offset, rowsOnPage);
         }
         Collection<PriceItem> priceItems = PriceItemConverter.convert(priceItemDtos);
-
         request.setAttribute("list", priceItems);
+
         // TODO: put basket info
 
         chain.doFilter(request, response);
