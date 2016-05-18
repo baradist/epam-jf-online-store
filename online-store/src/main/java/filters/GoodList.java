@@ -1,5 +1,6 @@
 package filters;
 
+import common.functions.Helper;
 import common.servlets.HttpFilter;
 import dao.dto.GoodDto;
 import dao.dto.converters.GoodConverter;
@@ -24,8 +25,11 @@ public class GoodList implements HttpFilter {
         if (goodDao == null) {
             goodDao = (GoodDao) DbInitializer.getDaoByClass(Good.class);
         }
-        Collection<GoodDto> goods = goodDao.getList();
-        request.setAttribute("goods", GoodConverter.convert(goods));
+        Helper.OffsetAndRowsOnPage offsetAndRowsOnPage = Helper.longListByPages(request, response, goodDao.getQuantity());
+
+        Collection<GoodDto> itemDtos = goodDao.getList(offsetAndRowsOnPage.offset, offsetAndRowsOnPage.rowsOnPage); // TODO
+        Collection<Good> items = GoodConverter.convert(itemDtos);
+        request.setAttribute("items", items);
 
         chain.doFilter(request, response);
     }

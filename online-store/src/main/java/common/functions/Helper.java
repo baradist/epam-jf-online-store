@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public interface Helper {
 
-    public static String ArrayToString(Collection<Integer> array) {
+    /*public*/ static String ArrayToString(Collection<Integer> array) {
         StringBuilder buffer = new StringBuilder();
         for (Integer integer : array) {
             buffer.append(integer);
@@ -26,13 +26,13 @@ public interface Helper {
 
     String PATTERN = "yyyy-MM-dd HH:mm:ss";
 
-    public static String convertDateTime(Instant instant) {
+    /*public*/ static String convertDateTime(Instant instant) {
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(PATTERN);
         Date dt = Date.from(instant);
         return sdf.format(dt);
     }
 
-    public static Instant convertDateTime(String string) {
+    /*public*/ static Instant convertDateTime(String string) {
         DateFormat format = new SimpleDateFormat(PATTERN);
         try {
             return format.parse(string).toInstant();
@@ -41,12 +41,13 @@ public interface Helper {
         }
     }
 
-    public static String getCookieValue(HttpServletRequest request, String path, String key) { // TODO
+    /*public*/ static String getCookieValue(HttpServletRequest request, String key) { // TODO
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
                 Cookie c = cookies[i];
-                if (c.getName().equals(key) && ((path.equals("/") && c.getPath() == null) || (c.getPath() != null && c.getPath().equalsIgnoreCase(path)))) {
+//                if (c.getName().equals(key) && ((path.equals("/") && c.getPath() == null) || (c.getPath() != null && c.getPath().equalsIgnoreCase(path)))) {
+                if (c.getName().equals(key)) {
                     return c.getValue();
                 }
             }
@@ -54,10 +55,52 @@ public interface Helper {
         return null;
     }
 
-    public static void putCookie(HttpServletResponse response, String path, String key, String value) {
+    /*public*/ static void putCookie(HttpServletResponse response, String key, String value) {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(86400); // TODO ??
-        cookie.setPath(path);
+//        cookie.setPath(path);
         response.addCookie(cookie);
+    }
+
+    /*public*/ static OffsetAndRowsOnPage longListByPages(HttpServletRequest request, HttpServletResponse response, int quantity) {
+        request.setAttribute("quantity", quantity);
+
+        String rowsOnPageString = request.getParameter("rowsOnPage");
+
+        int rowsOnPage = 10;
+        if (rowsOnPageString != null) {
+            Helper.putCookie(response, "rowsOnPage", rowsOnPageString);
+            rowsOnPage = Integer.parseInt(rowsOnPageString);
+        } else {
+            rowsOnPageString = Helper.getCookieValue(request, "rowsOnPage");
+            if (rowsOnPageString != null) {
+                rowsOnPage = Integer.parseInt(rowsOnPageString);
+            }
+        }
+        request.setAttribute("rowsOnPage", rowsOnPage);
+
+        String offsetString = request.getParameter("offset");
+        String pageNumberString = request.getParameter("pageNumber");
+        int offset;
+        int pageNumber;
+        if (offsetString != null && pageNumberString != null) {
+            offset = Integer.parseInt(offsetString);
+            pageNumber = Integer.parseInt(pageNumberString);
+        } else {
+            offset = 0;
+            pageNumber = 1;
+        }
+        request.setAttribute("pageNumber", pageNumber);
+        return new OffsetAndRowsOnPage(offset, rowsOnPage);
+    }
+
+    /*public static*/ class OffsetAndRowsOnPage {
+        public final int offset;
+        public final int rowsOnPage;
+
+        public OffsetAndRowsOnPage(int offset, int rowsOnPage) {
+            this.offset = offset;
+            this.rowsOnPage = rowsOnPage;
+        }
     }
 }

@@ -14,6 +14,11 @@ public interface MySqlGoodDao extends GoodDao {
     String SELECT = "SELECT ID, NAME, PRODUCER, DESCRIPTION FROM GOOD";
 
     @Override
+    default int getQuantity() {
+        return 50; // TODO
+    }
+
+    @Override
     default Optional<GoodDto> getById(int id) {
         return executeQuery(
                 SELECT + " WHERE ID = " + id,
@@ -34,6 +39,11 @@ public interface MySqlGoodDao extends GoodDao {
                                 getValue(rs));
                     return map;
                 }).toOptional().orElse(Collections.emptyMap()).values();
+    }
+
+    @Override
+    default Collection<GoodDto> getList(int start, int end) {
+        return getList(); // TODO
     }
 
     @Override
