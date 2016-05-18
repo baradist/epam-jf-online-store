@@ -176,4 +176,18 @@ public interface MySqlOrderDao extends OrderDao {
                     return preparedStatement.executeUpdate() == 1;
                 }).getOrThrowUnchecked();
     }
+
+    @Override
+    default Optional<Helper.TwoValues<Float, Float>> getPersonsBasketQuantityAndSum(String email) {
+        return executeQuery(
+                "SELECT SUM(quantity * price) AS basket_sum, SUM(quantity) AS basket_quantity FROM order_item\n" +
+                        "WHERE order_ IN (\n" +
+                        "\tSELECT o.id FROM order_ o INNER JOIN person p on o.customer = p.id \n" +
+                        "\tWHERE deleted IS NULL AND p.email = '" + email + "' ORDER BY o.id DESC\n" +
+                        ")",
+                rs -> rs.next()
+                        ? new Helper.TwoValues<>(rs.getFloat("basket_quantity"), rs.getFloat("basket_sum"))
+                        : null
+        ).toOptional();
+    }
 }

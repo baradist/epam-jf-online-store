@@ -6,6 +6,6 @@
 </head>
 <body>
 Invalid username and/or password, please
-<a href="/login.html">try again</a>.
+<a href="/login.jsp">try again</a>.
 </body>
 </html>

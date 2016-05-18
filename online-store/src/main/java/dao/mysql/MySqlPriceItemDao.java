@@ -13,12 +13,12 @@ import java.util.Optional;
 @FunctionalInterface
 public interface MySqlPriceItemDao extends PriceItemDao {
 
-    String SELECT = "SELECT ID, STORE, GOOD, DOCUMENT_IN, DOCUMENT_IN_ITEM, QUANTITY, QUANTITY_REST, SUPPLIER, PRICE_SUP, PRICE_SAL FROM LOT ";
+    String SELECT = "SELECT id, store, good, document_in, document_in_item, quantity, quantity_rest, supplier, price_sup, price_sal FROM lot ";
 
     @Override
     default int getQuantity() {
         return executeQuery(
-                "SELECT count(*) AS count from lot WHERE quantity_rest > 0",
+                "SELECT count(*) AS count FROM lot WHERE quantity_rest > 0",
                 rs -> rs.next()
                         ? Integer.valueOf(rs.getInt("count"))
                         : 0
@@ -29,7 +29,7 @@ public interface MySqlPriceItemDao extends PriceItemDao {
     default Optional<PriceItemDto> getById(int id) {
         return executeQuery(
                 SELECT +
-                        " WHERE ID = " + id,
+                        " WHERE id = " + id,
                 rs -> rs.next()
                         ? getValue(rs)
                         : null

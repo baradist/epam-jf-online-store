@@ -67,9 +67,9 @@ public interface Helper {
      * @param request
      * @param response
      * @param quantity of rows
-     * @return an offset and a number of rows on the page
+     * @return the TwoValues object, which contains an offset and a number of rows on the page
      */
-    /*public*/ static OffsetAndRowsOnPage longListByPages(HttpServletRequest request, HttpServletResponse response, int quantity) {
+    /*public*/ static TwoValues<Integer, Integer> longListByPages(HttpServletRequest request, HttpServletResponse response, int quantity) {
         request.setAttribute("url", request.getRequestURI());
 
         request.setAttribute("quantity", quantity);
@@ -103,16 +103,16 @@ public interface Helper {
             pageNumber = 1;
         }
         request.setAttribute("pageNumber", pageNumber);
-        return new OffsetAndRowsOnPage(offset, rowsOnPage);
+        return new TwoValues(offset, rowsOnPage);
     }
 
-    /*public static*/ class OffsetAndRowsOnPage {
-        public final int offset;
-        public final int rowsOnPage;
+    /*public static*/ class TwoValues<F, S> {
+        public final F first;
+        public final S second;
 
-        public OffsetAndRowsOnPage(int offset, int rowsOnPage) {
-            this.offset = offset;
-            this.rowsOnPage = rowsOnPage;
+        public TwoValues(F first, S second) {
+            this.first = first;
+            this.second = second;
         }
     }
 }

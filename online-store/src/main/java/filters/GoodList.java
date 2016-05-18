@@ -25,9 +25,9 @@ public class GoodList implements HttpFilter {
         if (goodDao == null) {
             goodDao = (GoodDao) DbInitializer.getDaoByClass(Good.class);
         }
-        Helper.OffsetAndRowsOnPage offsetAndRowsOnPage = Helper.longListByPages(request, response, goodDao.getQuantity());
+        Helper.TwoValues<Integer, Integer> offsetAndRowsOnPage = Helper.longListByPages(request, response, goodDao.getQuantity());
 
-        Collection<GoodDto> itemDtos = goodDao.getList(offsetAndRowsOnPage.offset, offsetAndRowsOnPage.rowsOnPage); // TODO
+        Collection<GoodDto> itemDtos = goodDao.getList(offsetAndRowsOnPage.first, offsetAndRowsOnPage.second);
         Collection<Good> items = GoodConverter.convert(itemDtos);
         request.setAttribute("items", items);
 

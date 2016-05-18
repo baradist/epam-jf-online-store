@@ -1,5 +1,6 @@
 package dao.interfaces;
 
+import common.functions.Helper;
 import dao.dto.OrderDto;
 
 import java.util.Collection;
@@ -28,4 +29,6 @@ public interface OrderDao extends Dao {
     boolean deleteIfEmpty(int orderId);
 
     boolean markDeleted(int orderId);
+
+    Optional<Helper.TwoValues<Float, Float>> getPersonsBasketQuantityAndSum(String email);
 }

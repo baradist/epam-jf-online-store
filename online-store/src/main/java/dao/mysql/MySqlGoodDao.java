@@ -11,17 +11,22 @@ import java.util.*;
 @FunctionalInterface
 public interface MySqlGoodDao extends GoodDao {
 
-    String SELECT = "SELECT ID, NAME, PRODUCER, DESCRIPTION FROM GOOD";
+    String SELECT = "SELECT id, name, producer, description FROM good";
 
     @Override
     default int getQuantity() {
-        return 99; // TODO
+        return executeQuery(
+                "SELECT count(*) AS count FROM good",
+                rs -> rs.next()
+                        ? Integer.valueOf(rs.getInt("count"))
+                        : 0
+        ).toOptional().get();
     }
 
     @Override
     default Optional<GoodDto> getById(int id) {
         return executeQuery(
-                SELECT + " WHERE ID = " + id,
+                SELECT + " WHERE id = " + id,
                 rs -> rs.next()
                         ? getValue(rs)
                         : null
@@ -35,7 +40,7 @@ public interface MySqlGoodDao extends GoodDao {
                 rs -> {
                     Map<Integer, GoodDto> map = new HashMap<>();
                     while (rs.next())
-                        map.put(rs.getInt("ID"),
+                        map.put(rs.getInt("id"),
                                 getValue(rs));
                     return map;
                 }).toOptional().orElse(Collections.emptyMap()).values();
@@ -54,11 +59,11 @@ public interface MySqlGoodDao extends GoodDao {
     @Override
     default Map<Integer, GoodDto> getMapByIds(Collection<Integer> ids) {
         return executeQuery(
-                SELECT + " WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
+                SELECT + " WHERE id IN (" + Helper.ArrayToString(ids) + ")",
                 rs -> {
                     Map<Integer, GoodDto> map = new HashMap<>();
                     while (rs.next())
-                        map.put(rs.getInt("ID"),
+                        map.put(rs.getInt("id"),
                                 getValue(rs));
                     return map;
                 }).toOptional().orElse(Collections.emptyMap());
@@ -66,7 +71,7 @@ public interface MySqlGoodDao extends GoodDao {
 
     default GoodDto getValue(ResultSet rs) throws SQLException {
         return new GoodDto(
-                rs.getInt("ID"), rs.getString("NAME"), rs.getInt("PRODUCER"), rs.getString("DESCRIPTION")
+                rs.getInt("id"), rs.getString("name"), rs.getInt("producer"), rs.getString("description")
         );
     }
 

@@ -27,13 +27,13 @@ public class PriceItemList implements HttpFilter {
             priceItemDao = (PriceItemDao) DbInitializer.getDaoByClass(PriceItem.class);
         }
 
-        Helper.OffsetAndRowsOnPage offsetAndRowsOnPage = Helper.longListByPages(request, response, priceItemDao.getQuantity());
+        Helper.TwoValues<Integer, Integer> offsetAndRowsOnPage = Helper.longListByPages(request, response, priceItemDao.getQuantity());
         Principal userPrincipal = request.getUserPrincipal();
         Collection<PriceItemDto> itemDtos;
         if (userPrincipal == null) {
-            itemDtos = priceItemDao.getList(offsetAndRowsOnPage.offset, offsetAndRowsOnPage.rowsOnPage);
+            itemDtos = priceItemDao.getList(offsetAndRowsOnPage.first, offsetAndRowsOnPage.second);
         } else {
-            itemDtos = priceItemDao.getListForPersonsEmail(userPrincipal.getName(), offsetAndRowsOnPage.offset, offsetAndRowsOnPage.rowsOnPage);
+            itemDtos = priceItemDao.getListForPersonsEmail(userPrincipal.getName(), offsetAndRowsOnPage.first, offsetAndRowsOnPage.second);
         }
         Collection<PriceItem> items = PriceItemConverter.convert(itemDtos);
         request.setAttribute("list", items);

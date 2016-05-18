@@ -7,6 +7,7 @@ import dao.interfaces.OrderDao;
 import dao.interfaces.OrderItemDao;
 import dao.interfaces.PersonDao;
 import listeners.DbInitializer;
+import lombok.extern.log4j.Log4j;
 import model.Order;
 import model.OrderItem;
 import model.Person;
@@ -24,6 +25,8 @@ import java.util.Optional;
 /**
  * Created by Oleg Grigorjev on 15.05.2016.
  */
+
+@Log4j
 @WebServlet({"/basket/edit/"})
 public class BasketEdit extends HttpServlet {
     private OrderDao orderDao;
@@ -49,6 +52,7 @@ public class BasketEdit extends HttpServlet {
             OrderDto orderDto = new OrderDto("number", Instant.now(), personDto.getId(), Order.State.NEW.toString(), null);
             orderDao.add(orderDto); // TODO return orderDto
             basket = orderDao.getPersonsBasket(personDto.getId());
+            log.info(userPrincipal.getName() + ": new basket (id=" + basket.get());
         }
         OrderDto orderDto = basket.get();
 
@@ -59,7 +63,6 @@ public class BasketEdit extends HttpServlet {
                     Double.parseDouble(request.getParameter("price"))
             );
             orderItemDao.add(orderItemDto);
-
 
         } else if (Boolean.parseBoolean(request.getParameter("delete"))) {
             orderItemDao.deleteFromBasket(orderDto.getId(), Integer.parseInt(request.getParameter("good")));
