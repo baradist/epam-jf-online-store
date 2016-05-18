@@ -15,7 +15,7 @@ public interface MySqlGoodDao extends GoodDao {
 
     @Override
     default int getQuantity() {
-        return 50; // TODO
+        return 99; // TODO
     }
 
     @Override

@@ -62,14 +62,26 @@ public interface Helper {
         response.addCookie(cookie);
     }
 
+    /**
+     * works only with /WEB-INF/pager.jsp !!!
+     * @param request
+     * @param response
+     * @param quantity of rows
+     * @return an offset and a number of rows on the page
+     */
     /*public*/ static OffsetAndRowsOnPage longListByPages(HttpServletRequest request, HttpServletResponse response, int quantity) {
+        request.setAttribute("url", request.getRequestURI());
+
         request.setAttribute("quantity", quantity);
+
+        int rowsOnPage = 10;
 
         String rowsOnPageString = request.getParameter("rowsOnPage");
 
-        int rowsOnPage = 10;
         if (rowsOnPageString != null) {
-            Helper.putCookie(response, "rowsOnPage", rowsOnPageString);
+            if (Boolean.parseBoolean(request.getParameter("changeRowsOnPage"))) {
+                Helper.putCookie(response, "rowsOnPage", rowsOnPageString);
+            }
             rowsOnPage = Integer.parseInt(rowsOnPageString);
         } else {
             rowsOnPageString = Helper.getCookieValue(request, "rowsOnPage");
