@@ -18,6 +18,11 @@ public class Auth extends HttpServlet {
         if (Boolean.parseBoolean(request.getParameter("logout"))) {
             request.logout();
             response.sendRedirect("/");
+        } else if (Boolean.parseBoolean(request.getParameter("login"))) {
+            if (request.getUserPrincipal() == null) {
+//                request.login();
+                response.sendRedirect("/");
+            }
         }
     }
 }

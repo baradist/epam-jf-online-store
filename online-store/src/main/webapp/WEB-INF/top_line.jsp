@@ -1,24 +1,25 @@
 <%--<%@ page language="java" contentType="text/html; charset=utf-8"--%>
-         <%--pageEncoding="utf-8"%>--%>
+<%--pageEncoding="utf-8"%>--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}" />
-<fmt:setBundle basename="locale" var="loc" />
-<fmt:message bundle="${loc}" key="local.message" var="message" />
-<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button" />
-<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button" />
-<fmt:message bundle="${loc}" key="title.documents" var="title_documents" />
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="locale" var="loc"/>
+<fmt:message bundle="${loc}" key="local.message" var="message"/>
+<fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button"/>
+<fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button"/>
+<fmt:message bundle="${loc}" key="title.documents" var="title_documents"/>
 <fmt:message bundle="${loc}" key="title.catalogs" var="title_catalogs"/>
 
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/">Home</a></li>
-                <li><a href="/basket/">Basket</a></li>
+
+            <ul class="nav navbar-nav navbar-left">
+                <li><a href="/"><img src="/hospital26.ico" href="/"></a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
                         ${title_catalogs} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="/catalogs/goods/">Goods</a></li>
@@ -28,51 +29,60 @@
                         <%--<li><a href="#">Separated link</a></li>--%>
                     </ul>
                 </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            ${title_documents} <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/documents/orders/">Orders</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
-                        </ul>
-                    </li>
-                    <%--<input type="hidden" name="local" value="ru" /> <input type="submit" value="${ru_button}" /><br />--%>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        ${title_documents} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/documents/orders/">Orders</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/basket/"><img src="/basket_26.ico"></a></li>
                 <li>
                     <div class="btn-group" role="group" aria-label="...">
                         <form action="/localizator" method="post" class="horizontal">
-                            <input type="hidden" name="local" value="ru" />
+                            <input type="hidden" name="local" value="ru"/>
                             <input type="submit" value="${ru_button}" class="btn btn-default">
                         </form>
                         <form action="/localizator" method="post" class="horizontal">
-                            <input type="hidden" name="local" value="en" />
+                            <input type="hidden" name="local" value="en"/>
                             <input type="submit" value="${en_button}" class="btn btn-default">
                         </form>
                     </div>
                 </li>
-                    <li>
-                        <form action="/auth" method="post" class="horizontal">
-                            <input type="hidden" name="login" value="${true}" />
-                            <input type="submit" value="Log In" class="btn btn-default">
-                        </form>
-                        <form action="/register.html" method="post" class="horizontal">
-                            <input type="submit" value="Register" class="btn btn-default">
-                        </form>
-                    </li>
-                    <li>
-                        <%--<div class="btn-group" role="group" aria-label="...">--%>
-                            <form action="/auth" method="post" class="horizontal">
-                                <input type="hidden" name="logout" value="${true}" />
-                                <input type="submit" value="Log Out" class="btn btn-default">
-                            </form>
-                            <%--<form action="/localizator" method="post" class="horizontal">--%>
-                                <%--<input type="hidden" name="local" value="en" />--%>
-                                <%--<input type="submit" value="${en_button}" class="btn btn-default">--%>
-                            <%--</form>--%>
-                        <%--</div>--%>
-                    </li>
+                <li>
+                    <%--<form action="/auth" method="post" class="horizontal">--%>
+                        <%--<input type="hidden" name="login" value="${true}"/>--%>
+                        <%--<input type="submit" value="Log In" class="btn btn-default">--%>
+                    <%--</form>--%>
+                    <form action="/login.html" method="get" class="horizontal">
+                        <%--<input type="hidden" name="login" value="${true}"/>--%>
+                        <input type="submit" value="Log In" class="btn btn-default">
+                    </form>
+                    <form action="/register.html" method="post" class="horizontal">
+                        <input type="submit" value="Register" class="btn btn-default">
+                    </form>
+                </li>
+                <li>
+                    <%--<div class="btn-group" role="group" aria-label="...">--%>
+                    <form action="/auth" method="post" class="horizontal">
+                        <input type="hidden" name="logout" value="${true}"/>
+                        <input type="submit" value="Log Out" class="btn btn-default">
+                    </form>
+                    <%--<form action="/localizator" method="post" class="horizontal">--%>
+                    <%--<input type="hidden" name="local" value="en" />--%>
+                    <%--<input type="submit" value="${en_button}" class="btn btn-default">--%>
+                    <%--</form>--%>
+                    <%--</div>--%>
+                </li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
