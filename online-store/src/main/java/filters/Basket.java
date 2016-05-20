@@ -60,9 +60,6 @@ public class Basket implements HttpFilter {
             }
         }
         Principal userPrincipal = request.getUserPrincipal();
-        if (userPrincipal == null) {
-            return;
-        }
         OrderDto orderDto = orderDao.getPersonsBasket(userPrincipal.getName()).get();
         Collection<OrderItem> orderItems = OrderItemConverter.convert(orderItemDao.getByOrder(orderDto.getId()));
         request.setAttribute("list", orderItems);

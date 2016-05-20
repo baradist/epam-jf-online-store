@@ -22,4 +22,14 @@ public class PersonDto {
     private String password;
     private String address;
     private String phone;
+
+    public PersonDto(String email, String firstName, String lastName, LocalDate dob, String password, String address, String phone) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.password = password;
+        this.address = address;
+        this.phone = phone;
+    }
 }

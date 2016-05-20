@@ -22,5 +22,8 @@ public interface PersonDao extends Dao {
     boolean update(PersonDto personDto);
 
     boolean delete(int id);
+
     boolean deleteByEmail(String email);
+
+    boolean addRole(String email, String role);
 }

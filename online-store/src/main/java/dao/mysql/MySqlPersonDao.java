@@ -117,7 +117,7 @@ public interface MySqlPersonDao extends PersonDao {
     default boolean add(PersonDto personDto) {
         return withPreparedStatement(
                 "INSERT INTO person (email, first_name, last_name, dob, password, address, phone) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?);",
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
                 preparedStatement -> {
                     preparedStatement.setString(1, personDto.getEmail());
                     preparedStatement.setString(2, personDto.getFirstName());
@@ -131,6 +131,17 @@ public interface MySqlPersonDao extends PersonDao {
                     preparedStatement.setString(5, personDto.getPassword());
                     preparedStatement.setString(6, personDto.getAddress());
                     preparedStatement.setString(7, personDto.getPhone());
+                    return preparedStatement.executeUpdate() == 1;
+                }).getOrThrowUnchecked();
+    }
+
+    @Override
+    default boolean addRole(String email, String role) {
+        return withPreparedStatement(
+                "INSERT INTO roles (email, role) VALUES (?, ?)",
+                preparedStatement -> {
+                    preparedStatement.setString(1, email);
+                    preparedStatement.setString(2, role);
                     return preparedStatement.executeUpdate() == 1;
                 }).getOrThrowUnchecked();
     }

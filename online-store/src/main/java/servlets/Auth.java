@@ -1,6 +1,7 @@
 package servlets;
 
 import common.functions.Helper;
+import dao.dto.PersonDto;
 import dao.interfaces.PersonDao;
 import listeners.DbInitializer;
 import lombok.extern.log4j.Log4j;
@@ -68,27 +69,36 @@ public class Auth extends HttpServlet {
             if (email.isEmpty()) {
                 request.setAttribute("loginIsEmpty", true);
                 formFilledWrong = true;
+                log.info("Registration: loginIsEmpty");
             }
             if (password.isEmpty()) {
                 request.setAttribute("passwordIsEmpty", true);
                 formFilledWrong = true;
+                log.info("Registration: passwordIsEmpty");
+
             }
             if (firstName.isEmpty()) {
                 request.setAttribute("firstNameIsEmpty", true);
                 formFilledWrong = true;
+                log.info("Registration: firstNameIsEmpty");
+
             }
 
             if (lastName.isEmpty()) {
                 request.setAttribute("lastNameIsEmpty", true);
                 formFilledWrong = true;
+                log.info("Registration: lastNameIsEmpty");
+
             }
             if (personDao.getByEmail(email).isPresent()) {
                 request.setAttribute("loginIsBusy", true);
                 formFilledWrong = true;
+                log.info("Registration: loginIsBusy (" + email + ")");
             }
-            if (password != confirmPassword) {
+            if (!password.equals(confirmPassword)) {
                 request.setAttribute("differentPasswords", true);
                 formFilledWrong = true;
+                log.info("Registration: entered different passwords");
             }
 
             LocalDate birthday = (dob.isEmpty()) ? null : Helper.convertStringToLacalDate(dob);
@@ -97,6 +107,7 @@ public class Auth extends HttpServlet {
             }
 
             if (formFilledWrong) {
+                // try again
                 request.setAttribute("email", email);
                 request.setAttribute("firstName", firstName);
                 request.setAttribute("lastName", lastName);
@@ -106,6 +117,14 @@ public class Auth extends HttpServlet {
                 request.getRequestDispatcher("/registration.jsp").forward(request, response);
 
             } else {
+                // welcome
+                PersonDto personDto = new PersonDto(email, firstName, lastName, birthday, password, address, phone);
+                personDao.add(personDto);
+                log.info("Added new person: " + personDto);
+                personDao.addRole(email, Person.Role.CUSTOMER.toString());
+                log.info("Added role: " + email + " - " + Person.Role.CUSTOMER.toString());
+                request.login(email, password);
+                log.info(email + " logging in successful");
                 response.sendRedirect("/");
             }
         }
