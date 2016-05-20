@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-         pageEncoding="utf-8" %>
+<%@ page language="java" contentType="text/html;charset=utf-8" pageEncoding="utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
@@ -43,7 +42,7 @@
                     <input type="hidden" name="orderItemId" value="${item.id}"/>
                     <input type="submit" value="-" class="btn btn-default">
                 </form>
-                    ${item.quantity}
+                    ${item.getIntQuantity()}
                 <form action="/basket/" method="post" class="horizontal">
                     <input type="hidden" name="increase" value="${true}"/>
                     <input type="hidden" name="orderItemId" value="${item.id}"/>

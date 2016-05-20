@@ -7,6 +7,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Date;
 
@@ -41,12 +43,16 @@ public interface Helper {
         }
     }
 
+    /*public*/ static LocalDate convertStringToLacalDate(String string) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(string, formatter);
+    }
+
     /*public*/ static String getCookieValue(HttpServletRequest request, String key) { // TODO
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
                 Cookie c = cookies[i];
-//                if (c.getName().equals(key) && ((path.equals("/") && c.getPath() == null) || (c.getPath() != null && c.getPath().equalsIgnoreCase(path)))) {
                 if (c.getName().equals(key)) {
                     return c.getValue();
                 }
@@ -58,7 +64,6 @@ public interface Helper {
     /*public*/ static void putCookie(HttpServletResponse response, String key, String value) {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(86400); // TODO ??
-//        cookie.setPath(path);
         response.addCookie(cookie);
     }
 

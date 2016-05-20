@@ -2,9 +2,12 @@ package servlets;
 
 import dao.dto.GoodDto;
 import dao.dto.converters.GoodConverter;
+import dao.dto.converters.ProducerConverter;
 import dao.interfaces.GoodDao;
+import dao.interfaces.ProducerDao;
 import listeners.DbInitializer;
 import model.Good;
+import model.Producer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,15 +26,19 @@ import static java.lang.Integer.parseInt;
 public class GoodEdit extends HttpServlet{
 
     private GoodDao goodDao;
+    private ProducerDao producerDao;
     private static Map<String, Good> editingGoods = new HashMap<>();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         goodDao = (GoodDao) DbInitializer.getDaoByClass(Good.class);
+        producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Collection<Producer> producers = ProducerConverter.convert(producerDao.getList());
+        request.setAttribute("producers", producers);
         if (Boolean.parseBoolean(request.getParameter("isNew"))) {
             // new
             request.setAttribute("isNew", true);
@@ -56,7 +64,7 @@ public class GoodEdit extends HttpServlet{
             // new
             GoodDto goodDto = new GoodDto(
                     request.getParameter("name"),
-                    Integer.parseInt(request.getParameter("producer")), // TODO: choose producer
+                    Integer.parseInt(request.getParameter("producerId")), // TODO: choose producer
                     request.getParameter("description")
             );
             goodDao.add(goodDto);

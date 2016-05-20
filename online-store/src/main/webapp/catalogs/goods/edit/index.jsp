@@ -1,18 +1,18 @@
+<%@ page language="java" contentType="text/html;charset=utf-8" pageEncoding="utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <c:set var="isNew" scope="page" value="${requestScope.isNew}"/>
 
-<c:if test="${!isNew}" >
+<c:if test="${!isNew}">
     <jsp:useBean id="good" type="model.Good" scope="request"/>
 </c:if>
 
 
 <html>
 <head>
-    <%@ include file="/WEB-INF/import.html"%>
+    <%@ include file="/WEB-INF/import.html" %>
     <c:choose>
-        <c:when test="${isNew}" >
+        <c:when test="${isNew}">
             <title>New good</title>
         </c:when>
         <c:otherwise>
@@ -21,7 +21,7 @@
     </c:choose>
 </head>
 <body>
-<%@ include file="/WEB-INF/top_line.jsp"%>
+<%@ include file="/WEB-INF/top_line.jsp" %>
 
 
 <form method="POST" action="/catalogs/goods/edit">
@@ -36,27 +36,31 @@
         <tr>
             <th align="right">Название:</th>
             <td align="left"><input type="text" name="name"
-                <c:if test="${!isNew}">
-                    value="${good.name}"
-                </c:if>
+            <c:if test="${!isNew}">
+                                    value="${good.name}"
+            </c:if>
             ></td>
         </tr>
         <tr>
             <th align="right">Производитель:</th>
-            <td align="left"><input type="text" name="producer"
-                <c:if test="${!isNew}">
-                                    value="${good.producer.name}" readonly
-                </c:if>
-            >
+            <td align="left">
+                <select required name="producerId">
+                    <c:forEach var="producer" items="${producers}">
+                        <option value="${producer.id}"
+                                <c:if test="${!isNew && good != null && producer.id == good.producer.id}">
+                                    selected
+                                </c:if>
+                        >${producer.name}</option>
+                    </c:forEach>
+                </select>
             </td>
         </tr>
         <tr>
             <th align="right">Описание:</th>
-            <td align="left"><input type="text" name="description"
-                <c:if test="${!isNew}">
-                    value="${good.description}"
-                </c:if>
-            ></td>
+            <td align="left">
+                <textarea name="description" cols="60" rows="10"> <c:if
+                        test="${!isNew}">${good.description}</c:if></textarea>
+            </td>
         </tr>
         <tr>
             <td align="right"><input type="submit" value="Save"></td>

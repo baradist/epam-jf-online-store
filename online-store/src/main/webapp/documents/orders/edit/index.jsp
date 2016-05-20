@@ -1,5 +1,6 @@
+<%@ page language="java" contentType="text/html;charset=utf-8" pageEncoding="utf-8" %>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <c:set var="isNew" scope="page" value="${requestScope.isNew}"/>
 
@@ -90,17 +91,6 @@
             <td style="border: 1px solid #000;">${item.good.producer.name} / ${item.good.producer.country.name}</td>
             <td style="border: 1px solid #000;">${item.quantity}</td>
             <td style="border: 1px solid #000;">${item.price}</td>
-            <%--<td style="border: 1px solid #000;">--%>
-                <%--<form action="/documents/orders/edit" method="get" class="horizontal">--%>
-                    <%--<input type="hidden" name="order" value="${item.id}" />--%>
-                    <%--<input type="submit" value="${edit}" class="btn btn-default">--%>
-                <%--</form>--%>
-                <%--<form action="/documents/orders/edit" method="post" class="horizontal">--%>
-                    <%--<input type="hidden" name="order" value="${item.id}" />--%>
-                    <%--<input type="hidden" name="delete" value="${true}" />--%>
-                    <%--<input type="submit" value="${delete}" class="btn btn-default">--%>
-                <%--</form>--%>
-            <%--</td>--%>
         </tr>
     </c:forEach>
 

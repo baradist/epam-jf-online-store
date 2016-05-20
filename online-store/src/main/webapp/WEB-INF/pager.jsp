@@ -1,6 +1,6 @@
  <%--works only with Helper.longListByPages(...) !!!--%>
 
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%--<%@ page language="java" contentType="text/html;charset=utf-8" pageEncoding="utf-8" %>--%>
 
 <ul class="nav navbar-nav navbar-fixed-bottom">
     <c:set value="${0}" var="n" scope="page"/>
@@ -19,21 +19,16 @@
             </form>
         </li>
     </c:forEach>
-    <li>Записей на странице: <b>${requestScope.rowsOnPage}</b>  </li>
+    <!--li>Записей на странице: <b>${requestScope.rowsOnPage}</b>  </li-->
 
     <li>
         <form action="${requestScope.url}" method="get" id="pagesTune" class="horizontal">
             <input form="pagesTune" type="hidden" name="changeRowsOnPage" value="${true}"/>
-            <input form="pagesTune" type="submit" value="Установить:">
-            <select required name="rowsOnPage">
-                <%--<option <c:if test="${requestScope.rowsOnPage ==  5}"> selected disabled </c:if> value= "5" >5</option>--%>
-                <%--<option <c:if test="${requestScope.rowsOnPage == 10}"> selected disabled </c:if> value="10">10</option>--%>
-                <%--<option <c:if test="${requestScope.rowsOnPage == 20}"> selected disabled </c:if> value="20">20</option>--%>
-                <%--<option <c:if test="${requestScope.rowsOnPage == 50}"> selected disabled </c:if> value="50">50</option>--%>
-                <c:if test="${requestScope.rowsOnPage !=  5}"> <option value= "5"> 5</option> </c:if>
-                <c:if test="${requestScope.rowsOnPage != 10}"> <option value="10">10</option> </c:if>
-                <c:if test="${requestScope.rowsOnPage != 20}"> <option value="20">20</option> </c:if>
-                <c:if test="${requestScope.rowsOnPage != 50}"> <option value="50">50</option> </c:if>
+            <select required name="rowsOnPage" onchange="$(this).parent().submit();">
+                <option value="5" <c:if test="${requestScope.rowsOnPage == 5}">selected</c:if>>5</option>
+                <option value="10" <c:if test="${requestScope.rowsOnPage == 10}">selected</c:if>>10</option>
+                <option value="20" <c:if test="${requestScope.rowsOnPage == 20}">selected</c:if>>20</option>
+                <option value="50" <c:if test="${requestScope.rowsOnPage == 50}">selected</c:if>>50</option>
             </select>
         </form>
     </li>

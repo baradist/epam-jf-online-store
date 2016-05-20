@@ -15,4 +15,8 @@ public class OrderItem {
     private Good good;
     private double quantity;
     private double price;
+
+    public int getIntQuantity() {
+        return (int) quantity;
+    }
 }

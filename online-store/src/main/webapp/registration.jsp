@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,6 @@
     <title>Registration TO LOCALISE</title>
 <body bgcolor="white">
 
-${requestScope.test}
 <form method="POST" action="/auth">
     <input type="hidden" name="register" value="${true}">
     <table border="0" cellspacing="5">
@@ -48,5 +48,11 @@ ${requestScope.test}
         </tr>
     </table>
 </form>
+<c:if test="${requestScope.differentPasswords}">
+    Passwords are not equals.
+</c:if>
+<c:if test="${requestScope.loginIsBusy}">
+    login is busy.
+</c:if>
 </body>
 </html>

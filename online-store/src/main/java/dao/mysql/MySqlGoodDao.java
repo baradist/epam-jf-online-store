@@ -35,8 +35,18 @@ public interface MySqlGoodDao extends GoodDao {
 
     @Override
     default Collection<GoodDto> getList() {
+        return getList(-1, 0);
+    }
+
+    @Override
+    default Collection<GoodDto> getList(int offset, int rows) {
+        String sql = SELECT +
+                " ORDER BY name ";
+        if (offset >= 0 && rows > 0) {
+            sql += " LIMIT " + offset + ", " + rows;
+        }
         return executeQuery(
-                SELECT,
+                sql,
                 rs -> {
                     Map<Integer, GoodDto> map = new HashMap<>();
                     while (rs.next())
@@ -44,11 +54,6 @@ public interface MySqlGoodDao extends GoodDao {
                                 getValue(rs));
                     return map;
                 }).toOptional().orElse(Collections.emptyMap()).values();
-    }
-
-    @Override
-    default Collection<GoodDto> getList(int start, int end) {
-        return getList(); // TODO
     }
 
     @Override

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@ page language="java" contentType="text/html;charset=utf-8" pageEncoding="utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
@@ -73,7 +73,7 @@
                             <form action="/login1.jsp" method="get" class="horizontal">
                                 <input type="submit" value="Log In" class="btn btn-default">
                             </form>
-                            <form action="/registration.jsp" method="get" class="horizontal">
+                            <form action="/auth" method="get" class="horizontal">
                                 <input type="submit" value="Register" class="btn btn-default">
                             </form>
                         </li>
