@@ -1,3 +1,7 @@
 .horizontal {
     display: inline-block;
 }
+
+.basket-list {
+    list-style: none;
+}

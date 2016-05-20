@@ -19,7 +19,7 @@
 
 <%--<jsp:include page="WEB-INF/top_line.jsp" />--%>
 <%@ include file="/WEB-INF/top_line.jsp" %>
-
+<div class="container">
 <h1>${listOfGoods}</h1>
 <table style="border: 1px solid #000;">
     <tr>
@@ -62,6 +62,8 @@
 </table>
 
 <%@ include file="/WEB-INF/pager.jsp" %>
+</div>
 
 </body>
+
 </html>

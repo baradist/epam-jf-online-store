@@ -16,7 +16,7 @@ import java.io.IOException;
 @WebServlet("/auth")
 public class Auth extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if (Boolean.parseBoolean(request.getParameter("logout"))) {
             try {
                 request.logout();
@@ -35,6 +35,19 @@ public class Auth extends HttpServlet {
                     log.info(j_username, e);
                 }
                 response.sendRedirect("/");
+            }
+        } else if (Boolean.parseBoolean(request.getParameter("register"))) {
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            String confirmPassword = request.getParameter("confirm_password");
+            String firstName = request.getParameter("first_name");
+            String lastName = request.getParameter("last_name");
+            String dob = request.getParameter("dob");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+            if (password != confirmPassword) {
+                request.setAttribute("test", true);
+                request.getRequestDispatcher("/registration.jsp").forward(request, response);
             }
         }
     }

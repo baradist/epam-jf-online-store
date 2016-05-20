@@ -48,7 +48,7 @@
                 <c:if test="${requestScope.basketQuantity > 0}">
                     <li><a href="/basket/"><img src="/basket_26.ico"></a></li>
                     <li>
-                        <ul>
+                        <ul class="basket-list">
                             <li>В корзине ${requestScope.basketSum} шт товара</li>
                             <li>на сумму ${requestScope.basketQuantity}</li>
                         </ul>
@@ -73,7 +73,7 @@
                             <form action="/login1.jsp" method="get" class="horizontal">
                                 <input type="submit" value="Log In" class="btn btn-default">
                             </form>
-                            <form action="/register.html" method="post" class="horizontal">
+                            <form action="/registration.jsp" method="get" class="horizontal">
                                 <input type="submit" value="Register" class="btn btn-default">
                             </form>
                         </li>
