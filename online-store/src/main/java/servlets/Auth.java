@@ -23,6 +23,11 @@ public class Auth extends HttpServlet {
     private PersonDao personDao;
 
     @Override
+    public void init() throws ServletException {
+        personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
+    }
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/registration.jsp").forward(request, response);
     }
@@ -64,16 +69,19 @@ public class Auth extends HttpServlet {
                 request.setAttribute("loginIsEmpty", true);
                 formFilledWrong = true;
             }
-
-            LocalDate birthday = (dob.isEmpty()) ? null : Helper.convertStringToLacalDate(dob);
-            if (personDao == null) {
-                personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
+            if (password.isEmpty()) {
+                request.setAttribute("passwordIsEmpty", true);
+                formFilledWrong = true;
             }
-            if (email.isEmpty()) {
-                request.setAttribute("loginIsEmpty", true);
+            if (firstName.isEmpty()) {
+                request.setAttribute("firstNameIsEmpty", true);
                 formFilledWrong = true;
             }
 
+            if (lastName.isEmpty()) {
+                request.setAttribute("lastNameIsEmpty", true);
+                formFilledWrong = true;
+            }
             if (personDao.getByEmail(email).isPresent()) {
                 request.setAttribute("loginIsBusy", true);
                 formFilledWrong = true;
@@ -83,7 +91,18 @@ public class Auth extends HttpServlet {
                 formFilledWrong = true;
             }
 
+            LocalDate birthday = (dob.isEmpty()) ? null : Helper.convertStringToLacalDate(dob);
+            if (personDao == null) {
+                personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
+            }
+
             if (formFilledWrong) {
+                request.setAttribute("email", email);
+                request.setAttribute("firstName", firstName);
+                request.setAttribute("lastName", lastName);
+                request.setAttribute("dob", dob);
+                request.setAttribute("phone", phone);
+                request.setAttribute("address", address);
                 request.getRequestDispatcher("/registration.jsp").forward(request, response);
 
             } else {
