@@ -31,7 +31,7 @@ public class OrderList extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Collection<Order> orders = OrderConverter.convert(orderDao.getListOfSentByPersonsEmail(request.getRemoteUser()));
+        Collection<Order> orders = OrderConverter.convert(orderDao.getListByEmailAndState(request.getRemoteUser(), "SENT"));
         request.setAttribute("orders", orders);
 
         request.getRequestDispatcher("/orders/index.jsp").forward(request, response);

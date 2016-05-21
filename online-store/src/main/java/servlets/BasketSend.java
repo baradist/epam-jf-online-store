@@ -1,5 +1,6 @@
 package servlets;
 
+import dao.dto.OrderDto;
 import dao.interfaces.OrderDao;
 import dao.interfaces.OrderItemDao;
 import listeners.DbInitializer;
@@ -33,7 +34,12 @@ public class BasketSend extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (Boolean.parseBoolean(request.getParameter("send"))) {
-            // TODO: make order and, maybe, other docs
+            String email = request.getRemoteUser();
+            log.info(email + ": sending the order");
+            OrderDto basketDto = orderDao.getPersonsBasket(email).get();
+            basketDto.setState(Order.State.SENT.toString());
+            orderDao.update(basketDto);
+            log.info("order " + basketDto.getId() + " SENT");
 
             response.sendRedirect("/orders/");
         }

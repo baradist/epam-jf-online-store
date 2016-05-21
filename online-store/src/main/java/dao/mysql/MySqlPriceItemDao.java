@@ -43,6 +43,7 @@ public interface MySqlPriceItemDao extends PriceItemDao {
 
     @Override
     default Collection<PriceItemDto> getList(int offset, int rows) {
+        // TODO: check booked by other people
         String sql = "SELECT \n" +
                 "  l.good,\n" +
                 "  l.quantity_rest AS quantity,\n" +
@@ -66,12 +67,12 @@ public interface MySqlPriceItemDao extends PriceItemDao {
     }
 
     @Override
-    default Collection<PriceItemDto> getListForPersonsEmail(String email) {
-        return getListForPersonsEmail(email, -1, 0);
+    default Collection<PriceItemDto> getListForPersonByEmail(String email) {
+        return getListForPersonByEmail(email, -1, 0);
     }
 
     @Override
-    default Collection<PriceItemDto> getListForPersonsEmail(String email, int offset, int rows) {
+    default Collection<PriceItemDto> getListForPersonByEmail(String email, int offset, int rows) {
         String sql = "SELECT \n" +
                 "  l.good,\n" +
                 "  l.quantity_rest AS quantity,\n" +

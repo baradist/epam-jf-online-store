@@ -14,7 +14,7 @@ public interface PriceItemDao extends Dao {
 
     Collection<PriceItemDto> getList(int start, int end);
 
-    Collection<PriceItemDto> getListForPersonsEmail(String email);
+    Collection<PriceItemDto> getListForPersonByEmail(String email);
 
-    Collection<PriceItemDto> getListForPersonsEmail(String email, int start, int end);
+    Collection<PriceItemDto> getListForPersonByEmail(String email, int start, int end);
 }

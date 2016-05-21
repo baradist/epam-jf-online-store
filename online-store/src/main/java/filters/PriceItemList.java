@@ -33,7 +33,7 @@ public class PriceItemList implements HttpFilter {
         if (userPrincipal == null) {
             itemDtos = priceItemDao.getList(offsetAndRowsOnPage.first, offsetAndRowsOnPage.second);
         } else {
-            itemDtos = priceItemDao.getListForPersonsEmail(userPrincipal.getName(), offsetAndRowsOnPage.first, offsetAndRowsOnPage.second);
+            itemDtos = priceItemDao.getListForPersonByEmail(userPrincipal.getName(), offsetAndRowsOnPage.first, offsetAndRowsOnPage.second);
         }
         Collection<PriceItem> items = PriceItemConverter.convert(itemDtos);
         request.setAttribute("list", items);

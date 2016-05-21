@@ -5,6 +5,7 @@ import common.functions.Helper;
 import dao.dto.OrderDto;
 import dao.interfaces.OrderDao;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -18,7 +19,7 @@ public interface MySqlOrderDao extends OrderDao {
     @Override
     default Optional<OrderDto> getById(int id) {
         return executeQuery(
-                SELECT + " WHERE ID = " + id,
+                SELECT + " WHERE id = " + id,
                 rs -> rs.next()
                         ? getValue(rs)
                         : null
@@ -32,7 +33,7 @@ public interface MySqlOrderDao extends OrderDao {
                 rs -> {
                     Map<Integer, OrderDto> map = new HashMap<>();
                     while (rs.next())
-                        map.put(rs.getInt("ID"),
+                        map.put(rs.getInt("id"),
                                 getValue(rs));
                     return map;
                 }).toOptional().orElse(Collections.emptyMap()).values();
@@ -46,11 +47,11 @@ public interface MySqlOrderDao extends OrderDao {
     @Override
     default Map<Integer, OrderDto> getMapByIds(Collection<Integer> ids) {
         return executeQuery(
-                SELECT + " WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
+                SELECT + " WHERE id IN (" + Helper.ArrayToString(ids) + ")",
                 rs -> {
                     Map<Integer, OrderDto> map = new HashMap<>();
                     while (rs.next())
-                        map.put(rs.getInt("ID"),
+                        map.put(rs.getInt("id"),
                                 getValue(rs));
                     return map;
                 }).toOptional().orElse(Collections.emptyMap());
@@ -58,10 +59,10 @@ public interface MySqlOrderDao extends OrderDao {
 
     default OrderDto getValue(ResultSet rs) throws SQLException {
         Instant deleted = null;
-            String rsDeleted = rs.getString("deleted");
-            if (rsDeleted != null) {
-                deleted = Helper.convertDateTime(rsDeleted);
-            }
+        String rsDeleted = rs.getString("deleted");
+        if (rsDeleted != null) {
+            deleted = Helper.convertDateTime(rsDeleted);
+        }
 
         OrderDto orderDto = new OrderDto(
                 rs.getInt("id"),
@@ -81,18 +82,7 @@ public interface MySqlOrderDao extends OrderDao {
                 "INSERT INTO order_ (number, date, customer, state, deleted) " +
                         "VALUES (?, ?, ?, ?, ?)",
                 preparedStatement -> {
-                    preparedStatement.setString(1, dto.getNumber());
-                    preparedStatement.setString(2, Helper.convertDateTime(dto.getDate()));
-
-                    preparedStatement.setInt(3, dto.getCustomer());
-                    preparedStatement.setString(4, dto.getState());
-
-                    Instant deleted = dto.getDeleted();
-                    if (deleted != null) {
-                        preparedStatement.setString(5, Helper.convertDateTime(deleted));
-                    } else {
-                        preparedStatement.setNull(5, Types.NULL);
-                    }
+                    setPreparedStatement(dto, preparedStatement);
 
                     return preparedStatement.executeUpdate() == 1;
                 }).getOrThrowUnchecked();
@@ -104,14 +94,24 @@ public interface MySqlOrderDao extends OrderDao {
                 "UPDATE order_ SET number = ?, date = ?, customer = ?, state = ?, deleted = ? " +
                         "WHERE id = ?"
                 , preparedStatement -> {
-                    preparedStatement.setString(1, dto.getNumber());
-                    preparedStatement.setString(2, Helper.convertDateTime(dto.getDate()));
-                    preparedStatement.setInt(3, dto.getCustomer());
-                    preparedStatement.setString(4, dto.getState());
-                    preparedStatement.setString(5, Helper.convertDateTime(dto.getDeleted()));
+                    setPreparedStatement(dto, preparedStatement);
                     preparedStatement.setInt(6, dto.getId());
                     return preparedStatement.executeUpdate() == 1;
                 }).getOrThrowUnchecked();
+    }
+
+    default void setPreparedStatement(OrderDto dto, PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setString(1, dto.getNumber());
+        preparedStatement.setString(2, Helper.convertDateTime(dto.getDate()));
+        preparedStatement.setInt(3, dto.getCustomer());
+        preparedStatement.setString(4, dto.getState());
+
+        Instant deleted = dto.getDeleted();
+        if (deleted != null) {
+            preparedStatement.setString(5, Helper.convertDateTime(deleted));
+        } else {
+            preparedStatement.setNull(5, Types.NULL);
+        }
     }
 
     @Override
@@ -141,7 +141,7 @@ public interface MySqlOrderDao extends OrderDao {
         Exceptional<OrderDto, SQLException> orderDtoSQLExceptionExceptional = executeQuery(
                 "SELECT o.id, o.number, o.date, o.customer, o.state, o.sum, o.deleted FROM order_ o " +
                         "INNER JOIN person p on o.customer = p.id WHERE deleted IS NULL AND p.email = '"
-                + email + "' ORDER BY o.id DESC",
+                        + email + "' ORDER BY o.id DESC",
                 rs -> rs.next()
                         ? MySqlOrderDao.this.getValue(rs)
                         : null
@@ -156,13 +156,13 @@ public interface MySqlOrderDao extends OrderDao {
     default boolean deleteIfEmpty(int orderId) { // TODO
         return withPreparedStatement(
                 "SELECT o.id " +
-                "FROM order_ o " +
-                "LEFT OUTER JOIN order_item oi ON o.id = oi.order_ " +
-                "WHERE o.id = ? AND oi.order_ IS NULL",
+                        "FROM order_ o " +
+                        "LEFT OUTER JOIN order_item oi ON o.id = oi.order_ " +
+                        "WHERE o.id = ? AND oi.order_ IS NULL",
                 preparedStatement -> {
-            preparedStatement.setInt(1, orderId);
-            return preparedStatement.executeUpdate() == 1;
-        }).getOrThrowUnchecked();
+                    preparedStatement.setInt(1, orderId);
+                    return preparedStatement.executeUpdate() == 1;
+                }).getOrThrowUnchecked();
     }
 
     @Override
@@ -193,13 +193,13 @@ public interface MySqlOrderDao extends OrderDao {
     }
 
     @Override
-    default Collection<OrderDto> getListOfSentByPersonsEmail(String email) {
+    default Collection<OrderDto> getListByEmailAndState(String email, String state) {
         return executeQuery(
-                SELECT + " WHERE deleted IS NULL AND state = 'SENT' AND customer = (SELECT id FROM person WHERE email = '"+ email + "')",
+                SELECT + " WHERE deleted IS NULL AND state = '" + state + "' AND customer = (SELECT id FROM person WHERE email = '" + email + "')",
                 rs -> {
                     Map<Integer, OrderDto> map = new HashMap<>();
                     while (rs.next())
-                        map.put(rs.getInt("ID"),
+                        map.put(rs.getInt("id"),
                                 getValue(rs));
                     return map;
                 }).toOptional().orElse(Collections.emptyMap()).values();

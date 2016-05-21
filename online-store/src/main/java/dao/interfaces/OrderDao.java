@@ -32,5 +32,5 @@ public interface OrderDao extends Dao {
 
     Optional<Helper.TwoValues<Float, Float>> getPersonsBasketQuantityAndSum(String email);
 
-    Collection<OrderDto> getListOfSentByPersonsEmail(String email);
+    Collection<OrderDto> getListByEmailAndState(String email, String state);
 }
