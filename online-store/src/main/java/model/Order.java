@@ -17,6 +17,7 @@ public class Order {
     private Instant date;
     private Person customer;
     private State state;
+    private double sum;
     private Instant deleted;
 
     public enum State {

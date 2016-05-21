@@ -31,4 +31,6 @@ public interface OrderDao extends Dao {
     boolean markDeleted(int orderId);
 
     Optional<Helper.TwoValues<Float, Float>> getPersonsBasketQuantityAndSum(String email);
+
+    Collection<OrderDto> getListOfSentByPersonsEmail(String email);
 }

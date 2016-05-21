@@ -24,6 +24,8 @@ import java.util.Optional;
 
 /**
  * Created by Oleg Grigorjev on 15.05.2016.
+ *
+ * adding and deleting goods from the main-page
  */
 
 @Log4j
@@ -34,22 +36,19 @@ public class BasketEdit extends HttpServlet {
     private PersonDao personDao;
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (orderDao == null) {
-            orderDao = (OrderDao) DbInitializer.getDaoByClass(Order.class);
-        }
-        if (orderItemDao == null) {
-            orderItemDao = (OrderItemDao) DbInitializer.getDaoByClass(OrderItem.class);
-        }
-        if (personDao == null) {
-            personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
-        }
+    public void init() throws ServletException {
+        personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
+        orderDao = (OrderDao) DbInitializer.getDaoByClass(Order.class);
+        orderItemDao = (OrderItemDao) DbInitializer.getDaoByClass(OrderItem.class);
+    }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Principal userPrincipal = request.getUserPrincipal();
         PersonDto personDto = personDao.getByEmail(userPrincipal.getName()).get();
         Optional<OrderDto> basket = orderDao.getPersonsBasket(personDto.getId());
         if (!basket.isPresent()) {
-            OrderDto orderDto = new OrderDto("number", Instant.now(), personDto.getId(), Order.State.NEW.toString(), null);
+            OrderDto orderDto = new OrderDto("number", Instant.now(), personDto.getId(), Order.State.NEW.toString(), 0, null);
             orderDao.add(orderDto); // TODO return orderDto
             basket = orderDao.getPersonsBasket(personDto.getId());
             log.info(userPrincipal.getName() + ": new basket (id=" + basket.get());

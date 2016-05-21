@@ -46,6 +46,7 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <c:if test="${requestScope.basketQuantity > 0}">
+                    <li><a href="/orders/">My orders</a> </li>
                     <li><a href="/basket/"><img src="/basket_26.ico"></a></li>
                     <li>
                         <ul class="basket-list">

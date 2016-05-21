@@ -24,13 +24,15 @@ public class OrderDto {
     private int customer;
     @Max(10)
     private String state;
+    private double sum;
     private Instant deleted;
 
-    public OrderDto(String number, Instant date, int customer, String state, Instant deleted) {
+    public OrderDto(String number, Instant date, int customer, String state, double sum, Instant deleted) {
         this.number = number;
         this.date = date;
         this.customer = customer;
         this.state = state;
+        this.sum = sum;
         this.deleted = deleted;
     }
 }

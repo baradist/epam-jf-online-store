@@ -53,63 +53,31 @@
                     <input type="hidden" name="orderItemId" value="${item.id}"/>
                     <input type="submit" value="x" class="btn btn-default">
                 </form>
-                    <%--<ul class="nav navbar-nav navbar-fixed-bottom">--%>
-                    <%--<li>--%>
-                    <%--<form action="/basket" method="post" class="horizontal">--%>
-                    <%--<input type="hidden" name="decrease" value="${true}"/>--%>
-                    <%--<input type="submit" value="-" class="btn btn-default">--%>
-                    <%--</form>--%>
-                    <%--</li>--%>
-                    <%--<li>${item.quantity}</li>--%>
-                    <%--<li>--%>
-                    <%--<form action="/basket" method="post" class="horizontal">--%>
-                    <%--<input type="hidden" name="increase" value="${true}"/>--%>
-                    <%--<input type="submit" value="+" class="btn btn-default">--%>
-                    <%--</form>--%>
-                    <%--</li>--%>
-                    <%--<li>--%>
-                    <%--<form action="/basket" method="post" class="horizontal">--%>
-                    <%--<input type="hidden" name="delete" value="${true}"/>--%>
-                    <%--<input type="submit" value="+" class="btn btn-default">--%>
-                    <%--</form>--%>
-                    <%--</li>--%>
-                    <%--</ul>--%>
             </td>
         </tr>
     </c:forEach>
 
 </table>
 
-<%--<ul class="nav navbar-nav navbar-fixed-bottom">--%>
-<%--<c:set value="${0}" var="n" scope="page"/>--%>
-<%--<c:forEach var="i" begin="0" step="${requestScope.rowsOnPage}" end="${requestScope.quantity - 1}">--%>
-<%--<c:set value="${n + 1}" var="n" scope="page"/>--%>
-<%--<li>--%>
-<%--<form action="/" method="get" class="horizontal">--%>
-<%--<input type="hidden" name="offset" value="${i}"/>--%>
-<%--<input type="hidden" name="pageNumber" value="${n}"/>--%>
-<%--<input type="hidden" name="rowsOnPage" value="${requestScope.rowsOnPage}"/>--%>
-<%--<input type="submit" value="${n}"--%>
-<%--<c:if test="${requestScope.pageNumber eq n}">--%>
-<%--disabled="true"--%>
-<%--</c:if>--%>
-<%--class="btn btn-default">--%>
-<%--</form>--%>
-<%--</li>--%>
-<%--</c:forEach>--%>
+Check your contact-info:
 
-<%--<li>--%>
-<%--<form action="/" method="get" id="pagesTune" class="horizontal">--%>
-<%--<select required name="rowsOnPage">--%>
-<%--<option <c:if test="${requestScope.rowsOnPage == 5}"> selected </c:if> value="5">5</option>--%>
-<%--<option <c:if test="${requestScope.rowsOnPage == 10}"> selected </c:if> value="10">10</option>--%>
-<%--<option <c:if test="${requestScope.rowsOnPage == 20}"> selected </c:if> value="20">20</option>--%>
-<%--<option <c:if test="${requestScope.rowsOnPage == 50}"> selected </c:if> value="50">50</option>--%>
-<%--</select>--%>
-<%--<input form="pagesTune" type="submit" value="Обновить">--%>
-<%--</form>--%>
-<%--</li>--%>
-<%--</ul>--%>
+<form method="POST" action="/basket/send/">
+    <input type="hidden" name="send" value="${true}">
+    <table border="0" cellspacing="5">
+        <tr>
+            <th align="right">Phone:</th>
+            <td align="left"><input type="text" name="phone" value="${requestScope.person.phone}"></td>
+        </tr>
+        <tr>
+            <th align="right">Address:</th>
+            <td align="left"><input type="text" name="address" value="${requestScope.person.address}"></td>
+        </tr>
+        <tr>
+            <td align="right"><input type="submit" value="Send"></td>
+            <td align="left"><input type="reset"></td>
+        </tr>
+    </table>
+</form>
 
 </body>
 </html>

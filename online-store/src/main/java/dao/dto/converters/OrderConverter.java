@@ -20,6 +20,7 @@ public interface OrderConverter {
                 orderDto.getDate(),
                 PersonConverter.convert(((PersonDao) DbInitializer.getDaoByClass(Person.class)).getById(orderDto.getCustomer()).get()),
                 Order.State.valueOf(orderDto.getState()),
+                orderDto.getSum(),
                 orderDto.getDeleted()
         );
     }
@@ -39,6 +40,7 @@ public interface OrderConverter {
                 order.getDate(),
                 order.getCustomer().getId(),
                 order.getState().toString(),
+                order.getSum(),
                 order.getDeleted()
         );
     }

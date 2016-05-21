@@ -1,0 +1,2 @@
+ALTER TABLE `store`.`order_` 
+ADD COLUMN `sum` DOUBLE NULL DEFAULT 0 AFTER `state`;

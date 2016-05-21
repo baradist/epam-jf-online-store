@@ -4,11 +4,14 @@ import common.servlets.HttpFilter;
 import dao.dto.OrderDto;
 import dao.dto.OrderItemDto;
 import dao.dto.converters.OrderItemConverter;
+import dao.dto.converters.PersonConverter;
 import dao.interfaces.OrderDao;
 import dao.interfaces.OrderItemDao;
+import dao.interfaces.PersonDao;
 import listeners.DbInitializer;
 import model.Order;
 import model.OrderItem;
+import model.Person;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -28,9 +31,11 @@ import java.util.Optional;
 public class Basket implements HttpFilter {
     private OrderDao orderDao;
     private OrderItemDao orderItemDao;
+    private PersonDao personDao;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
         orderDao = (OrderDao) DbInitializer.getDaoByClass(Order.class);
         orderItemDao = (OrderItemDao) DbInitializer.getDaoByClass(OrderItem.class);
     }
@@ -63,6 +68,9 @@ public class Basket implements HttpFilter {
         OrderDto orderDto = orderDao.getPersonsBasket(userPrincipal.getName()).get();
         Collection<OrderItem> orderItems = OrderItemConverter.convert(orderItemDao.getByOrder(orderDto.getId()));
         request.setAttribute("list", orderItems);
+
+        Person person = PersonConverter.convert(personDao.getByEmail(userPrincipal.getName()).get());
+        request.setAttribute("person", person);
 
         chain.doFilter(request, response);
     }

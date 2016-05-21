@@ -74,6 +74,7 @@ public class OrderEdit extends HttpServlet{
                     Instant.now(), // TODO: date
                     0, // TODO: customer
                     request.getParameter("state"),
+                    0,
                     null // deleted
             );
             orderDao.add(orderDto);

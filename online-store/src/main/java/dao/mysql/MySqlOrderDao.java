@@ -13,7 +13,7 @@ import java.util.*;
 
 @FunctionalInterface
 public interface MySqlOrderDao extends OrderDao {
-    String SELECT = "SELECT id, number, date, customer, state, deleted FROM order_ ";
+    String SELECT = "SELECT id, number, date, customer, state, sum, deleted FROM order_ ";
 
     @Override
     default Optional<OrderDto> getById(int id) {
@@ -58,17 +58,18 @@ public interface MySqlOrderDao extends OrderDao {
 
     default OrderDto getValue(ResultSet rs) throws SQLException {
         Instant deleted = null;
-            String rsDeleted = rs.getString("DELETED");
+            String rsDeleted = rs.getString("deleted");
             if (rsDeleted != null) {
                 deleted = Helper.convertDateTime(rsDeleted);
             }
 
         OrderDto orderDto = new OrderDto(
-                rs.getInt("ID"),
-                rs.getString("NUMBER"),
-                Helper.convertDateTime(rs.getString("DATE")),
-                rs.getInt("CUSTOMER"),
-                rs.getString("STATE"),
+                rs.getInt("id"),
+                rs.getString("number"),
+                Helper.convertDateTime(rs.getString("date")),
+                rs.getInt("customer"),
+                rs.getString("state"),
+                rs.getDouble("sum"),
                 deleted
         );
         return orderDto;
@@ -115,7 +116,7 @@ public interface MySqlOrderDao extends OrderDao {
 
     @Override
     default boolean delete(int id) {
-        return withPreparedStatement("DELETE FROM ORDER_ WHERE ID = ?", preparedStatement -> {
+        return withPreparedStatement("DELETE FROM order_ WHERE id = ?", preparedStatement -> {
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() == 1;
         }).getOrThrowUnchecked();
@@ -124,7 +125,7 @@ public interface MySqlOrderDao extends OrderDao {
     @Override
     default Optional<OrderDto> getPersonsBasket(int personId) {
         Exceptional<OrderDto, SQLException> orderDtoSQLExceptionExceptional = executeQuery(
-                SELECT + " WHERE deleted IS NULL AND CUSTOMER = " + personId + " ORDER BY id DESC",
+                SELECT + " WHERE deleted IS NULL AND customer = " + personId + " ORDER BY id DESC",
                 rs -> rs.next()
                         ? MySqlOrderDao.this.getValue(rs)
                         : null
@@ -138,7 +139,7 @@ public interface MySqlOrderDao extends OrderDao {
     @Override
     default Optional<OrderDto> getPersonsBasket(String email) {
         Exceptional<OrderDto, SQLException> orderDtoSQLExceptionExceptional = executeQuery(
-                "SELECT o.id, o.number, o.date, o.customer, o.state, o.deleted FROM order_ o " +
+                "SELECT o.id, o.number, o.date, o.customer, o.state, o.sum, o.deleted FROM order_ o " +
                         "INNER JOIN person p on o.customer = p.id WHERE deleted IS NULL AND p.email = '"
                 + email + "' ORDER BY o.id DESC",
                 rs -> rs.next()
@@ -189,5 +190,18 @@ public interface MySqlOrderDao extends OrderDao {
                         ? new Helper.TwoValues<>(rs.getFloat("basket_quantity"), rs.getFloat("basket_sum"))
                         : null
         ).toOptional();
+    }
+
+    @Override
+    default Collection<OrderDto> getListOfSentByPersonsEmail(String email) {
+        return executeQuery(
+                SELECT + " WHERE deleted IS NULL AND state = 'SENT' AND customer = (SELECT id FROM person WHERE email = '"+ email + "')",
+                rs -> {
+                    Map<Integer, OrderDto> map = new HashMap<>();
+                    while (rs.next())
+                        map.put(rs.getInt("ID"),
+                                getValue(rs));
+                    return map;
+                }).toOptional().orElse(Collections.emptyMap()).values();
     }
 }
