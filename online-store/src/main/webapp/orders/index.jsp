@@ -18,39 +18,41 @@
 
 <%@ include file="/WEB-INF/top_line.jsp" %>
 
-<h1>${Orders}</h1>
-<table style="border: 1px solid #000;">
-    <tr>
-        <th style="border: 1px solid #000;">Код</th>
-        <th style="border: 1px solid #000;">Номер</th>
-        <th style="border: 1px solid #000;">Статус</th>
-        <th style="border: 1px solid #000;">Пользователь</th>
-        <th style="border: 1px solid #000;">Сумма</th>
-    </tr>
-
-    <c:forEach var="order" items="${orders}">
+<div class="container">
+    <h1>${Orders}</h1>
+    <table style="border: 1px solid #000;">
         <tr>
-                <%--// TODO format date by tld function --%>
-            <td style="border: 1px solid #000;">${order.id}</td>
-            <td style="border: 1px solid #000;"><a href="/orders/item?order=${order.id}">${order.number} / ${order.date} </a></td>
-            <td style="border: 1px solid #000;">${order.state}</td>
-            <td style="border: 1px solid #000;">${order.customer.email}</td>
-            <td style="border: 1px solid #000;">${order.sum}</td>
-            <%--<td style="border: 1px solid #000;">--%>
-                <%--<form action="/documents/orders/edit" method="get" class="horizontal">--%>
+            <th style="border: 1px solid #000;">Код</th>
+            <th style="border: 1px solid #000;">Номер</th>
+            <th style="border: 1px solid #000;">Статус</th>
+            <th style="border: 1px solid #000;">Пользователь</th>
+            <th style="border: 1px solid #000;">Сумма</th>
+        </tr>
+
+        <c:forEach var="order" items="${orders}">
+            <tr>
+                    <%--// TODO format date by tld function --%>
+                <td style="border: 1px solid #000;">${order.id}</td>
+                <td style="border: 1px solid #000;"><a href="/orders/item?order=${order.id}">${order.number}
+                    / ${order.date} </a></td>
+                <td style="border: 1px solid #000;">${order.state}</td>
+                <td style="border: 1px solid #000;">${order.customer.email}</td>
+                <td style="border: 1px solid #000;">${order.sum}</td>
+                    <%--<td style="border: 1px solid #000;">--%>
+                    <%--<form action="/documents/orders/edit" method="get" class="horizontal">--%>
                     <%--<input type="hidden" name="order" value="${order.id}"/>--%>
                     <%--<input type="submit" value="${edit}" class="btn btn-default">--%>
-                <%--</form>--%>
-                <%--<form action="/documents/orders/edit" method="post" class="horizontal">--%>
+                    <%--</form>--%>
+                    <%--<form action="/documents/orders/edit" method="post" class="horizontal">--%>
                     <%--<input type="hidden" name="order" value="${order.id}"/>--%>
                     <%--<input type="hidden" name="delete" value="${true}"/>--%>
                     <%--<input type="submit" value="${delete}" class="btn btn-default">--%>
-                <%--</form>--%>
-            <%--</td>--%>
-        </tr>
-    </c:forEach>
+                    <%--</form>--%>
+                    <%--</td>--%>
+            </tr>
+        </c:forEach>
 
-</table>
-
+    </table>
+</div>
 </body>
 </html>
