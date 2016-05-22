@@ -24,6 +24,16 @@ public interface MySqlOrderItemDao extends OrderItemDao {
     }
 
     @Override
+    default Optional<OrderItemDto> get(int orderId, int goodId) {
+        return executeQuery(
+                SELECT + " WHERE good = " + goodId + " AND order_ = " + orderId,
+                rs -> rs.next()
+                        ? getValue(rs)
+                        : null
+        ).toOptional();
+    }
+
+    @Override
     default Collection<OrderItemDto> getList() {
         return executeQuery(
                 SELECT,
@@ -101,7 +111,7 @@ public interface MySqlOrderItemDao extends OrderItemDao {
     }
 
     @Override
-    default boolean deleteFromBasket(int orderId, int goodId) {
+    default boolean delete(int orderId, int goodId) {
         return withPreparedStatement("DELETE FROM order_item WHERE order_ = ? AND good = ?",
                 preparedStatement -> {
             preparedStatement.setInt(1, orderId);

@@ -3,32 +3,39 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="locale" var="loc"/>
+<fmt:message bundle="${loc}" key="Catalog" var="Catalog"/>
+<fmt:message bundle="${loc}" key="Persons" var="Persons"/>
+<fmt:message bundle="${loc}" key="Email" var="Email"/>
+<fmt:message bundle="${loc}" key="FirsName" var="FirsName"/>
+<fmt:message bundle="${loc}" key="LastName" var="LastName"/>
+<fmt:message bundle="${loc}" key="Birthday" var="Birthday"/>
+<fmt:message bundle="${loc}" key="Address" var="Address"/>
+<fmt:message bundle="${loc}" key="Phone" var="Phone"/>
+<fmt:message bundle="${loc}" key="Edit" var="Edit"/>
+<fmt:message bundle="${loc}" key="Delete" var="Delete"/>
 
 <html>
 <head>
     <%@ include file="/WEB-INF/import.html" %>
 
-    <fmt:setLocale value="${sessionScope.local}"/>
-    <fmt:setBundle basename="locale" var="loc"/>
-    <fmt:message bundle="${loc}" key="Goods" var="Goods"/>
-    <fmt:message bundle="${loc}" key="delete" var="delete"/>
-    <fmt:message bundle="${loc}" key="edit" var="edit"/>
-    <title>${title}</title>
+    <title>${Catalog} - ${Persons}</title>
 </head>
 <body>
 
 <%@ include file="/WEB-INF/top_line.jsp" %>
 <div class="container">
-    <h1>${Goods}</h1>
+    <h1>${Catalog} - ${Persons}</h1>
     <table style="border: 1px solid #000;">
         <tr>
-            <th style="border: 1px solid #000;">e-mail</th>
-            <th style="border: 1px solid #000;">Имя</th>
-            <th style="border: 1px solid #000;">Фамилия</th>
-            <th style="border: 1px solid #000;">День рождения</th>
-            <th style="border: 1px solid #000;">Адрес</th>
-            <th style="border: 1px solid #000;">Телефон</th>
-            <th style="border: 1px solid #000;">Редактировать</th>
+            <th style="border: 1px solid #000;">${Email}</th>
+            <th style="border: 1px solid #000;">${FirsName}</th>
+            <th style="border: 1px solid #000;">${LastName}</th>
+            <th style="border: 1px solid #000;">${Birthday}</th>
+            <th style="border: 1px solid #000;">${Address}</th>
+            <th style="border: 1px solid #000;">${Phone}</th>
+            <th style="border: 1px solid #000;">${Edit}</th>
         </tr>
 
         <c:forEach var="person" items="${items}">
@@ -40,14 +47,14 @@
                 <td style="border: 1px solid #000;">${person.address}</td>
                 <td style="border: 1px solid #000;">${person.phone}</td>
                 <td style="border: 1px solid #000;">
-                    <form action="/catalogs/persons/edit" method="get" class="horizontal">
+                    <form action="/catalogs/persons/edit/" method="get" class="horizontal">
                         <input type="hidden" name="id" value="${person.id}"/>
-                        <input type="submit" value="${edit}" class="btn btn-default">
+                        <input type="submit" value="${Edit}" class="btn btn-default">
                     </form>
-                    <form action="/catalogs/persons/edit" method="post" class="horizontal">
+                    <form action="/catalogs/persons/edit/" method="post" class="horizontal">
                         <input type="hidden" name="id" value="${person.id}"/>
                         <input type="hidden" name="delete" value="${true}"/>
-                        <input type="submit" value="${delete}" class="btn btn-default">
+                        <input type="submit" value="${Delete}" class="btn btn-default">
                     </form>
                 </td>
             </tr>

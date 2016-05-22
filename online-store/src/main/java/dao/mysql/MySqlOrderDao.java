@@ -125,7 +125,7 @@ public interface MySqlOrderDao extends OrderDao {
     @Override
     default Optional<OrderDto> getPersonsBasket(int personId) {
         Exceptional<OrderDto, SQLException> orderDtoSQLExceptionExceptional = executeQuery(
-                SELECT + " WHERE deleted IS NULL AND customer = " + personId + " ORDER BY id DESC",
+                SELECT + " WHERE deleted IS NULL AND state = 'NEW' AND customer = " + personId + " ORDER BY id DESC",
                 rs -> rs.next()
                         ? MySqlOrderDao.this.getValue(rs)
                         : null
@@ -140,7 +140,7 @@ public interface MySqlOrderDao extends OrderDao {
     default Optional<OrderDto> getPersonsBasket(String email) {
         Exceptional<OrderDto, SQLException> orderDtoSQLExceptionExceptional = executeQuery(
                 "SELECT o.id, o.number, o.date, o.customer, o.state, o.sum, o.deleted FROM order_ o " +
-                        "INNER JOIN person p on o.customer = p.id WHERE deleted IS NULL AND p.email = '"
+                        "INNER JOIN person p on o.customer = p.id WHERE deleted IS NULL AND state = 'NEW' AND p.email = '"
                         + email + "' ORDER BY o.id DESC",
                 rs -> rs.next()
                         ? MySqlOrderDao.this.getValue(rs)
@@ -184,7 +184,7 @@ public interface MySqlOrderDao extends OrderDao {
                 "SELECT SUM(quantity * price) AS basket_sum, SUM(quantity) AS basket_quantity FROM order_item\n" +
                         "WHERE order_ IN (\n" +
                         "\tSELECT o.id FROM order_ o INNER JOIN person p on o.customer = p.id \n" +
-                        "\tWHERE deleted IS NULL AND p.email = '" + email + "' ORDER BY o.id DESC\n" +
+                        "\tWHERE deleted IS NULL AND state = 'NEW' AND p.email = '" + email + "' ORDER BY o.id DESC\n" +
                         ")",
                 rs -> rs.next()
                         ? new Helper.TwoValues<>(rs.getFloat("basket_quantity"), rs.getFloat("basket_sum"))

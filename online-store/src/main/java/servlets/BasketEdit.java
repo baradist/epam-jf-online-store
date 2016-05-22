@@ -55,16 +55,37 @@ public class BasketEdit extends HttpServlet {
         }
         OrderDto orderDto = basket.get();
 
+        Optional<OrderItemDto> orderItemDtoOptional = orderItemDao.get(orderDto.getId(), Integer.parseInt(request.getParameter("good")));
         if (Boolean.parseBoolean(request.getParameter("add"))) {
-            OrderItemDto orderItemDto = new OrderItemDto(orderDto.getId(),
-                    Integer.parseInt(request.getParameter("good")),
-                    Double.parseDouble(request.getParameter("quantity")),
-                    Double.parseDouble(request.getParameter("price"))
-            );
-            orderItemDao.add(orderItemDto);
+            OrderItemDto orderItemDto;
+            if (orderItemDtoOptional.isPresent()) {
+                orderItemDto = orderItemDtoOptional.get();
+                orderItemDto.setQuantity(orderItemDto.getQuantity() + 1);
+                orderItemDao.update(orderItemDto);
+            } else {
+                orderItemDto = new OrderItemDto(orderDto.getId(),
+                        Integer.parseInt(request.getParameter("good")),
+                        Double.parseDouble(request.getParameter("quantity")),
+                        Double.parseDouble(request.getParameter("price")));
+                orderItemDao.add(orderItemDto);
+            }
 
-        } else if (Boolean.parseBoolean(request.getParameter("delete"))) {
-            orderItemDao.deleteFromBasket(orderDto.getId(), Integer.parseInt(request.getParameter("good")));
+//        } else if (Boolean.parseBoolean(request.getParameter("decrease"))) { // TODO: hasn't used yet
+//            if (orderItemDtoOptional.isPresent()) {
+//                OrderItemDto orderItemDto = orderItemDtoOptional.get();
+//                if (orderItemDto.getQuantity() > 1) {
+//                    orderItemDto.setQuantity(orderItemDto.getQuantity() - 1);
+//                    orderItemDao.update(orderItemDto);
+//                } else {
+//                    orderItemDao.delete(orderDto.getId(), Integer.parseInt(request.getParameter("good")));
+//                }
+////            orderDao.deleteIfEmpty(orderDto.getId()); // TODO
+//            }
+        }else if (Boolean.parseBoolean(request.getParameter("delete"))) {
+            if (orderItemDtoOptional.isPresent()) {
+                OrderItemDto orderItemDto = orderItemDtoOptional.get();
+                orderItemDao.delete(orderItemDto.getId());
+            }
 //            orderDao.deleteIfEmpty(orderDto.getId()); // TODO
         }
         response.sendRedirect("/");

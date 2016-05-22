@@ -2,31 +2,37 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="locale" var="loc"/>
+<fmt:message bundle="${loc}" key="Documents" var="Documents"/>
+<fmt:message bundle="${loc}" key="Invoices" var="Invoices"/>
+
+<fmt:message bundle="${loc}" key="Code" var="Code"/>
+<fmt:message bundle="${loc}" key="Number" var="Number"/>
+<fmt:message bundle="${loc}" key="Supplier" var="Supplier"/>
+<fmt:message bundle="${loc}" key="Store" var="Store"/>
+<fmt:message bundle="${loc}" key="Sum" var="Sum"/>
+<fmt:message bundle="${loc}" key="Manager" var="Manager"/>
 
 <html>
 <head>
     <%@ include file="/WEB-INF/import.html" %>
 
-    <fmt:setLocale value="${sessionScope.local}"/>
-    <fmt:setBundle basename="locale" var="loc"/>
-    <fmt:message bundle="${loc}" key="Orders" var="Orders"/>
-    <fmt:message bundle="${loc}" key="delete" var="delete"/>
-    <fmt:message bundle="${loc}" key="edit" var="edit"/>
-    <title>${title}</title>
+    <title>${Documents} - ${Invoices}</title>
 </head>
 <body>
 
 <%@ include file="/WEB-INF/top_line.jsp" %>
 <div class="container">
-    <h1>${Orders}</h1>
+    <h1>${Documents} - ${Invoices}</h1>
     <table style="border: 1px solid #000;">
         <tr>
-            <th style="border: 1px solid #000;">Код</th>
-            <th style="border: 1px solid #000;">Номер</th>
-            <th style="border: 1px solid #000;">Поставщик</th>
-            <th style="border: 1px solid #000;">Склад</th>
-            <th style="border: 1px solid #000;">Сумма</th>
-            <th style="border: 1px solid #000;">Менеджер</th>
+            <th style="border: 1px solid #000;">${Code}</th>
+            <th style="border: 1px solid #000;">${Number}</th>
+            <th style="border: 1px solid #000;">${Supplier}</th>
+            <th style="border: 1px solid #000;">${Store}</th>
+            <th style="border: 1px solid #000;">${Sum}</th>
+            <th style="border: 1px solid #000;">${Manager}</th>
         </tr>
 
         <c:forEach var="item" items="${items}">
@@ -39,17 +45,6 @@
                 <td style="border: 1px solid #000;">${item.store.name}</td>
                 <td style="border: 1px solid #000;">${item.sum}</td>
                 <td style="border: 1px solid #000;">${item.manager.firstName} ${item.manager.lastName}</td>
-                    <%--<td style="border: 1px solid #000;">--%>
-                    <%--<form action="/documents/orders/edit" method="get" class="horizontal">--%>
-                    <%--<input type="hidden" name="order" value="${item.id}" />--%>
-                    <%--<input type="submit" value="${edit}" class="btn btn-default">--%>
-                    <%--</form>--%>
-                    <%--<form action="/documents/orders/edit" method="post" class="horizontal">--%>
-                    <%--<input type="hidden" name="order" value="${item.id}" />--%>
-                    <%--<input type="hidden" name="delete" value="${true}" />--%>
-                    <%--<input type="submit" value="${delete}" class="btn btn-default">--%>
-                    <%--</form>--%>
-                    <%--</td>--%>
             </tr>
         </c:forEach>
 

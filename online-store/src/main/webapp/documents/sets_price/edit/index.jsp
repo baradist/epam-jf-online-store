@@ -1,6 +1,28 @@
 <%@ page language="java" contentType="text/html;charset=utf-8" pageEncoding="utf-8" %>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="locale" var="loc"/>
+<fmt:message bundle="${loc}" key="Editing" var="Editing"/>
+<fmt:message bundle="${loc}" key="New" var="New"/>
+<fmt:message bundle="${loc}" key="Save" var="Save"/>
+<fmt:message bundle="${loc}" key="Reset" var="Reset"/>
+
+<fmt:message bundle="${loc}" key="Document" var="Document"/>
+<fmt:message bundle="${loc}" key="SetsPrice" var="SetsPrice"/>
+<fmt:message bundle="${loc}" key="SetPrice" var="SetPrice"/>
+<fmt:message bundle="${loc}" key="Code" var="Code"/>
+<fmt:message bundle="${loc}" key="Number" var="Number"/>
+<fmt:message bundle="${loc}" key="Date" var="Date"/>
+<fmt:message bundle="${loc}" key="Manager" var="Manager"/>
+
+<fmt:message bundle="${loc}" key="Name" var="Name"/>
+<fmt:message bundle="${loc}" key="Producer" var="Producer"/>
+<fmt:message bundle="${loc}" key="Quantity" var="Quantity"/>
+<fmt:message bundle="${loc}" key="PriceSup" var="PriceSup"/>
+<fmt:message bundle="${loc}" key="PriceSal" var="PriceSal"/>
+<fmt:message bundle="${loc}" key="PriceIncrease" var="PriceIncrease"/>
 
 <c:set var="isNew" scope="page" value="${requestScope.isNew}"/>
 
@@ -14,10 +36,10 @@
     <%@ include file="/WEB-INF/import.html" %>
     <c:choose>
         <c:when test="${isNew}">
-            <title>New good</title>
+            <title>${New}</title>
         </c:when>
         <c:otherwise>
-            <title>Edit ${setPrice.number} / ${setPrice.date}</title>
+            <title>${Editing} ${setPrice.number} / ${setPrice.date}</title>
         </c:otherwise>
     </c:choose>
 </head>
@@ -29,22 +51,22 @@
         <table border="0" cellspacing="5">
             <c:if test="${!isNew}">
                 <tr>
-                    <th align="right">Код:</th>
+                    <th align="right">${Code}:</th>
                     <td align="left"><input type="text" name="id" value="${setPrice.id}" readonly></td>
                 </tr>
             </c:if>
 
             <tr>
-                <th align="right">Номер:</th>
-                <td align="left"><input type="text" name="name"
+                <th align="right">${Number}:</th>
+                <td align="left"><input type="text" name="number"
                 <c:if test="${!isNew}">
                                         value="${setPrice.number}"
                 </c:if>
                 ></td>
             </tr>
             <tr>
-                <th align="right">Дата:</th>
-                <td align="left"><input type="text" name="producer"
+                <th align="right">${Date}:</th>
+                <td align="left"><input type="text" name="date"
                 <c:if test="${!isNew}">
                                         value="${setPrice.date}" readonly
                 </c:if>
@@ -52,8 +74,9 @@
                 </td>
             </tr>
             <tr>
-                <th align="right">Менеджер:</th>
-                <td align="left"><input type="text" name="description"
+                <%--// TODO: select - manager--%>
+                <th align="right">${Manager}:</th>
+                <td align="left"><input type="text" name="manager"
                 <c:if test="${!isNew}">
                                         value="${setPrice.manager.firstName} ${setPrice.manager.lastName}"
                 </c:if>
@@ -61,8 +84,8 @@
             </tr>
             <tr>
                 <%--// TODO disabled--%>
-                <td align="right"><input type="submit" value="Save" disabled></td>
-                <td align="left"><input type="reset"></td>
+                <td align="right"><input type="submit" value="${Save}" disabled></td>
+                <td align="left"><input type="${Reset}"></td>
             </tr>
         </table>
         <input type="hidden" name="isNew" value="${requestScope.isNew}">
@@ -70,12 +93,12 @@
 
     <table style="border: 1px solid #000;">
         <tr>
-            <th style="border: 1px solid #000;">Артикул</th>
-            <th style="border: 1px solid #000;">Название</th>
-            <th style="border: 1px solid #000;">Производитель</th>
-            <th style="border: 1px solid #000;">Цена закупки</th>
-            <th style="border: 1px solid #000;">Наценка</th>
-            <th style="border: 1px solid #000;">Цена продажи</th>
+            <th style="border: 1px solid #000;">${Code}</th>
+            <th style="border: 1px solid #000;">${Name}</th>
+            <th style="border: 1px solid #000;">${Producer}</th>
+            <th style="border: 1px solid #000;">${PriceSup}</th>
+            <th style="border: 1px solid #000;">${PriceIncrease}</th>
+            <th style="border: 1px solid #000;">${PriceSal}</th>
         </tr>
 
         <c:forEach var="item" items="${items}">

@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface OrderItemDao extends Dao {
     Optional<OrderItemDto> getById(int id);
 
+    Optional<OrderItemDto> get(int orderId, int goodId);
+
     Collection<OrderItemDto> getList();
 
     Collection<OrderItemDto> getListByIds(Collection<Integer> ids);
@@ -21,7 +23,7 @@ public interface OrderItemDao extends Dao {
 
     boolean delete(int id);
 
-    boolean deleteFromBasket(int orderId, int goodId);
+    boolean delete(int orderId, int goodId);
 
     Collection<OrderItemDto> getByOrder(int orderId);
 }

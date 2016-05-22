@@ -7,8 +7,22 @@
 <fmt:message bundle="${loc}" key="local.message" var="message"/>
 <fmt:message bundle="${loc}" key="local.locbutton.name.ru" var="ru_button"/>
 <fmt:message bundle="${loc}" key="local.locbutton.name.en" var="en_button"/>
-<fmt:message bundle="${loc}" key="title.documents" var="title_documents"/>
-<fmt:message bundle="${loc}" key="title.catalogs" var="title_catalogs"/>
+<fmt:message bundle="${loc}" key="LogIn" var="LogIn"/>
+<fmt:message bundle="${loc}" key="LogOut" var="LogOut"/>
+<fmt:message bundle="${loc}" key="Register" var="Register"/>
+<fmt:message bundle="${loc}" key="Documents" var="Documents"/>
+<fmt:message bundle="${loc}" key="Catalogs" var="Catalogs"/>
+<fmt:message bundle="${loc}" key="Goods" var="Goods"/>
+<fmt:message bundle="${loc}" key="Producers" var="Producers"/>
+<fmt:message bundle="${loc}" key="Countries" var="Countries"/>
+<fmt:message bundle="${loc}" key="Stores" var="Stores"/>
+<fmt:message bundle="${loc}" key="Persons" var="Persons"/>
+<fmt:message bundle="${loc}" key="Orders" var="Orders"/>
+<fmt:message bundle="${loc}" key="Invoices" var="Invoices"/>
+<fmt:message bundle="${loc}" key="SetsPrice" var="SetsPrice"/>
+<fmt:message bundle="${loc}" key="basket.ItemsOfGoodsInTheBasket" var="BasketItemsOfGoodsInTheBasket"/>
+<fmt:message bundle="${loc}" key="basket.Sum" var="BasketSum"/>
+<fmt:message bundle="${loc}" key="MyOrders" var="MyOrders"/>
 
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -20,24 +34,24 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">
-                                ${title_catalogs} <span class="caret"></span></a>
+                                ${Catalogs} <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/catalogs/goods/">Goods</a></li>
-                            <li><a href="/catalogs/producers/">Producers</a></li>
-                            <li><a href="/catalogs/countries/">Countries</a></li>
-                            <li><a href="/catalogs/stores/">Stores</a></li>
+                            <li><a href="/catalogs/goods/">${Goods}</a></li>
+                            <li><a href="/catalogs/producers/">${Producers}</a></li>
+                            <li><a href="/catalogs/countries/">${Countries}</a></li>
+                            <li><a href="/catalogs/stores/">${Stores}</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="/catalogs/persons/">Persons</a></li>
+                            <li><a href="/catalogs/persons/">${Persons}</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">
-                                ${title_documents} <span class="caret"></span></a>
+                                ${Documents} <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/documents/orders/">Orders</a></li>
-                            <li><a href="/documents/invoices/">Invoices</a></li>
-                            <li><a href="/documents/sets_price/">Set price</a></li>
+                            <li><a href="/documents/orders/">${Orders}</a></li>
+                            <li><a href="/documents/invoices/">${Invoices}</a></li>
+                            <li><a href="/documents/sets_price/">${SetsPrice}</a></li>
                                 <%--<li><a href="#">Another action</a></li>--%>
                                 <%--<li><a href="#">Something else here</a></li>--%>
                                 <%--<li role="separator" class="divider"></li>--%>
@@ -48,37 +62,43 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="/orders/">${MyOrders}</a></li>
                 <c:if test="${requestScope.basketQuantity > 0}">
-                    <li><a href="/orders/">My orders</a></li>
                     <li><a href="/basket/"><img src="/basket_26.ico"></a></li>
                     <li>
                         <ul class="basket-list">
-                            <li>В корзине ${requestScope.basketSum} шт товара</li>
-                            <li>на сумму ${requestScope.basketQuantity}</li>
+                            <li>${BasketItemsOfGoodsInTheBasket} ${requestScope.basketSum}</li>
+                            <li>${BasketSum} ${requestScope.basketQuantity}</li>
                         </ul>
                     </li>
                 </c:if>
 
                 <li>
                     <div class="btn-group" role="group" aria-label="...">
-                        <form action="/localizator" method="post" class="horizontal">
-                            <input type="hidden" name="local" value="ru"/>
-                            <input type="submit" value="${ru_button}" class="btn btn-default">
-                        </form>
-                        <form action="/localizator" method="post" class="horizontal">
-                            <input type="hidden" name="local" value="en"/>
-                            <input type="submit" value="${en_button}" class="btn btn-default">
-                        </form>
+                        <%--<c:choose>--%>
+                            <%--<c:when test="${sessionScope.local == ru}">--%>
+                                <form action="/localizator" method="post" class="horizontal">
+                                    <input type="hidden" name="local" value="en"/>
+                                    <input type="submit" value="${en_button}" class="btn btn-default">
+                                </form>
+                            <%--</c:when>--%>
+                            <%--<c:otherwise>--%>
+                                <form action="/localizator" method="post" class="horizontal">
+                                    <input type="hidden" name="local" value="ru"/>
+                                    <input type="submit" value="${ru_button}" class="btn btn-default">
+                                </form>
+                            <%--</c:otherwise>--%>
+                        <%--</c:choose>--%>
                     </div>
                 </li>
                 <c:choose>
                     <c:when test="${!requestScope.isLoggedIn}">
                         <li>
                             <form action="/login1.jsp" method="get" class="horizontal">
-                                <input type="submit" value="Log In" class="btn btn-default">
+                                <input type="submit" value="${LogIn}" class="btn btn-default">
                             </form>
                             <form action="/auth" method="get" class="horizontal">
-                                <input type="submit" value="Register" class="btn btn-default">
+                                <input type="submit" value="${Register}" class="btn btn-default">
                             </form>
                         </li>
                     </c:when>
@@ -87,7 +107,7 @@
                         <li>
                             <form action="/auth" method="post" class="horizontal">
                                 <input type="hidden" name="logout" value="${true}"/>
-                                <input type="submit" value="Log Out" class="btn btn-default">
+                                <input type="submit" value="${LogOut}" class="btn btn-default">
                             </form>
                         </li>
                     </c:otherwise>
