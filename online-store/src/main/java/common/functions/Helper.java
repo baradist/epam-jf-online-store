@@ -77,6 +77,10 @@ public interface Helper {
     /*public*/ static TwoValues<Integer, Integer> longListByPages(HttpServletRequest request, HttpServletResponse response, int quantity) {
         request.setAttribute("url", request.getRequestURI());
 
+        String id = request.getParameter("id");
+        if (id != null) {
+            request.setAttribute("id", id);
+        }
         request.setAttribute("quantity", quantity);
 
         int rowsOnPage = 10;

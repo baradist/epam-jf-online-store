@@ -1,4 +1,4 @@
- <%--works only with Helper.longListByPages(...) !!!--%>
+<%--works only with Helper.longListByPages(...) !!!--%>
 
 <%--<%@ page language="java" contentType="text/html;charset=utf-8" pageEncoding="utf-8" %>--%>
 
@@ -11,6 +11,9 @@
                 <input type="hidden" name="offset" value="${i}"/>
                 <input type="hidden" name="pageNumber" value="${n}"/>
                 <input type="hidden" name="rowsOnPage" value="${requestScope.rowsOnPage}"/>
+                <c:if test="${requestScope.id != null}">
+                    <input type="hidden" name="id" value="${requestScope.id}"/>
+                </c:if>
                 <input type="submit" value="${n}"
                 <c:if test="${requestScope.pageNumber eq n}">
                        disabled="true"
@@ -19,11 +22,13 @@
             </form>
         </li>
     </c:forEach>
-    <!--li>Записей на странице: <b>${requestScope.rowsOnPage}</b>  </li-->
 
     <li>
         <form action="${requestScope.url}" method="get" id="pagesTune" class="horizontal">
             <input form="pagesTune" type="hidden" name="changeRowsOnPage" value="${true}"/>
+            <c:if test="${requestScope.id != null}">
+                <input form="pagesTune" type="hidden" name="id" value="${requestScope.id}"/>
+            </c:if>
             <select required name="rowsOnPage" onchange="$(this).parent().submit();">
                 <option value="5" <c:if test="${requestScope.rowsOnPage == 5}">selected</c:if>>5</option>
                 <option value="10" <c:if test="${requestScope.rowsOnPage == 10}">selected</c:if>>10</option>
