@@ -16,6 +16,16 @@ public interface MySqlPersonDao extends PersonDao {
     String SELECT = "SELECT id, email, first_name, last_name, dob, password, address, phone FROM person ";
 
     @Override
+    default int getQuantity() {
+        return executeQuery(
+                "SELECT count(*) AS count FROM person",
+                rs -> rs.next()
+                        ? Integer.valueOf(rs.getInt("count"))
+                        : 0
+        ).toOptional().get();
+    }
+
+    @Override
     default Optional<PersonDto> getById(int id) {
         return executeQuery(
                 SELECT + " WHERE id = " + id,
@@ -42,8 +52,18 @@ public interface MySqlPersonDao extends PersonDao {
 
     @Override
     default Collection<PersonDto> getList() {
+        return getList(-1, 0);
+    }
+
+    @Override
+    default Collection<PersonDto> getList(int offset, int rows) {
+        String sql = SELECT +
+                " ORDER BY last_name ";
+        if (offset >= 0 && rows > 0) {
+            sql += " LIMIT " + offset + ", " + rows;
+        }
         return executeQuery(
-                SELECT,
+                sql,
                 rs -> {
                     Map<Integer, PersonDto> map = new HashMap<>();
                     while (rs.next())

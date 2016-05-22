@@ -110,3 +110,25 @@ WHERE `id` = OLD.invoice;
 
 END$$
 DELIMITER ;
+
+ALTER TABLE `store`.`set_price` 
+DROP FOREIGN KEY `set_price_person`;
+ALTER TABLE `store`.`set_price` 
+CHANGE COLUMN `person` `manager` INT(11) NOT NULL ;
+ALTER TABLE `store`.`set_price` 
+ADD CONSTRAINT `set_price_person`
+  FOREIGN KEY (`manager`)
+  REFERENCES `store`.`person` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `store`.`set_price_item` 
+DROP FOREIGN KEY `spi_c_set_price`;
+ALTER TABLE `store`.`set_price_item` 
+CHANGE COLUMN `c_set_price` `set_price` INT(11) NOT NULL ;
+ALTER TABLE `store`.`set_price_item` 
+ADD CONSTRAINT `spi_c_set_price`
+  FOREIGN KEY (`set_price`)
+  REFERENCES `store`.`set_price` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;

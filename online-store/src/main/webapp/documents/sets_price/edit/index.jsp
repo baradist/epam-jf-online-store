@@ -5,7 +5,7 @@
 <c:set var="isNew" scope="page" value="${requestScope.isNew}"/>
 
 <c:if test="${!isNew}">
-    <jsp:useBean id="invoice" type="model.Invoice" scope="request"/>
+    <jsp:useBean id="setPrice" type="model.SetPrice" scope="request"/>
 </c:if>
 
 
@@ -17,7 +17,7 @@
             <title>New good</title>
         </c:when>
         <c:otherwise>
-            <title>Edit ${invoice.number} / ${invoice.date}</title>
+            <title>Edit ${setPrice.number} / ${setPrice.date}</title>
         </c:otherwise>
     </c:choose>
 </head>
@@ -30,7 +30,7 @@
             <c:if test="${!isNew}">
                 <tr>
                     <th align="right">Код:</th>
-                    <td align="left"><input type="text" name="id" value="${invoice.id}" readonly></td>
+                    <td align="left"><input type="text" name="id" value="${setPrice.id}" readonly></td>
                 </tr>
             </c:if>
 
@@ -38,7 +38,7 @@
                 <th align="right">Номер:</th>
                 <td align="left"><input type="text" name="name"
                 <c:if test="${!isNew}">
-                                        value="${invoice.number}"
+                                        value="${setPrice.number}"
                 </c:if>
                 ></td>
             </tr>
@@ -46,40 +46,16 @@
                 <th align="right">Дата:</th>
                 <td align="left"><input type="text" name="producer"
                 <c:if test="${!isNew}">
-                                        value="${invoice.date}" readonly
+                                        value="${setPrice.date}" readonly
                 </c:if>
                 >
                 </td>
             </tr>
             <tr>
-                <th align="right">Поставщик:</th>
-                <td align="left"><input type="text" name="description"
-                <c:if test="${!isNew}">
-                                        value="${invoice.supplier.name}"
-                </c:if>
-                ></td>
-            </tr>
-            <tr>
-                <th align="right">Склад:</th>
-                <td align="left"><input type="text" name="description"
-                <c:if test="${!isNew}">
-                                        value="${invoice.store.name}"
-                </c:if>
-                ></td>
-            </tr>
-            <tr>
-                <th align="right">Сумма:</th>
-                <td align="left"><input type="text" name="description"
-                <c:if test="${!isNew}">
-                                        value="${invoice.sum}"
-                </c:if>
-                ></td>
-            </tr>
-            <tr>
                 <th align="right">Менеджер:</th>
                 <td align="left"><input type="text" name="description"
                 <c:if test="${!isNew}">
-                                        value="${invoice.manager.firstName} ${invoice.manager.lastName}"
+                                        value="${setPrice.manager.firstName} ${setPrice.manager.lastName}"
                 </c:if>
                 ></td>
             </tr>
@@ -97,25 +73,25 @@
             <th style="border: 1px solid #000;">Артикул</th>
             <th style="border: 1px solid #000;">Название</th>
             <th style="border: 1px solid #000;">Производитель</th>
-            <th style="border: 1px solid #000;">Количество</th>
-            <th style="border: 1px solid #000;">Цена</th>
-            <th style="border: 1px solid #000;">Сумма</th>
+            <th style="border: 1px solid #000;">Цена закупки</th>
+            <th style="border: 1px solid #000;">Наценка</th>
+            <th style="border: 1px solid #000;">Цена продажи</th>
         </tr>
 
         <c:forEach var="item" items="${items}">
             <tr>
-                <td style="border: 1px solid #000;">${item.good.id}</td>
-                <td style="border: 1px solid #000;">${item.good.name}</td>
-                <td style="border: 1px solid #000;">${item.good.producer.name} / ${item.good.producer.country.name}</td>
-                <td style="border: 1px solid #000;">${item.quantity}</td>
-                <td style="border: 1px solid #000;">${item.price}</td>
-                <td style="border: 1px solid #000;">${item.quantity * item.price}</td>
+                <td style="border: 1px solid #000;">${item.lot.good.id}</td>
+                <td style="border: 1px solid #000;">${item.lot.good.name}</td>
+                <td style="border: 1px solid #000;">${item.lot.good.producer.name} / ${item.lot.good.producer.country.name}</td>
+                <td style="border: 1px solid #000;">${item.lot.priceSup}</td>
+                <td style="border: 1px solid #000;">${item.increase}</td>
+                <td style="border: 1px solid #000;">${item.priceSal}</td>
             </tr>
         </c:forEach>
 
     </table>
 
-    <%@ include file="/WEB-INF/pager.jsp" %>
+    <%@include file="/WEB-INF/pager.jsp"%>
 </div>
 </body>
 </html>

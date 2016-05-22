@@ -3,6 +3,9 @@ package dao.dto.converters;
 import dao.dto.PersonDto;
 import model.Person;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * Created by Oleg Grigorjev on 13.05.2016.
  */
@@ -30,5 +33,11 @@ public interface PersonConverter {
                 person.getAddress(),
                 person.getPhone());
     }
-
+    static Collection<Person> convert(Collection<PersonDto> orderItemDtos) { // TODO
+        Collection<Person> persons = new ArrayList<>();
+        for (PersonDto producerDto : orderItemDtos) {
+            persons.add(convert(producerDto));
+        }
+        return persons;
+    }
 }

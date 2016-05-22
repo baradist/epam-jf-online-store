@@ -7,11 +7,15 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface PersonDao extends Dao {
+    int getQuantity();
+
     Optional<PersonDto> getById(int id);
 
     Optional<PersonDto> getByEmail(String email);
 
     Collection<PersonDto> getList();
+
+    Collection<PersonDto> getList(int start, int end);
 
     Collection<PersonDto> getListByIds(Collection<Integer> ids);
 

@@ -2,10 +2,10 @@ package filters;
 
 import common.functions.Helper;
 import common.servlets.HttpFilter;
-import dao.dto.converters.GoodConverter;
-import dao.interfaces.GoodDao;
+import dao.dto.converters.PersonConverter;
+import dao.interfaces.PersonDao;
 import listeners.DbInitializer;
-import model.Good;
+import model.Person;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -16,20 +16,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
-@WebFilter({"/catalogs/goods/", "/catalogs/goods/index.jsp"})
-public class GoodList implements HttpFilter {
-    private GoodDao goodDao;
+@WebFilter({"/catalogs/persons/", "/catalogs/persons/index.jsp"})
+public class PersonList implements HttpFilter {
+    private PersonDao personDao;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        goodDao = (GoodDao) DbInitializer.getDaoByClass(Good.class);
+        personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
     }
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        Helper.TwoValues<Integer, Integer> offsetAndRowsOnPage = Helper.longListByPages(request, response, goodDao.getQuantity());
+        Helper.TwoValues<Integer, Integer> offsetAndRowsOnPage = Helper.longListByPages(request, response, personDao.getQuantity());
 
-        Collection<Good> items = GoodConverter.convert(goodDao.getList(offsetAndRowsOnPage.first, offsetAndRowsOnPage.second));
+        Collection<Person> items = PersonConverter.convert(personDao.getList(offsetAndRowsOnPage.first, offsetAndRowsOnPage.second));
 
         request.setAttribute("items", items);
 

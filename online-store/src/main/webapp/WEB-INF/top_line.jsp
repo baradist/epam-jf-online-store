@@ -26,6 +26,8 @@
                             <li><a href="/catalogs/producers/">Producers</a></li>
                             <li><a href="/catalogs/countries/">Countries</a></li>
                             <li><a href="/catalogs/stores/">Stores</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/catalogs/persons/">Persons</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -35,10 +37,11 @@
                         <ul class="dropdown-menu">
                             <li><a href="/documents/orders/">Orders</a></li>
                             <li><a href="/documents/invoices/">Invoices</a></li>
-                            <%--<li><a href="#">Another action</a></li>--%>
-                            <%--<li><a href="#">Something else here</a></li>--%>
-                            <%--<li role="separator" class="divider"></li>--%>
-                            <%--<li><a href="#">Separated link</a></li>--%>
+                            <li><a href="/documents/sets_price/">Set price</a></li>
+                                <%--<li><a href="#">Another action</a></li>--%>
+                                <%--<li><a href="#">Something else here</a></li>--%>
+                                <%--<li role="separator" class="divider"></li>--%>
+                                <%--<li><a href="#">Separated link</a></li>--%>
                         </ul>
                     </li>
                 </c:if>
@@ -46,7 +49,7 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <c:if test="${requestScope.basketQuantity > 0}">
-                    <li><a href="/orders/">My orders</a> </li>
+                    <li><a href="/orders/">My orders</a></li>
                     <li><a href="/basket/"><img src="/basket_26.ico"></a></li>
                     <li>
                         <ul class="basket-list">
