@@ -10,12 +10,12 @@ import java.util.*;
 
 @FunctionalInterface
 public interface MySqlStoreDao extends StoreDao {
-    String SELECT = "SELECT ID, NAME, ADDRESS FROM STORE ";
+    String SELECT = "SELECT id, name, address FROM store ";
 
     @Override
     default Optional<StoreDto> getById(int id) {
         return executeQuery(
-                SELECT + " WHERE ID = " + id,
+                SELECT + " WHERE id = " + id,
                 rs -> rs.next()
                         ? getValue(rs)
                         : null
@@ -34,7 +34,7 @@ public interface MySqlStoreDao extends StoreDao {
                 rs -> {
                     Map<Integer, StoreDto> map = new HashMap<>();
                     while (rs.next())
-                        map.put(rs.getInt("ID"),
+                        map.put(rs.getInt("id"),
                                 getValue(rs));
                     return map;
                 }).toOptional().orElse(Collections.emptyMap()).values();
@@ -43,11 +43,11 @@ public interface MySqlStoreDao extends StoreDao {
     @Override
     default Map<Integer, StoreDto> getMapByIds(Collection<Integer> ids) {
         return executeQuery(
-                SELECT + " WHERE ID IN (" + Helper.ArrayToString(ids) + ")",
+                SELECT + " WHERE id IN (" + Helper.ArrayToString(ids) + ")",
                 rs -> {
                     Map<Integer, StoreDto> map = new HashMap<>();
                     while (rs.next())
-                        map.put(rs.getInt("ID"),
+                        map.put(rs.getInt("id"),
                                 getValue(rs));
                     return map;
                 }).toOptional().orElse(Collections.emptyMap());
@@ -55,8 +55,8 @@ public interface MySqlStoreDao extends StoreDao {
 
     default StoreDto getValue(ResultSet rs) throws SQLException {
         return new StoreDto(
-                rs.getInt("ID"),
-                rs.getString("NAME"),
-                rs.getString("ADDRESS"));
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("address"));
     }
 }

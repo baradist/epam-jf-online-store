@@ -6,18 +6,14 @@ import lombok.Data;
 import java.time.Instant;
 
 /**
- * Created by 1 on 07.05.2016.
+ * Created by Oleg Grigorjev on 13.05.2016.
  */
 
 @Data
 @AllArgsConstructor
-public class Invoice {
+public class SetPrice {
     private int id;
     private String number;
     private Instant date;
-    private Contractor supplier;
-    private Store store;
-    private double sum;
-    private Instant deleted;
     private Person manager;
 }

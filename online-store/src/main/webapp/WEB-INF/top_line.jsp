@@ -25,8 +25,7 @@
                             <li><a href="/catalogs/goods/">Goods</a></li>
                             <li><a href="/catalogs/producers/">Producers</a></li>
                             <li><a href="/catalogs/countries/">Countries</a></li>
-                                <%--<li role="separator" class="divider"></li>--%>
-                                <%--<li><a href="#">Separated link</a></li>--%>
+                            <li><a href="/catalogs/stores/">Stores</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -35,10 +34,11 @@
                                 ${title_documents} <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/documents/orders/">Orders</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
+                            <li><a href="/documents/invoices/">Invoices</a></li>
+                            <%--<li><a href="#">Another action</a></li>--%>
+                            <%--<li><a href="#">Something else here</a></li>--%>
+                            <%--<li role="separator" class="divider"></li>--%>
+                            <%--<li><a href="#">Separated link</a></li>--%>
                         </ul>
                     </li>
                 </c:if>

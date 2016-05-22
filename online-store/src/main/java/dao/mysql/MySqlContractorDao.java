@@ -1,23 +1,22 @@
 package dao.mysql;
 
 import common.functions.Helper;
-import dao.dto.GoodDto;
-import dao.interfaces.GoodDao;
+import dao.dto.ContractorDto;
+import dao.interfaces.ContractorDao;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
 @FunctionalInterface
-public interface MySqlGoodDao extends GoodDao {
+public interface MySqlContractorDao extends ContractorDao {
 
-    String SELECT = "SELECT id, name, producer, description FROM good";
+    String SELECT = "SELECT id, name FROM contractor ";
 
     @Override
     default int getQuantity() {
         return executeQuery(
-                "SELECT count(*) AS count FROM good",
+                "SELECT count(*) AS count FROM contractor",
                 rs -> rs.next()
                         ? Integer.valueOf(rs.getInt("count"))
                         : 0
@@ -25,7 +24,7 @@ public interface MySqlGoodDao extends GoodDao {
     }
 
     @Override
-    default Optional<GoodDto> getById(int id) {
+    default Optional<ContractorDto> getById(int id) {
         return executeQuery(
                 SELECT + " WHERE id = " + id,
                 rs -> rs.next()
@@ -35,12 +34,12 @@ public interface MySqlGoodDao extends GoodDao {
     }
 
     @Override
-    default Collection<GoodDto> getList() {
+    default Collection<ContractorDto> getList() {
         return getList(-1, 0);
     }
 
     @Override
-    default Collection<GoodDto> getList(int offset, int rows) {
+    default Collection<ContractorDto> getList(int offset, int rows) {
         String sql = SELECT +
                 " ORDER BY name ";
         if (offset >= 0 && rows > 0) {
@@ -49,7 +48,7 @@ public interface MySqlGoodDao extends GoodDao {
         return executeQuery(
                 sql,
                 rs -> {
-                    Map<Integer, GoodDto> map = new HashMap<>();
+                    Map<Integer, ContractorDto> map = new HashMap<>();
                     while (rs.next())
                         map.put(rs.getInt("id"),
                                 getValue(rs));
@@ -58,16 +57,16 @@ public interface MySqlGoodDao extends GoodDao {
     }
 
     @Override
-    default Collection<GoodDto> getListByIds(Collection<Integer> ids) { // TODO
+    default Collection<ContractorDto> getListByIds(Collection<Integer> ids) { // TODO
         return getMapByIds(ids).values();
     }
 
     @Override
-    default Map<Integer, GoodDto> getMapByIds(Collection<Integer> ids) {
+    default Map<Integer, ContractorDto> getMapByIds(Collection<Integer> ids) {
         return executeQuery(
                 SELECT + " WHERE id IN (" + Helper.ArrayToString(ids) + ")",
                 rs -> {
-                    Map<Integer, GoodDto> map = new HashMap<>();
+                    Map<Integer, ContractorDto> map = new HashMap<>();
                     while (rs.next())
                         map.put(rs.getInt("id"),
                                 getValue(rs));
@@ -75,46 +74,38 @@ public interface MySqlGoodDao extends GoodDao {
                 }).toOptional().orElse(Collections.emptyMap());
     }
 
-    default GoodDto getValue(ResultSet rs) throws SQLException {
-        return new GoodDto(
-                rs.getInt("id"), rs.getString("name"), rs.getInt("producer"), rs.getString("description")
+    default ContractorDto getValue(ResultSet rs) throws SQLException {
+        return new ContractorDto(
+                rs.getInt("id"), rs.getString("name")
         );
     }
 
     @Override
-    default boolean add(GoodDto goodDto) {
+    default boolean add(ContractorDto goodDto) {
         return withPreparedStatement(
-                "INSERT INTO good (name, producer, description) " +
-                        "VALUES (?, ?, ?)",
+                "INSERT INTO contractor (name) VALUES (?)",
                 preparedStatement -> {
-                    setPreparedStatement(preparedStatement, goodDto);
+                    preparedStatement.setString(1, goodDto.getName());
                     return preparedStatement.executeUpdate() == 1;
                 }).getOrThrowUnchecked();
     }
 
     @Override
-    default boolean update(GoodDto goodDto) {
+    default boolean update(ContractorDto goodDto) {
         return withPreparedStatement(
-                "UPDATE good SET name = ?, producer = ?, description = ? " +
-                        "WHERE ID = ?"
+                "UPDATE contractor SET name = ? WHERE id = ?"
                 , preparedStatement -> {
-                    setPreparedStatement(preparedStatement, goodDto);
-                    preparedStatement.setInt(4, goodDto.getId());
+                    preparedStatement.setString(1, goodDto.getName());
+                    preparedStatement.setInt(2, goodDto.getId());
                     return preparedStatement.executeUpdate() == 1;
                 }).getOrThrowUnchecked();
     }
 
     @Override
     default boolean delete(int id) {
-        return withPreparedStatement("DELETE FROM good WHERE ID = ?", preparedStatement -> {
+        return withPreparedStatement("DELETE FROM contractor ID = ?", preparedStatement -> {
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() == 1;
         }).getOrThrowUnchecked();
-    }
-
-    default void setPreparedStatement(PreparedStatement preparedStatement, GoodDto dto) throws SQLException {
-        preparedStatement.setString(1, dto.getName());
-        preparedStatement.setInt(2, dto.getProducer());
-        preparedStatement.setString(3, dto.getDescription());
     }
 }

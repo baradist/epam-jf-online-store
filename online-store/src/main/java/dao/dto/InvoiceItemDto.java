@@ -1,4 +1,4 @@
-package model;
+package dao.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,10 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class InvoiceItem {
+public class InvoiceItemDto {
     private int id;
-    private Invoice invoice;
-    private Good good;
+    private int invoice;
+    private int good;
     private double quantity;
     private double price;
 }

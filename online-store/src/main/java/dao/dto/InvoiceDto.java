@@ -1,4 +1,4 @@
-package model;
+package dao.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,13 +11,13 @@ import java.time.Instant;
 
 @Data
 @AllArgsConstructor
-public class Invoice {
+public class InvoiceDto {
     private int id;
     private String number;
     private Instant date;
-    private Contractor supplier;
-    private Store store;
+    private int supplier;
+    private int store;
     private double sum;
     private Instant deleted;
-    private Person manager;
+    private int manager;
 }
