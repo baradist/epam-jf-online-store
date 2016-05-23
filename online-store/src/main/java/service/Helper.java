@@ -19,6 +19,9 @@ import java.util.Date;
 public interface Helper {
 
     /*public*/ static String ArrayToString(Collection<Integer> array) {
+        if (array.size() == 0) {
+            return "";
+        }
         StringBuilder buffer = new StringBuilder();
         for (Integer integer : array) {
             buffer.append(integer);
