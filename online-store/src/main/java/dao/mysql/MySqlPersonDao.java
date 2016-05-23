@@ -10,6 +10,10 @@ import java.sql.Types;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 @FunctionalInterface
 public interface MySqlPersonDao extends PersonDao {
 

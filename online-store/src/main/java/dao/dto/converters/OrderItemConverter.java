@@ -14,6 +14,7 @@ import java.util.Collection;
 /**
  * Created by Oleg Grigorjev on 13.05.2016.
  */
+ 
 public interface OrderItemConverter {
     static OrderItem convert(OrderItemDto orderItemDto) {
         return new OrderItem(

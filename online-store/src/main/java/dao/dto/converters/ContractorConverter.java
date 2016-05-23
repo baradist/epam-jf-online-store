@@ -6,6 +6,7 @@ import model.Contractor;
 /**
  * Created by Oleg Grigorjev on 13.05.2016.
  */
+ 
 public interface ContractorConverter {
     static Contractor convert(ContractorDto dto) {
         return new Contractor(dto.getId(), dto.getName());

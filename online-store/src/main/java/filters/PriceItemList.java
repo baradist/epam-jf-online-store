@@ -20,6 +20,8 @@ import java.security.Principal;
 import java.util.Collection;
 
 /**
+ * Created by Oleg Grigorjev 
+ *
  *  getting the price list and sending it to the main-page
  */
 @Log4j

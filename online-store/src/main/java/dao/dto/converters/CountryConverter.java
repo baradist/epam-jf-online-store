@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * Created by Oleg Grigorjev on 13.05.2016.
  */
+ 
 public interface CountryConverter {
     static Country convert(CountryDto countryDto) {
         return new Country(countryDto.getId(), countryDto.getName());

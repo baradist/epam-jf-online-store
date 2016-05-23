@@ -17,6 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
+
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 @Log4j
 @WebFilter({"/documents/sets_price/", "/documents/sets_price/index.jsp"})
 public class SetPriceList implements HttpFilter {

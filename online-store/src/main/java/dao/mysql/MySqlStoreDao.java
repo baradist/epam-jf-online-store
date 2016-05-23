@@ -8,6 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 @FunctionalInterface
 public interface MySqlStoreDao extends StoreDao {
     String SELECT = "SELECT id, name, address FROM store ";

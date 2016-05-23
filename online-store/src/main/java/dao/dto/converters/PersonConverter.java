@@ -9,6 +9,7 @@ import java.util.Collection;
 /**
  * Created by Oleg Grigorjev on 13.05.2016.
  */
+ 
 public interface PersonConverter {
     static Person convert(PersonDto personDto) {
         return new Person(

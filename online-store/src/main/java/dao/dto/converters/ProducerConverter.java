@@ -11,6 +11,7 @@ import java.util.*;
 /**
  * Created by Oleg Grigorjev on 13.05.2016.
  */
+ 
 public interface ProducerConverter {
     CountryDao countryDao = (CountryDao) DaoHandler.getDaoByClass(Country.class);
     static Producer convert(ProducerDto producerDto) {

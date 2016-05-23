@@ -5,6 +5,10 @@ import dao.dto.PriceItemDto;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 public interface PriceItemDao extends Dao {
     int getQuantity();
 

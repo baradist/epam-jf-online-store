@@ -18,6 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 @Log4j
 @WebFilter({"/documents/invoices/", "/documents/invoices/index.jsp"})
 public class InvoiceList implements HttpFilter {

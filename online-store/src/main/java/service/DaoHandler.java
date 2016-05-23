@@ -10,8 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by o_grigorev on 23.05.2016.
+ * Created by Oleg Grigorjev on 23.05.2016.
  */
+ 
 public class DaoHandler {
     private static Map<Class, Dao> daoMap = new HashMap<>();
 

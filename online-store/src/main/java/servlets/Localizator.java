@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 @Log4j
 @WebServlet("/localizator")
 public class Localizator extends HttpServlet {

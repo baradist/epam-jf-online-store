@@ -12,6 +12,10 @@ import java.sql.Types;
 import java.time.Instant;
 import java.util.*;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 @FunctionalInterface
 public interface MySqlOrderDao extends OrderDao {
     String SELECT = "SELECT id, number, date, customer, state, sum, deleted FROM order_ ";

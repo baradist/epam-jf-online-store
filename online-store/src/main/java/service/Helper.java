@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Date;
 
 /**
- * Created by 1 on 23.04.2016.
+ * Created by Oleg Grigorjev on 23.04.2016.
  */
 
 public interface Helper {

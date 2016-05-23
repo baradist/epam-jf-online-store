@@ -16,6 +16,7 @@ import java.util.Collection;
 /**
  * Created by Oleg Grigorjev on 13.05.2016.
  */
+ 
 public interface InvoiceConverter {
     static Invoice convert(InvoiceDto dto) {
         return new Invoice(

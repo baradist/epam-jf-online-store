@@ -7,6 +7,10 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 public interface OrderDao extends Dao {
     Optional<OrderDto> getById(int id);
 

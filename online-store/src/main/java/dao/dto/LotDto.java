@@ -7,7 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
- * Created by 1 on 07.05.2016.
+ * Created by Oleg Grigorjev on 07.05.2016.
  */
 
 @Data

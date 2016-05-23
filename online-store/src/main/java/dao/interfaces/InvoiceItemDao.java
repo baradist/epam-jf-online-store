@@ -6,6 +6,10 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 public interface InvoiceItemDao extends Dao {
 
     int getQuantity(int invoiceId);

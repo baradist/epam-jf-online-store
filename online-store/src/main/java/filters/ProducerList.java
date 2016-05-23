@@ -17,6 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 @Log4j
 @WebFilter({"/catalogs/producers", "/catalogs/producers/index.jsp"})
 public class ProducerList implements HttpFilter {

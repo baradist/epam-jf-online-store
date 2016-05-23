@@ -14,6 +14,7 @@ import java.util.Map;
 /**
  * Created by Oleg Grigorjev on 13.05.2016.
  */
+ 
 public interface GoodConverter {
     ProducerDao producerDao = (ProducerDao) DaoHandler.getDaoByClass(Producer.class);
 

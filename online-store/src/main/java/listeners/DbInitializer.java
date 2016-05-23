@@ -8,6 +8,10 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import javax.sql.DataSource;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 @WebListener
 public class DbInitializer implements ServletContextListener {
 

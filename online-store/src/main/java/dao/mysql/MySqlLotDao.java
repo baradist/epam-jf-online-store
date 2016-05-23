@@ -10,6 +10,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 @FunctionalInterface
 public interface MySqlLotDao extends LotDao {
 

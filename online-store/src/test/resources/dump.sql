@@ -84,7 +84,7 @@ CREATE TABLE `good` (
   PRIMARY KEY (`id`),
   KEY `good_producer_idx` (`producer`),
   CONSTRAINT `good_producer` FOREIGN KEY (`producer`) REFERENCES `producer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=507 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=508 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,17 +205,17 @@ DROP TABLE IF EXISTS `invoice`;
 CREATE TABLE `invoice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `number` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `date` datetime DEFAULT NULL,
+  `date` datetime NOT NULL,
   `supplier` int(11) NOT NULL,
   `store` int(11) NOT NULL,
-  `sum` float DEFAULT NULL,
+  `sum` double DEFAULT NULL,
   `deleted` datetime DEFAULT NULL,
-  `person` int(11) DEFAULT NULL,
+  `manager` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `supplier_idx` (`supplier`),
   KEY `store_idx` (`store`),
-  KEY `invoice_person_idx` (`person`),
-  CONSTRAINT `invoice_person` FOREIGN KEY (`person`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `invoice_person_idx` (`manager`),
+  CONSTRAINT `invoice_person` FOREIGN KEY (`manager`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `invoice_store` FOREIGN KEY (`store`) REFERENCES `store` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `invoice_supplier` FOREIGN KEY (`supplier`) REFERENCES `contractor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -227,8 +227,8 @@ CREATE TABLE `invoice` (
 
 LOCK TABLES `invoice` WRITE;
 /*!40000 ALTER TABLE `invoice` DISABLE KEYS */;
-INSERT INTO `invoice` VALUES (4,'I-0000001','2016-04-04 00:00:00',1,1,NULL,NULL,6),
-(5,'I-0000002','2016-05-05 00:00:00',2,2,NULL,NULL,6);
+INSERT INTO `invoice` VALUES (4,'I-0000001','2016-04-04 00:00:00',1,1,20560,NULL,6),
+(5,'I-0000002','2016-05-05 00:00:00',2,2,44125,NULL,6);
 /*!40000 ALTER TABLE `invoice` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -250,7 +250,7 @@ CREATE TABLE `invoice_item` (
   KEY `good_idx` (`good`),
   CONSTRAINT `ii_good` FOREIGN KEY (`good`) REFERENCES `good` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `ii_invoice` FOREIGN KEY (`invoice`) REFERENCES `invoice` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -283,10 +283,75 @@ INSERT INTO `invoice_item` VALUES (1,4,408,1,1000),
 (22,5,442,10,1000),
 (23,5,443,30,700),
 (24,5,444,2,250),
-(25,5,445,5,15),
-(26,5,446,10,10);
+(25,5,445,5,15);
 /*!40000 ALTER TABLE `invoice_item` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `store`.`invoice_item_AFTER_INSERT` AFTER INSERT ON `invoice_item` FOR EACH ROW
+BEGIN
+
+UPDATE `store`.`invoice`
+SET `sum` = (SELECT SUM(price * quantity) FROM invoice_item WHERE invoice = NEW.invoice)
+WHERE `id` = NEW.invoice;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `store`.`invoice_item_AFTER_UPDATE` AFTER UPDATE ON `invoice_item` FOR EACH ROW
+BEGIN
+
+UPDATE `store`.`invoice`
+SET `sum` = (SELECT SUM(price * quantity) FROM invoice_item WHERE invoice = NEW.invoice)
+WHERE `id` = NEW.invoice;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `store`.`invoice_item_AFTER_DELETE` AFTER DELETE ON `invoice_item` FOR EACH ROW
+BEGIN
+
+UPDATE `store`.`invoice`
+SET `sum` = (SELECT SUM(price * quantity) FROM invoice_item WHERE invoice = OLD.invoice)
+WHERE `id` = OLD.invoice;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `lot`
@@ -313,7 +378,7 @@ CREATE TABLE `lot` (
   CONSTRAINT `lot_good` FOREIGN KEY (`good`) REFERENCES `good` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lot_store` FOREIGN KEY (`store`) REFERENCES `store` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lot_supplier` FOREIGN KEY (`supplier`) REFERENCES `contractor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -344,10 +409,9 @@ INSERT INTO `lot` VALUES (1,1,408,4,1,1,1,1,1000,1200),
 (20,2,440,5,20,2,2,2,700,840),
 (21,2,441,5,21,5,5,2,250,300),
 (22,2,442,5,22,10,10,2,1000,1200),
-(23,2,443,5,23,30,30,2,700,840),
+(23,2,443,5,23,30,0,2,700,840),
 (24,2,444,5,24,2,2,2,250,300),
-(25,2,445,5,25,5,5,2,15,18),
-(26,2,446,5,26,10,10,2,10,12);
+(25,2,445,5,25,5,5,2,15,18);
 /*!40000 ALTER TABLE `lot` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -364,10 +428,11 @@ CREATE TABLE `order_` (
   `date` datetime NOT NULL,
   `customer` int(11) NOT NULL,
   `state` varchar(10) COLLATE utf8_bin DEFAULT NULL,
+  `sum` double DEFAULT '0',
   `deleted` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `customer_idx` (`customer`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -376,15 +441,37 @@ CREATE TABLE `order_` (
 
 LOCK TABLES `order_` WRITE;
 /*!40000 ALTER TABLE `order_` DISABLE KEYS */;
-INSERT INTO `order_` VALUES (1,'number','2016-05-15 20:20:56',7,'NEW','2016-05-16 02:40:23'),
-(2,'number','2016-05-15 20:26:46',7,'NEW','2016-05-16 00:59:45'),
-(3,'number','2016-05-15 20:46:26',7,'NEW','2016-05-16 02:02:18'),
-(5,'number','2016-05-15 20:51:52',7,'NEW','2016-05-16 02:02:19'),
-(6,'number','2016-05-16 02:02:27',7,'NEW','2016-05-16 02:05:16'),
-(7,'number','2016-05-16 02:24:33',7,'NEW',NULL),
-(8,'number','2016-05-16 22:53:49',6,'NEW',NULL);
+INSERT INTO `order_` VALUES (1,'number','2016-05-15 20:20:56',7,'NEW',2082,'2016-05-16 02:40:23'),
+(2,'number','2016-05-15 20:26:46',7,'NEW',0,'2016-05-16 00:59:45'),
+(3,'number','2016-05-15 20:46:26',7,'NEW',18,'2016-05-16 02:02:18'),
+(5,'number','2016-05-15 20:51:52',7,'NEW',0,'2016-05-16 02:02:19'),
+(6,'number','2016-05-16 02:02:27',7,'NEW',48,'2016-05-16 02:05:16'),
+(7,'number','2016-05-16 02:24:33',7,'NEW',6552,NULL),
+(8,'number','2016-05-16 22:53:49',6,'SENT',5196,NULL),
+(9,'number','2016-05-20 23:36:10',14,'SENT',3000,NULL),
+(10,'number','2016-05-23 01:43:02',6,'SENT',1500,NULL);
 /*!40000 ALTER TABLE `order_` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `store`.`order__BEFORE_DELETE` BEFORE DELETE ON `order_` FOR EACH ROW
+BEGIN
+
+DELETE FROM order_item WHERE order_ = OLD.id;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `order_item`
@@ -402,7 +489,7 @@ CREATE TABLE `order_item` (
   PRIMARY KEY (`id`),
   KEY `order_good_idx` (`good`),
   CONSTRAINT `order_good` FOREIGN KEY (`good`) REFERENCES `good` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -423,11 +510,92 @@ INSERT INTO `order_item` VALUES (15,1,408,1,1200),
 (27,7,414,1,840),
 (28,7,412,1,12),
 (29,7,413,1,1200),
-(30,8,420,1,300),
 (31,7,408,1,1200),
-(32,7,408,1,1200);
+(32,7,408,2,1200),
+(34,8,441,2,300),
+(36,8,409,4,840),
+(37,8,416,2,18),
+(39,7,441,3,300),
+(40,9,441,2,300),
+(42,9,418,2,1200),
+(43,8,420,1,300),
+(44,8,420,1,300),
+(45,8,420,1,300),
+(46,8,420,1,300),
+(47,10,420,2,300),
+(48,10,419,1,840),
+(49,10,417,5,12);
 /*!40000 ALTER TABLE `order_item` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `store`.`order_item_AFTER_INSERT` AFTER INSERT ON `order_item` FOR EACH ROW
+BEGIN
+
+UPDATE `store`.`order_`
+SET
+`sum` = (SELECT SUM(price * quantity) FROM order_item WHERE order_ = NEW.order_)
+WHERE `id` = NEW.order_;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `store`.`order_item_AFTER_UPDATE` AFTER UPDATE ON `order_item` FOR EACH ROW
+BEGIN
+
+UPDATE `store`.`order_`
+SET
+`sum` = (SELECT SUM(price * quantity) FROM order_item WHERE order_ = NEW.order_)
+WHERE `id` = NEW.order_;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `store`.`order_item_AFTER_DELETE` AFTER DELETE ON `order_item` FOR EACH ROW
+BEGIN
+
+UPDATE `store`.`order_`
+SET
+`sum` = (SELECT SUM(price * quantity) FROM order_item WHERE order_ = OLD.order_)
+WHERE `id` = OLD.order_;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `person`
@@ -447,7 +615,7 @@ CREATE TABLE `person` (
   `phone` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -459,9 +627,7 @@ LOCK TABLES `person` WRITE;
 INSERT INTO `person` VALUES (5,'admin@gmail.com','Пупкин','Василий','1983-01-01','qwerty','Какой-то адрес','+79211234567'),
 (6,'manager@gmail.com','Николай','Иванович','1993-02-03','qwerty','Какой-то адрес','+79211234568'),
 (7,'passerby@gmail.com','Иванов','Иван','1979-11-25','qwerty','Какой-то адрес','+79211234569'),
-(9,'A8E6BC3FFBB1DAE5310CDFA755F7CF54',NULL,NULL,NULL,NULL,NULL,NULL),
-(10,'A48464D55460A5FE28358CB05D949247',NULL,NULL,NULL,NULL,NULL,NULL),
-(11,'DBF81960FF6D6F3E41D2D423BE480878',NULL,NULL,NULL,NULL,NULL,NULL);
+(14,'user@mail.ru','Вася','Пупкин','1970-01-01','1','Санкт-Петербург','12345');
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -516,7 +682,8 @@ LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
 INSERT INTO `roles` VALUES ('admin@gmail.com','ADMINISTRATOR'),
 ('manager@gmail.com','MANAGER'),
-('passerby@gmail.com','CUSTOMER');
+('passerby@gmail.com','CUSTOMER'),
+('user@mail.ru','CUSTOMER');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -531,10 +698,10 @@ CREATE TABLE `set_price` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `number` varchar(45) COLLATE utf8_bin DEFAULT NULL,
   `date` datetime NOT NULL,
-  `person` int(11) NOT NULL,
+  `manager` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `set_price_person_idx` (`person`),
-  CONSTRAINT `set_price_person` FOREIGN KEY (`person`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `set_price_person_idx` (`manager`),
+  CONSTRAINT `set_price_person` FOREIGN KEY (`manager`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -557,14 +724,14 @@ DROP TABLE IF EXISTS `set_price_item`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `set_price_item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `c_set_price` int(11) NOT NULL,
+  `set_price` int(11) NOT NULL,
   `lot` int(11) NOT NULL,
   `increase` double NOT NULL,
   `price_sal` double NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `spi_c_set_price_idx` (`c_set_price`),
-  CONSTRAINT `spi_c_set_price` FOREIGN KEY (`c_set_price`) REFERENCES `set_price` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  KEY `spi_c_set_price_idx` (`set_price`),
+  CONSTRAINT `spi_c_set_price` FOREIGN KEY (`set_price`) REFERENCES `set_price` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -597,8 +764,7 @@ INSERT INTO `set_price_item` VALUES (1,1,1,200,1200),
 (22,1,22,200,1200),
 (23,1,23,140,840),
 (24,1,24,50,300),
-(25,1,25,3,18),
-(26,1,26,2,12);
+(25,1,25,3,18);
 /*!40000 ALTER TABLE `set_price_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -645,4 +811,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-16 23:46:59
+-- Dump completed on 2016-05-24  2:45:41

@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.util.Collection;
 
 import static java.lang.Integer.parseInt;
+
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 @Log4j
 @WebServlet({"/catalogs/goods/edit"})
 public class GoodEdit extends HttpServlet{

@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 /**
- * Created by o_grigorev on 23.05.2016.
+ * Created by Oleg Grigorjev on 23.05.2016.
  */
 
 @WebListener

@@ -11,6 +11,10 @@ import java.sql.Types;
 import java.time.Instant;
 import java.util.*;
 
+/**
+ * Created by Oleg Grigorjev 
+ */
+ 
 @FunctionalInterface
 public interface MySqlInvoiceDao extends InvoiceDao {
 

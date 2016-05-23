@@ -18,6 +18,7 @@ import java.time.LocalDate;
 /**
  * Created by Oleg Grigorjev on 16.05.2016.
  */
+ 
 @Log4j
 @WebServlet("/auth")
 public class Auth extends HttpServlet {

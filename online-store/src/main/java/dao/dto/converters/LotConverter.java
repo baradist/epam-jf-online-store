@@ -12,6 +12,7 @@ import java.util.Collection;
 /**
  * Created by Oleg Grigorjev on 13.05.2016.
  */
+ 
 public interface LotConverter {
     static Lot convert(LotDto lotDto) { // TODO
         return new Lot(

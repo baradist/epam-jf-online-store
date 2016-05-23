@@ -14,6 +14,7 @@ import java.util.Optional;
 /**
  * Created by Oleg Grigorjev on 13.05.2016.
  */
+ 
 public interface OrderConverter {
     static Order convert(OrderDto orderDto) {
         Optional<PersonDto> personDtoOptional = ((PersonDao) DaoHandler.getDaoByClass(Person.class)).getById(orderDto.getCustomer());
