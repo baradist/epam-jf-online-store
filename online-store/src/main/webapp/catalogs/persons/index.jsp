@@ -14,6 +14,7 @@
 <fmt:message bundle="${loc}" key="Address" var="Address"/>
 <fmt:message bundle="${loc}" key="Phone" var="Phone"/>
 <fmt:message bundle="${loc}" key="Edit" var="Edit"/>
+<fmt:message bundle="${loc}" key="Editing" var="Editing"/>
 <fmt:message bundle="${loc}" key="Delete" var="Delete"/>
 
 <html>
@@ -35,7 +36,7 @@
             <th style="border: 1px solid #000;">${Birthday}</th>
             <th style="border: 1px solid #000;">${Address}</th>
             <th style="border: 1px solid #000;">${Phone}</th>
-            <th style="border: 1px solid #000;">${Edit}</th>
+            <th style="border: 1px solid #000;">${Editing}</th>
         </tr>
 
         <c:forEach var="person" items="${items}">
@@ -47,14 +48,14 @@
                 <td style="border: 1px solid #000;">${person.address}</td>
                 <td style="border: 1px solid #000;">${person.phone}</td>
                 <td style="border: 1px solid #000;">
-                    <form action="/catalogs/persons/edit/" method="get" class="horizontal">
+                    <form action="/catalogs/persons/edit" method="get" class="horizontal">
                         <input type="hidden" name="id" value="${person.id}"/>
-                        <input type="submit" value="${Edit}" class="btn btn-default">
+                        <input type="submit" value="${Edit}" class="btn btn-default" disabled>
                     </form>
-                    <form action="/catalogs/persons/edit/" method="post" class="horizontal">
+                    <form action="/catalogs/persons/edit" method="post" class="horizontal">
                         <input type="hidden" name="id" value="${person.id}"/>
                         <input type="hidden" name="delete" value="${true}"/>
-                        <input type="submit" value="${Delete}" class="btn btn-default">
+                        <input type="submit" value="${Delete}" class="btn btn-default" disabled>
                     </form>
                 </td>
             </tr>

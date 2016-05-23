@@ -22,12 +22,12 @@ import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
-@WebServlet({"/catalogs/goods/edit"})
+@WebServlet({/*"/catalogs/goods/edit/", */"/catalogs/goods/edit"/*, "/catalogs/goods/edit/index.jsp"*/})
 public class GoodEdit extends HttpServlet{
 
     private GoodDao goodDao;
     private ProducerDao producerDao;
-    private static Map<String, Good> editingGoods = new HashMap<>();
+//    private static Map<String, Good> editingGoods = new HashMap<>();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -45,7 +45,7 @@ public class GoodEdit extends HttpServlet{
         } else {
             // edit
             Good good = GoodConverter.convert(goodDao.getById(parseInt(request.getParameter("id"))).get());
-            editingGoods.put(request.getSession().getId(), good);
+//            editingGoods.put(request.getSession().getId(), good);
 
             request.setAttribute("good", good);
             request.setAttribute("isNew", false);
@@ -71,14 +71,15 @@ public class GoodEdit extends HttpServlet{
 
         } else {
             // edit
-            String sessionId = request.getSession().getId();
-            Good good = editingGoods.get(sessionId);
-            editingGoods.remove(sessionId);
+            GoodDto goodDto = new GoodDto(
+                    Integer.parseInt(request.getParameter("id")),
+                    request.getParameter("name"),
+                    Integer.parseInt(request.getParameter("producerId")), // TODO: choose producer
+                    request.getParameter("description")
+            );
+            goodDao.update(goodDto);
 
-            good.setName(request.getParameter("name"));
-            good.setDescription(request.getParameter("description"));
-
-            goodDao.update(GoodConverter.convert(good));
+//            goodDao.update(GoodConverter.convert(good));
         }
 
         response.sendRedirect("/catalogs/goods");

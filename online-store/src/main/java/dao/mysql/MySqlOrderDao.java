@@ -58,12 +58,6 @@ public interface MySqlOrderDao extends OrderDao {
     }
 
     default OrderDto getValue(ResultSet rs) throws SQLException {
-        Instant deleted = null;
-        String rsDeleted = rs.getString("deleted");
-        if (rsDeleted != null) {
-            deleted = Helper.convertDateTime(rsDeleted);
-        }
-
         OrderDto orderDto = new OrderDto(
                 rs.getInt("id"),
                 rs.getString("number"),
@@ -71,7 +65,7 @@ public interface MySqlOrderDao extends OrderDao {
                 rs.getInt("customer"),
                 rs.getString("state"),
                 rs.getDouble("sum"),
-                deleted
+                Helper.convertDateTime(rs.getString("deleted"))
         );
         return orderDto;
     }
@@ -124,32 +118,24 @@ public interface MySqlOrderDao extends OrderDao {
 
     @Override
     default Optional<OrderDto> getPersonsBasket(int personId) {
-        Exceptional<OrderDto, SQLException> orderDtoSQLExceptionExceptional = executeQuery(
+        return executeQuery(
                 SELECT + " WHERE deleted IS NULL AND state = 'NEW' AND customer = " + personId + " ORDER BY id DESC",
                 rs -> rs.next()
-                        ? MySqlOrderDao.this.getValue(rs)
+                        ? getValue(rs)
                         : null
-        );
-        if (orderDtoSQLExceptionExceptional == null) {
-
-        }
-        return orderDtoSQLExceptionExceptional.toOptional();
+        ).toOptional();
     }
 
     @Override
     default Optional<OrderDto> getPersonsBasket(String email) {
-        Exceptional<OrderDto, SQLException> orderDtoSQLExceptionExceptional = executeQuery(
+        return executeQuery(
                 "SELECT o.id, o.number, o.date, o.customer, o.state, o.sum, o.deleted FROM order_ o " +
                         "INNER JOIN person p on o.customer = p.id WHERE deleted IS NULL AND state = 'NEW' AND p.email = '"
                         + email + "' ORDER BY o.id DESC",
                 rs -> rs.next()
                         ? MySqlOrderDao.this.getValue(rs)
                         : null
-        );
-        if (orderDtoSQLExceptionExceptional == null) {
-
-        }
-        return orderDtoSQLExceptionExceptional.toOptional();
+        ).toOptional();
     }
 
     @Override
@@ -181,11 +167,11 @@ public interface MySqlOrderDao extends OrderDao {
     @Override
     default Optional<Helper.TwoValues<Float, Float>> getPersonsBasketQuantityAndSum(String email) {
         return executeQuery(
-                "SELECT SUM(quantity * price) AS basket_sum, SUM(quantity) AS basket_quantity FROM order_item\n" +
-                        "WHERE order_ IN (\n" +
-                        "\tSELECT o.id FROM order_ o INNER JOIN person p on o.customer = p.id \n" +
-                        "\tWHERE deleted IS NULL AND state = 'NEW' AND p.email = '" + email + "' ORDER BY o.id DESC\n" +
-                        ")",
+                "SELECT SUM(oo.quantity * oo.price) AS basket_sum, SUM(oo.quantity) AS basket_quantity FROM order_item oo\n" +
+                        "INNER JOIN (\n" +
+                        "\tSELECT o.id FROM order_ o INNER JOIN person p on o.customer = p.id  \n" +
+                        "\tWHERE deleted IS NULL AND state = 'NEW' AND p.email = '" + email + "' ORDER BY o.id DESC LIMIT 1 \n" +
+                        ") o_id ON oo.order_ = o_id.id",
                 rs -> rs.next()
                         ? new Helper.TwoValues<>(rs.getFloat("basket_quantity"), rs.getFloat("basket_sum"))
                         : null

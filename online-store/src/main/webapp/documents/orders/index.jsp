@@ -5,6 +5,7 @@
 <fmt:setLocale value="${sessionScope.local}"/>
 <fmt:setBundle basename="locale" var="loc"/>
 <fmt:message bundle="${loc}" key="Editing" var="Editing"/>
+<fmt:message bundle="${loc}" key="New" var="New"/>
 <fmt:message bundle="${loc}" key="Edit" var="Edit"/>
 <fmt:message bundle="${loc}" key="Delete" var="Delete"/>
 <fmt:message bundle="${loc}" key="Documents" var="Documents"/>
@@ -31,7 +32,7 @@
     <h1>${Documents} - ${Orders}</h1>
     <form method="GET" id="add_good">
         <button name="isNew" form="add_good" formaction="/documents/orders/edit" value=true>
-            Add new
+            ${New}
         </button>
     </form>
     <table style="border: 1px solid #000;">

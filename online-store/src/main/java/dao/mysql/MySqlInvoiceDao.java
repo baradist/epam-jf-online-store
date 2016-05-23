@@ -86,11 +86,6 @@ public interface MySqlInvoiceDao extends InvoiceDao {
     }
 
     default InvoiceDto getValue(ResultSet rs) throws SQLException {
-        Instant deleted = null;
-        String rsDeleted = rs.getString("deleted");
-        if (rsDeleted != null) {
-            deleted = Helper.convertDateTime(rsDeleted);
-        }
         return new InvoiceDto(
                 rs.getInt("id"),
                 rs.getString("number"),
@@ -98,7 +93,7 @@ public interface MySqlInvoiceDao extends InvoiceDao {
                 rs.getInt("supplier"),
                 rs.getInt("store"),
                 rs.getDouble("sum"),
-                deleted,
+                Helper.convertDateTime(rs.getString("deleted")),
                 rs.getInt("manager")
         );
     }

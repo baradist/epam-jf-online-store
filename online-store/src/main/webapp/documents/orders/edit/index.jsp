@@ -101,7 +101,7 @@
             </tr>
             <tr>
                 <td align="right"><input type="submit" value="${Save}"></td>
-                <td align="left"><input type="${Reset}"></td>
+                <td align="left"><input type="reset" name="${Reset}"></td>
             </tr>
         </table>
         <input type="hidden" name="isNew" value="${requestScope.isNew}">

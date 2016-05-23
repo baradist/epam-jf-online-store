@@ -92,7 +92,7 @@ public interface MySqlPersonDao extends PersonDao {
                 rs.getString("email"),
                 rs.getString("first_name"),
                 rs.getString("last_name"),
-                rs.getDate("dob").toLocalDate(),
+                Helper.getLocalDateFromDate(rs.getDate("dob")),
                 rs.getString("password"), // TODO
                 rs.getString("address"),
                 rs.getString("phone")

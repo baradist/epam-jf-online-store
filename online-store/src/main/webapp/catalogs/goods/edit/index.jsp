@@ -37,7 +37,7 @@
 <%@ include file="/WEB-INF/top_line.jsp" %>
 
 
-<form method="POST" action="/catalogs/goods/edit/">
+<form method="POST" action="/catalogs/goods/edit">
     <table border="0" cellspacing="5">
         <c:if test="${!isNew}">
             <tr>

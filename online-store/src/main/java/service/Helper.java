@@ -34,13 +34,17 @@ public interface Helper {
         return sdf.format(dt);
     }
 
-    /*public*/ static Instant convertDateTime(String string) {
-        DateFormat format = new SimpleDateFormat(PATTERN);
-        try {
-            return format.parse(string).toInstant();
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+    /*public*/
+    static Instant convertDateTime(String string) {
+        if (string != null) {
+            DateFormat format = new SimpleDateFormat(PATTERN);
+            try {
+                return format.parse(string).toInstant();
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return null;
     }
 
     /*public*/ static LocalDate convertStringToLacalDate(String string) {
@@ -113,6 +117,14 @@ public interface Helper {
         }
         request.setAttribute("pageNumber", pageNumber);
         return new TwoValues(offset, rowsOnPage);
+    }
+
+    static LocalDate getLocalDateFromDate(java.sql.Date date) {
+        if (date != null) {
+            return date.toLocalDate();
+        } else {
+            return null;
+        }
     }
 
     /*public static*/ class TwoValues<F, S> {

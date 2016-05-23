@@ -6,6 +6,7 @@
 <fmt:setBundle basename="locale" var="loc"/>
 <fmt:message bundle="${loc}" key="Catalog" var="Catalog"/>
 <fmt:message bundle="${loc}" key="Producers" var="Producers"/>
+<fmt:message bundle="${loc}" key="Producer" var="Producer"/>
 <fmt:message bundle="${loc}" key="Code" var="Code"/>
 <fmt:message bundle="${loc}" key="Name" var="Name"/>
 <fmt:message bundle="${loc}" key="Country" var="Country"/>
@@ -24,7 +25,7 @@
     <table style="border: 1px solid #000;">
         <tr>
             <th style="border: 1px solid #000;">${Code}</th>
-            <th style="border: 1px solid #000;">${Producers}</th>
+            <th style="border: 1px solid #000;">${Producer}</th>
             <th style="border: 1px solid #000;">${Country}</th>
         </tr>
 
