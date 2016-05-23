@@ -2,6 +2,7 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://epam.com/courses/jf/jsp/format" prefix="fmtt"%>
 
 <fmt:setLocale value="${sessionScope.local}"/>
 <fmt:setBundle basename="locale" var="loc"/>
@@ -44,7 +45,12 @@
                 <td style="border: 1px solid #000;">${person.email}</td>
                 <td style="border: 1px solid #000;">${person.firstName}</td>
                 <td style="border: 1px solid #000;">${person.lastName}</td>
-                <td style="border: 1px solid #000;">${person.dob}</td>
+                <td style="border: 1px solid #000;">
+
+                        <fmtt:dob value="${person.dob}"/>
+
+
+                </td>
                 <td style="border: 1px solid #000;">${person.address}</td>
                 <td style="border: 1px solid #000;">${person.phone}</td>
                 <td style="border: 1px solid #000;">
