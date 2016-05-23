@@ -8,6 +8,7 @@ import dao.interfaces.OrderItemDao;
 import model.Order;
 import model.OrderItem;
 import service.DaoHandler;
+import service.Helper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,13 +28,16 @@ public class OrderEdit extends HttpServlet{
 
     private OrderDao orderDao;
     private OrderItemDao orderItemDao;
-    private static Map<String, Order> editingOrders = new HashMap<>();
+//    private static Map<String, Order> editingOrders = new HashMap<>();
+
+    @Override
+    public void init() throws ServletException {
+        orderDao = (OrderDao) DaoHandler.getDaoByClass(Order.class);
+        orderItemDao = (OrderItemDao) DaoHandler.getDaoByClass(OrderItem.class);
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (orderDao == null) {
-            orderDao = (OrderDao) DaoHandler.getDaoByClass(Order.class);
-        }
         if (Boolean.parseBoolean(request.getParameter("isNew"))) {
             // new
             request.setAttribute("isNew", true);
@@ -42,11 +46,8 @@ public class OrderEdit extends HttpServlet{
 
         } else {
             // edit
-            if (orderItemDao == null) {
-                orderItemDao = (OrderItemDao) DaoHandler.getDaoByClass(OrderItem.class);
-            }
             Order order = OrderConverter.convert(orderDao.getById(parseInt(request.getParameter("order"))).get());
-            editingOrders.put(request.getSession().getId(), order);
+//            editingOrders.put(request.getSession().getId(), order);
 
             Collection<OrderItem> orderItems = OrderItemConverter.convert(orderItemDao.getByOrder(order.getId()));
             request.setAttribute("order", order);
@@ -60,9 +61,6 @@ public class OrderEdit extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (orderDao == null) {
-            orderDao = (OrderDao) DaoHandler.getDaoByClass(Order.class);
-        }
         if (Boolean.parseBoolean(request.getParameter("delete"))) {
             // delete
 //            orderDao.delete(parseInt(request.getParameter("order")));
@@ -81,16 +79,19 @@ public class OrderEdit extends HttpServlet{
 
         } else {
             // edit
-            String sessionId = request.getSession().getId();
-            Order order = editingOrders.get(sessionId);
-            editingOrders.remove(sessionId);
+            OrderDto orderDto = new OrderDto(
+                    Integer.parseInt(request.getParameter("id")),
+                    request.getParameter("number"),
+                    Helper.convertStringToInstant(request.getParameter("date")),
+                    0, // TODO: customer
+                    request.getParameter("state"),
+                    0,
+                    null // deleted
+            );
 
-            order.setNumber(request.getParameter("number"));
-            order.setState(Order.State.valueOf(request.getParameter("state")));
-
-            orderDao.update(OrderConverter.convert(order));
+            orderDao.update(orderDto);
         }
 
-        response.sendRedirect("/documents/orders");
+        response.sendRedirect("/documents/orders/");
     }
 }

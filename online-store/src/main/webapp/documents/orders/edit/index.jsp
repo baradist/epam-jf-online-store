@@ -49,7 +49,7 @@
 <%@ include file="/WEB-INF/top_line.jsp" %>
 
 <div class="container">
-    <form method="POST" action="/documents/orders/edit/">
+    <form method="POST" action="/documents/orders/edit">
         <table border="0" cellspacing="5">
             <c:if test="${!isNew}">
                 <tr>

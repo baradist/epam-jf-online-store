@@ -1,6 +1,7 @@
 package dao.dto.converters;
 
 import dao.dto.OrderDto;
+import dao.dto.PersonDto;
 import dao.interfaces.PersonDao;
 import model.Order;
 import model.Person;
@@ -8,17 +9,25 @@ import service.DaoHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Created by Oleg Grigorjev on 13.05.2016.
  */
 public interface OrderConverter {
     static Order convert(OrderDto orderDto) {
+        Optional<PersonDto> personDtoOptional = ((PersonDao) DaoHandler.getDaoByClass(Person.class)).getById(orderDto.getCustomer());
+        Person customer;
+        if (personDtoOptional.isPresent()) {
+            customer = PersonConverter.convert(personDtoOptional.get());
+        } else {
+            customer = null;
+        }
         return new Order(
                 orderDto.getId(),
                 orderDto.getNumber(),
                 orderDto.getDate(),
-                PersonConverter.convert(((PersonDao) DaoHandler.getDaoByClass(Person.class)).getById(orderDto.getCustomer()).get()),
+                customer,
                 Order.State.valueOf(orderDto.getState()),
                 orderDto.getSum(),
                 orderDto.getDeleted()

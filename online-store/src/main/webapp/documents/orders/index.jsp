@@ -31,7 +31,7 @@
 <div class="container">
     <h1>${Documents} - ${Orders}</h1>
     <form method="GET" id="add_good">
-        <button name="isNew" form="add_good" formaction="/documents/orders/edit" value=true>
+        <button name="isNew" form="add_good" formaction="/documents/orders/edit" value="true" disabled>
             ${New}
         </button>
     </form>
@@ -57,11 +57,11 @@
                 <td style="border: 1px solid #000;">${order.customer.email}</td>
                 <td style="border: 1px solid #000;">${order.deleted}</td>
                 <td style="border: 1px solid #000;">
-                    <form action="/documents/orders/edit/" method="get" class="horizontal">
+                    <form action="/documents/orders/edit" method="get" class="horizontal">
                         <input type="hidden" name="order" value="${order.id}"/>
                         <input type="submit" value="${Edit}" class="btn btn-default">
                     </form>
-                    <form action="/documents/orders/edit/" method="post" class="horizontal">
+                    <form action="/documents/orders/edit" method="post" class="horizontal">
                         <input type="hidden" name="order" value="${order.id}"/>
                         <input type="hidden" name="delete" value="${true}"/>
                         <input type="submit" value="${Delete}" class="btn btn-default">

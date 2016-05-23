@@ -15,6 +15,7 @@ import java.util.Date;
 /**
  * Created by 1 on 23.04.2016.
  */
+
 public interface Helper {
 
     /*public*/ static String ArrayToString(Collection<Integer> array) {
@@ -34,14 +35,15 @@ public interface Helper {
         return sdf.format(dt);
     }
 
-    /*public*/
-    static Instant convertDateTime(String string) {
+    /*public*/ static Instant convertDateTime(String string) {
         if (string != null) {
             DateFormat format = new SimpleDateFormat(PATTERN);
             try {
                 return format.parse(string).toInstant();
             } catch (ParseException e) {
-                throw new RuntimeException(e);
+//                log.warning() TODO
+                return null;
+//                throw new RuntimeException(e);
             }
         }
         return null;
@@ -52,7 +54,20 @@ public interface Helper {
         return LocalDate.parse(string, formatter);
     }
 
-    /*public*/ static String getCookieValue(HttpServletRequest request, String key) { // TODO
+    /*public*/ static Instant convertStringToInstant(String string) {
+        if (string != null) {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            try {
+                return format.parse(string).toInstant();
+            } catch (ParseException e) {
+//                log.warning() TODO
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
+
+    /*public*/ static String getCookieValue(HttpServletRequest request, String key) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
