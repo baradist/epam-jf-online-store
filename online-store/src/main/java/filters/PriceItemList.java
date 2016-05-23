@@ -1,12 +1,12 @@
 package filters;
 
-import common.functions.Helper;
+import service.Helper;
 import common.servlets.HttpFilter;
 import dao.dto.PriceItemDto;
 import dao.dto.converters.PriceItemConverter;
 import dao.interfaces.PriceItemDao;
-import listeners.DbInitializer;
 import model.PriceItem;
+import service.DaoHandler;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -28,7 +28,7 @@ public class PriceItemList implements HttpFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        priceItemDao = (PriceItemDao) DbInitializer.getDaoByClass(PriceItem.class);
+        priceItemDao = (PriceItemDao) DaoHandler.getDaoByClass(PriceItem.class);
     }
 
     @Override

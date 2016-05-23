@@ -4,8 +4,8 @@ import common.servlets.HttpFilter;
 import dao.dto.OrderDto;
 import dao.dto.converters.OrderConverter;
 import dao.interfaces.OrderDao;
-import listeners.DbInitializer;
 import model.Order;
+import service.DaoHandler;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,7 +22,7 @@ public class OrderList implements HttpFilter {
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (orderDao == null) {
-            orderDao = (OrderDao) DbInitializer.getDaoByClass(Order.class);
+            orderDao = (OrderDao) DaoHandler.getDaoByClass(Order.class);
         }
         Collection<OrderDto> orderDtos = orderDao.getList();
         request.setAttribute("orders", OrderConverter.convert(orderDtos));

@@ -1,11 +1,11 @@
 package filters;
 
-import common.functions.Helper;
+import service.Helper;
 import common.servlets.HttpFilter;
 import dao.interfaces.OrderDao;
-import listeners.DbInitializer;
 import model.Order;
 import model.Person;
+import service.DaoHandler;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -34,7 +34,7 @@ public class TopLineFilter implements HttpFilter {
 
         if (userPrincipal != null && request.getMethod().equalsIgnoreCase("get")
                 || request.getRequestURI().equalsIgnoreCase("/basket/")) {
-            Helper.TwoValues<Float, Float> quantitySum = ((OrderDao) DbInitializer.getDaoByClass(Order.class)).getPersonsBasketQuantityAndSum(userPrincipal.getName()).get();
+            Helper.TwoValues<Float, Float> quantitySum = ((OrderDao) DaoHandler.getDaoByClass(Order.class)).getPersonsBasketQuantityAndSum(userPrincipal.getName()).get();
             request.setAttribute("basketSum", quantitySum.first);
             request.setAttribute("basketQuantity", quantitySum.second);
         }

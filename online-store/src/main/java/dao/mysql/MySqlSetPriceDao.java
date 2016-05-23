@@ -1,6 +1,6 @@
 package dao.mysql;
 
-import common.functions.Helper;
+import service.Helper;
 import dao.dto.SetPriceDto;
 import dao.interfaces.SetPriceDao;
 

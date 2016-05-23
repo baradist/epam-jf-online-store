@@ -3,10 +3,10 @@ package dao.dto.converters;
 import dao.dto.SetPriceItemDto;
 import dao.interfaces.LotDao;
 import dao.interfaces.SetPriceDao;
-import listeners.DbInitializer;
 import model.Lot;
 import model.SetPrice;
 import model.SetPriceItem;
+import service.DaoHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,8 +18,8 @@ public interface SetPriceItemConverter {
     static SetPriceItem convert(SetPriceItemDto dto) {
         return new SetPriceItem(
                 dto.getId(),
-                SetPriceConverter.convert(((SetPriceDao) DbInitializer.getDaoByClass(SetPrice.class)).getById(dto.getSetPrice()).get()),
-                LotConverter.convert(((LotDao) DbInitializer.getDaoByClass(Lot.class)).getById(dto.getLot()).get()),
+                SetPriceConverter.convert(((SetPriceDao) DaoHandler.getDaoByClass(SetPrice.class)).getById(dto.getSetPrice()).get()),
+                LotConverter.convert(((LotDao) DaoHandler.getDaoByClass(Lot.class)).getById(dto.getLot()).get()),
                 dto.getIncrease(),
                 dto.getPriceSal()
         );

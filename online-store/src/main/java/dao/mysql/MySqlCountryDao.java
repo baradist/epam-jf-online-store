@@ -1,6 +1,6 @@
 package dao.mysql;
 
-import common.functions.Helper;
+import service.Helper;
 import dao.dto.CountryDto;
 import dao.interfaces.CountryDao;
 

@@ -2,9 +2,9 @@ package dao.dto.converters;
 
 import dao.dto.SetPriceDto;
 import dao.interfaces.PersonDao;
-import listeners.DbInitializer;
 import model.Person;
 import model.SetPrice;
+import service.DaoHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +18,7 @@ public interface SetPriceConverter {
                 dto.getId(),
                 dto.getNumber(),
                 dto.getDate(),
-                PersonConverter.convert(((PersonDao) DbInitializer.getDaoByClass(Person.class)).getById(dto.getManager()).get())
+                PersonConverter.convert(((PersonDao) DaoHandler.getDaoByClass(Person.class)).getById(dto.getManager()).get())
         );
     }
 

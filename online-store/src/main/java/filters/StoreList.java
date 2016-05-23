@@ -3,8 +3,8 @@ package filters;
 import common.servlets.HttpFilter;
 import dao.dto.StoreDto;
 import dao.interfaces.StoreDao;
-import listeners.DbInitializer;
 import model.Store;
+import service.DaoHandler;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -25,7 +25,7 @@ public class StoreList  implements HttpFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        storeDao = (StoreDao) DbInitializer.getDaoByClass(Store.class);
+        storeDao = (StoreDao) DaoHandler.getDaoByClass(Store.class);
     }
 
     @Override

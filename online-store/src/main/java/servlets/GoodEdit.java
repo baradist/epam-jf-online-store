@@ -5,9 +5,9 @@ import dao.dto.converters.GoodConverter;
 import dao.dto.converters.ProducerConverter;
 import dao.interfaces.GoodDao;
 import dao.interfaces.ProducerDao;
-import listeners.DbInitializer;
 import model.Good;
 import model.Producer;
+import service.DaoHandler;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -31,8 +31,8 @@ public class GoodEdit extends HttpServlet{
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        goodDao = (GoodDao) DbInitializer.getDaoByClass(Good.class);
-        producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
+        goodDao = (GoodDao) DaoHandler.getDaoByClass(Good.class);
+        producerDao = (ProducerDao) DaoHandler.getDaoByClass(Producer.class);
     }
 
     @Override

@@ -3,8 +3,8 @@ package filters;
 import common.servlets.HttpFilter;
 import dao.dto.CountryDto;
 import dao.interfaces.CountryDao;
-import listeners.DbInitializer;
 import model.Country;
+import service.DaoHandler;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -21,7 +21,7 @@ public class CountryList implements HttpFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        countryDao = (CountryDao) DbInitializer.getDaoByClass(Country.class);
+        countryDao = (CountryDao) DaoHandler.getDaoByClass(Country.class);
     }
 
     @Override

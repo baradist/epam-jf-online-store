@@ -1,11 +1,11 @@
 package filters;
 
-import common.functions.Helper;
+import service.Helper;
 import common.servlets.HttpFilter;
 import dao.dto.converters.GoodConverter;
 import dao.interfaces.GoodDao;
-import listeners.DbInitializer;
 import model.Good;
+import service.DaoHandler;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -22,7 +22,7 @@ public class GoodList implements HttpFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        goodDao = (GoodDao) DbInitializer.getDaoByClass(Good.class);
+        goodDao = (GoodDao) DaoHandler.getDaoByClass(Good.class);
     }
 
     @Override

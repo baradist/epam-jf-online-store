@@ -2,9 +2,9 @@ package dao.dto.converters;
 
 import dao.dto.PriceItemDto;
 import dao.interfaces.GoodDao;
-import listeners.DbInitializer;
 import model.Good;
 import model.PriceItem;
+import service.DaoHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +15,7 @@ import java.util.Collection;
 public interface PriceItemConverter {
     static PriceItem convert(PriceItemDto itemDto) {
         return new PriceItem(
-                GoodConverter.convert(((GoodDao) DbInitializer.getDaoByClass(Good.class)).getById(itemDto.getGood()).get()),
+                GoodConverter.convert(((GoodDao) DaoHandler.getDaoByClass(Good.class)).getById(itemDto.getGood()).get()),
                 itemDto.getQuantity(),
                 itemDto.getQuantityOrdered(),
                 itemDto.getPrice()

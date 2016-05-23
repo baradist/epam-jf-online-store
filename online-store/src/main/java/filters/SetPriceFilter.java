@@ -1,14 +1,14 @@
 package filters;
 
-import common.functions.Helper;
+import service.Helper;
 import common.servlets.HttpFilter;
 import dao.dto.converters.SetPriceConverter;
 import dao.dto.converters.SetPriceItemConverter;
 import dao.interfaces.SetPriceDao;
 import dao.interfaces.SetPriceItemDao;
-import listeners.DbInitializer;
 import model.SetPrice;
 import model.SetPriceItem;
+import service.DaoHandler;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -30,8 +30,8 @@ public class SetPriceFilter implements HttpFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        setPriceDao = (SetPriceDao) DbInitializer.getDaoByClass(SetPrice.class);
-        setPriceItemDao = (SetPriceItemDao) DbInitializer.getDaoByClass(SetPriceItem.class);
+        setPriceDao = (SetPriceDao) DaoHandler.getDaoByClass(SetPrice.class);
+        setPriceItemDao = (SetPriceItemDao) DaoHandler.getDaoByClass(SetPriceItem.class);
     }
 
     @Override

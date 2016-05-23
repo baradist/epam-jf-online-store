@@ -4,11 +4,11 @@ import dao.dto.InvoiceDto;
 import dao.interfaces.ContractorDao;
 import dao.interfaces.PersonDao;
 import dao.interfaces.StoreDao;
-import listeners.DbInitializer;
 import model.Contractor;
 import model.Invoice;
 import model.Person;
 import model.Store;
+import service.DaoHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,11 +22,11 @@ public interface InvoiceConverter {
                 dto.getId(),
                 dto.getNumber(),
                 dto.getDate(),
-                ContractorConverter.convert(((ContractorDao) DbInitializer.getDaoByClass(Contractor.class)).getById(dto.getSupplier()).get()),
-                StoreConverter.convert(((StoreDao) DbInitializer.getDaoByClass(Store.class)).getById(dto.getStore()).get()),
+                ContractorConverter.convert(((ContractorDao) DaoHandler.getDaoByClass(Contractor.class)).getById(dto.getSupplier()).get()),
+                StoreConverter.convert(((StoreDao) DaoHandler.getDaoByClass(Store.class)).getById(dto.getStore()).get()),
                 dto.getSum(),
                 dto.getDeleted(),
-                PersonConverter.convert(((PersonDao) DbInitializer.getDaoByClass(Person.class)).getById(dto.getManager()).get())
+                PersonConverter.convert(((PersonDao) DaoHandler.getDaoByClass(Person.class)).getById(dto.getManager()).get())
         );
     }
 

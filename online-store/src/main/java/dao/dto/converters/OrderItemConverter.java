@@ -3,10 +3,10 @@ package dao.dto.converters;
 import dao.dto.OrderItemDto;
 import dao.interfaces.GoodDao;
 import dao.interfaces.OrderDao;
-import listeners.DbInitializer;
 import model.Good;
 import model.Order;
 import model.OrderItem;
+import service.DaoHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,8 +18,8 @@ public interface OrderItemConverter {
     static OrderItem convert(OrderItemDto orderItemDto) {
         return new OrderItem(
                 orderItemDto.getId(),
-                OrderConverter.convert(((OrderDao) DbInitializer.getDaoByClass(Order.class)).getById(orderItemDto.getOrder()).get()),
-                GoodConverter.convert(((GoodDao) DbInitializer.getDaoByClass(Good.class)).getById(orderItemDto.getGood()).get()),
+                OrderConverter.convert(((OrderDao) DaoHandler.getDaoByClass(Order.class)).getById(orderItemDto.getOrder()).get()),
+                GoodConverter.convert(((GoodDao) DaoHandler.getDaoByClass(Good.class)).getById(orderItemDto.getGood()).get()),
                 orderItemDto.getQuantity(),
                 orderItemDto.getPrice()
         );

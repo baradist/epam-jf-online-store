@@ -4,8 +4,8 @@ import common.servlets.HttpFilter;
 import dao.dto.ProducerDto;
 import dao.dto.converters.ProducerConverter;
 import dao.interfaces.ProducerDao;
-import listeners.DbInitializer;
 import model.Producer;
+import service.DaoHandler;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,7 +22,7 @@ public class ProducerList implements HttpFilter {
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (producerDao == null) {
-            producerDao = (ProducerDao) DbInitializer.getDaoByClass(Producer.class);
+            producerDao = (ProducerDao) DaoHandler.getDaoByClass(Producer.class);
         }
         Collection<ProducerDto> producersDto = producerDao.getList();
 

@@ -8,10 +8,10 @@ import dao.dto.converters.PersonConverter;
 import dao.interfaces.OrderDao;
 import dao.interfaces.OrderItemDao;
 import dao.interfaces.PersonDao;
-import listeners.DbInitializer;
 import model.Order;
 import model.OrderItem;
 import model.Person;
+import service.DaoHandler;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -35,9 +35,9 @@ public class Basket implements HttpFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
-        orderDao = (OrderDao) DbInitializer.getDaoByClass(Order.class);
-        orderItemDao = (OrderItemDao) DbInitializer.getDaoByClass(OrderItem.class);
+        personDao = (PersonDao) DaoHandler.getDaoByClass(Person.class);
+        orderDao = (OrderDao) DaoHandler.getDaoByClass(Order.class);
+        orderItemDao = (OrderItemDao) DaoHandler.getDaoByClass(OrderItem.class);
     }
 
     @Override

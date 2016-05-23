@@ -2,8 +2,8 @@ package dao.dto.converters;
 
 import dao.dto.InvoiceItemDto;
 import dao.interfaces.*;
-import listeners.DbInitializer;
 import model.*;
+import service.DaoHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,8 +15,8 @@ public interface InvoiceItemConverter {
     static InvoiceItem convert(InvoiceItemDto dto) {
         return new InvoiceItem(
                 dto.getId(),
-                InvoiceConverter.convert(((InvoiceDao) DbInitializer.getDaoByClass(Invoice.class)).getById(dto.getInvoice()).get()),
-                GoodConverter.convert(((GoodDao) DbInitializer.getDaoByClass(Good.class)).getById(dto.getGood()).get()),
+                InvoiceConverter.convert(((InvoiceDao) DaoHandler.getDaoByClass(Invoice.class)).getById(dto.getInvoice()).get()),
+                GoodConverter.convert(((GoodDao) DaoHandler.getDaoByClass(Good.class)).getById(dto.getGood()).get()),
                 dto.getQuantity(),
                 dto.getPrice()
         );

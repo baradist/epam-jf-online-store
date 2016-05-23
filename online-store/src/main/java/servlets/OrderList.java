@@ -2,8 +2,8 @@ package servlets;
 
 import dao.dto.converters.OrderConverter;
 import dao.interfaces.OrderDao;
-import listeners.DbInitializer;
 import model.Order;
+import service.DaoHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,7 +25,7 @@ public class OrderList extends HttpServlet {
     @Override
     public void init() throws ServletException {
 //        personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
-        orderDao = (OrderDao) DbInitializer.getDaoByClass(Order.class);
+        orderDao = (OrderDao) DaoHandler.getDaoByClass(Order.class);
 //        orderItemDao = (OrderItemDao) DbInitializer.getDaoByClass(OrderItem.class);
     }
 

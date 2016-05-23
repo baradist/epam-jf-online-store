@@ -1,6 +1,6 @@
 package dao.interfaces;
 
-import common.functions.Helper;
+import service.Helper;
 import dao.dto.OrderDto;
 
 import java.util.Collection;

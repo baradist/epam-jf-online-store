@@ -1,11 +1,11 @@
 package servlets;
 
-import common.functions.Helper;
+import service.Helper;
 import dao.dto.PersonDto;
 import dao.interfaces.PersonDao;
-import listeners.DbInitializer;
 import lombok.extern.log4j.Log4j;
 import model.Person;
+import service.DaoHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,7 +25,7 @@ public class Auth extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
+        personDao = (PersonDao) DaoHandler.getDaoByClass(Person.class);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class Auth extends HttpServlet {
 
             LocalDate birthday = (dob.isEmpty()) ? null : Helper.convertStringToLacalDate(dob);
             if (personDao == null) {
-                personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
+                personDao = (PersonDao) DaoHandler.getDaoByClass(Person.class);
             }
 
             if (formFilledWrong) {

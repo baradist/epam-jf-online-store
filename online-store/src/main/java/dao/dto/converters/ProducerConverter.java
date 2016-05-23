@@ -2,9 +2,9 @@ package dao.dto.converters;
 
 import dao.dto.ProducerDto;
 import dao.interfaces.CountryDao;
-import listeners.DbInitializer;
 import model.Country;
 import model.Producer;
+import service.DaoHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +17,7 @@ public interface ProducerConverter {
         return new Producer(
                 producerDto.getId(),
                 producerDto.getName(),
-                CountryConverter.convert(((CountryDao) DbInitializer.getDaoByClass(Country.class)).getById(producerDto.getCountry()).get())
+                CountryConverter.convert(((CountryDao) DaoHandler.getDaoByClass(Country.class)).getById(producerDto.getCountry()).get())
         );
     }
 

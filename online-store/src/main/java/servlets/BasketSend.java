@@ -3,10 +3,10 @@ package servlets;
 import dao.dto.OrderDto;
 import dao.interfaces.OrderDao;
 import dao.interfaces.OrderItemDao;
-import listeners.DbInitializer;
 import lombok.extern.log4j.Log4j;
 import model.Order;
 import model.OrderItem;
+import service.DaoHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,8 +27,8 @@ public class BasketSend extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        orderDao = (OrderDao) DbInitializer.getDaoByClass(Order.class);
-        orderItemDao = (OrderItemDao) DbInitializer.getDaoByClass(OrderItem.class);
+        orderDao = (OrderDao) DaoHandler.getDaoByClass(Order.class);
+        orderItemDao = (OrderItemDao) DaoHandler.getDaoByClass(OrderItem.class);
     }
 
     @Override

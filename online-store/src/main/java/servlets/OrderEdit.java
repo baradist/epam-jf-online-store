@@ -5,9 +5,9 @@ import dao.dto.converters.OrderConverter;
 import dao.dto.converters.OrderItemConverter;
 import dao.interfaces.OrderDao;
 import dao.interfaces.OrderItemDao;
-import listeners.DbInitializer;
 import model.Order;
 import model.OrderItem;
+import service.DaoHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,7 +32,7 @@ public class OrderEdit extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (orderDao == null) {
-            orderDao = (OrderDao) DbInitializer.getDaoByClass(Order.class);
+            orderDao = (OrderDao) DaoHandler.getDaoByClass(Order.class);
         }
         if (Boolean.parseBoolean(request.getParameter("isNew"))) {
             // new
@@ -43,7 +43,7 @@ public class OrderEdit extends HttpServlet{
         } else {
             // edit
             if (orderItemDao == null) {
-                orderItemDao = (OrderItemDao) DbInitializer.getDaoByClass(OrderItem.class);
+                orderItemDao = (OrderItemDao) DaoHandler.getDaoByClass(OrderItem.class);
             }
             Order order = OrderConverter.convert(orderDao.getById(parseInt(request.getParameter("order"))).get());
             editingOrders.put(request.getSession().getId(), order);
@@ -61,7 +61,7 @@ public class OrderEdit extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (orderDao == null) {
-            orderDao = (OrderDao) DbInitializer.getDaoByClass(Order.class);
+            orderDao = (OrderDao) DaoHandler.getDaoByClass(Order.class);
         }
         if (Boolean.parseBoolean(request.getParameter("delete"))) {
             // delete

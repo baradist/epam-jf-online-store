@@ -2,9 +2,9 @@ package dao.dto.converters;
 
 import dao.dto.LotDto;
 import dao.interfaces.GoodDao;
-import listeners.DbInitializer;
 import model.Good;
 import model.Lot;
+import service.DaoHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +17,7 @@ public interface LotConverter {
         return new Lot(
                 lotDto.getId(),
                 null, //lotDto.getStore(),
-                GoodConverter.convert(((GoodDao) DbInitializer.getDaoByClass(Good.class)).getById(lotDto.getGood()).get()),
+                GoodConverter.convert(((GoodDao) DaoHandler.getDaoByClass(Good.class)).getById(lotDto.getGood()).get()),
                 null, //lotDto.getInvoice(),
                 null, //lotDto.getInvoiceItem(),
                 lotDto.getQuantity(),

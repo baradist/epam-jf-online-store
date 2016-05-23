@@ -1,11 +1,11 @@
 package filters;
 
-import common.functions.Helper;
+import service.Helper;
 import common.servlets.HttpFilter;
 import dao.dto.converters.PersonConverter;
 import dao.interfaces.PersonDao;
-import listeners.DbInitializer;
 import model.Person;
+import service.DaoHandler;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -22,7 +22,7 @@ public class PersonList implements HttpFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
+        personDao = (PersonDao) DaoHandler.getDaoByClass(Person.class);
     }
 
     @Override

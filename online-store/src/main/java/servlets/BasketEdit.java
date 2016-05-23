@@ -6,11 +6,11 @@ import dao.dto.PersonDto;
 import dao.interfaces.OrderDao;
 import dao.interfaces.OrderItemDao;
 import dao.interfaces.PersonDao;
-import listeners.DbInitializer;
 import lombok.extern.log4j.Log4j;
 import model.Order;
 import model.OrderItem;
 import model.Person;
+import service.DaoHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,9 +37,9 @@ public class BasketEdit extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
-        orderDao = (OrderDao) DbInitializer.getDaoByClass(Order.class);
-        orderItemDao = (OrderItemDao) DbInitializer.getDaoByClass(OrderItem.class);
+        personDao = (PersonDao) DaoHandler.getDaoByClass(Person.class);
+        orderDao = (OrderDao) DaoHandler.getDaoByClass(Order.class);
+        orderItemDao = (OrderItemDao) DaoHandler.getDaoByClass(OrderItem.class);
     }
 
     @Override

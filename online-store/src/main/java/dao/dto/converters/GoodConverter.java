@@ -2,9 +2,9 @@ package dao.dto.converters;
 
 import dao.dto.GoodDto;
 import dao.interfaces.ProducerDao;
-import listeners.DbInitializer;
 import model.Good;
 import model.Producer;
+import service.DaoHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +17,7 @@ public interface GoodConverter {
         return new Good(
                 goodDto.getId(),
                 goodDto.getName(),
-                ProducerConverter.convert(((ProducerDao) DbInitializer.getDaoByClass(Producer.class)).getById(goodDto.getProducer()).get()),
+                ProducerConverter.convert(((ProducerDao) DaoHandler.getDaoByClass(Producer.class)).getById(goodDto.getProducer()).get()),
                 goodDto.getDescription()
         );
     }

@@ -1,12 +1,12 @@
 package filters;
 
-import common.functions.Helper;
+import service.Helper;
 import common.servlets.HttpFilter;
 import dao.dto.InvoiceDto;
 import dao.dto.converters.InvoiceConverter;
 import dao.interfaces.InvoiceDao;
-import listeners.DbInitializer;
 import model.Invoice;
+import service.DaoHandler;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -23,7 +23,7 @@ public class InvoiceList implements HttpFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        invoice = (InvoiceDao) DbInitializer.getDaoByClass(Invoice.class);
+        invoice = (InvoiceDao) DaoHandler.getDaoByClass(Invoice.class);
     }
 
     @Override
