@@ -11,7 +11,7 @@
 <fmt:message bundle="${loc}" key="Email" var="Email"/>
 <fmt:message bundle="${loc}" key="FirsName" var="FirsName"/>
 <fmt:message bundle="${loc}" key="LastName" var="LastName"/>
-<fmt:message bundle="${loc}" key="Birthday" var="Birthday"/>
+<fmt:message bundle="${loc}" key="Age" var="Age"/>
 <fmt:message bundle="${loc}" key="Address" var="Address"/>
 <fmt:message bundle="${loc}" key="Phone" var="Phone"/>
 <fmt:message bundle="${loc}" key="Edit" var="Edit"/>
@@ -34,7 +34,7 @@
             <th style="border: 1px solid #000;">${Email}</th>
             <th style="border: 1px solid #000;">${FirsName}</th>
             <th style="border: 1px solid #000;">${LastName}</th>
-            <th style="border: 1px solid #000;">${Birthday}</th>
+            <th style="border: 1px solid #000;">${Age}</th>
             <th style="border: 1px solid #000;">${Address}</th>
             <th style="border: 1px solid #000;">${Phone}</th>
             <th style="border: 1px solid #000;">${Editing}</th>

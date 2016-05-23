@@ -9,6 +9,7 @@
 <fmt:message bundle="${loc}" key="Code" var="Code"/>
 <fmt:message bundle="${loc}" key="Number" var="Number"/>
 <fmt:message bundle="${loc}" key="State" var="State"/>
+<fmt:message bundle="${loc}" key="Manager" var="Manager"/>
 <fmt:message bundle="${loc}" key="Sum" var="Sum"/>
 
 <html>
@@ -28,6 +29,7 @@
             <th style="border: 1px solid #000;">${Code}</th>
             <th style="border: 1px solid #000;">${Number}</th>
             <th style="border: 1px solid #000;">${State}</th>
+            <th style="border: 1px solid #000;">${Manager}</th>
             <th style="border: 1px solid #000;">${Sum}</th>
         </tr>
 
