@@ -4,6 +4,7 @@ import common.servlets.HttpFilter;
 import dao.dto.OrderDto;
 import dao.dto.converters.OrderConverter;
 import dao.interfaces.OrderDao;
+import lombok.extern.log4j.Log4j;
 import model.Order;
 import service.DaoHandler;
 
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
+@Log4j
 @WebFilter({"/documents/orders/", "/documents/orders/index.jsp"})
 public class OrderList implements HttpFilter {
     private OrderDao orderDao;
@@ -29,6 +31,7 @@ public class OrderList implements HttpFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         Collection<OrderDto> orderDtos = orderDao.getList();
         request.setAttribute("orders", OrderConverter.convert(orderDtos));
+        log.info("order list add to the request");
 
         chain.doFilter(request, response);
     }

@@ -1,5 +1,6 @@
 package filters;
 
+import lombok.extern.log4j.Log4j;
 import service.Helper;
 import common.servlets.HttpFilter;
 import dao.dto.converters.InvoiceConverter;
@@ -23,6 +24,7 @@ import java.util.Collection;
  * Created by Oleg Grigorjev on 22.05.2016.
  */
 
+@Log4j
 @WebFilter({"/documents/invoices/edit/", "/documents/invoices/edit/index.jsp"})
 public class InvoiceFilter implements HttpFilter {
     InvoiceDao invoiceDao;
@@ -38,10 +40,11 @@ public class InvoiceFilter implements HttpFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         Invoice invoice = InvoiceConverter.convert(invoiceDao.getById(Integer.parseInt(request.getParameter("id"))).get());
         request.setAttribute("invoice", invoice);
-
+        log.info("the invoice id=" + invoice.getId() + " add to the request");
         Helper.TwoValues<Integer, Integer> offsetAndRowsOnPage = Helper.longListByPages(request, response, invoiceItemDao.getQuantity(invoice.getId()));
         Collection<InvoiceItem> items = InvoiceItemConverter.convert(invoiceItemDao.getList(invoice.getId(), offsetAndRowsOnPage.first, offsetAndRowsOnPage.second));
         request.setAttribute("items", items);
+        log.info("invoice items add to the request");
 
         request.setAttribute("isNew", false);
 

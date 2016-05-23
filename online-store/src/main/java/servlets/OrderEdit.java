@@ -5,6 +5,7 @@ import dao.dto.converters.OrderConverter;
 import dao.dto.converters.OrderItemConverter;
 import dao.interfaces.OrderDao;
 import dao.interfaces.OrderItemDao;
+import lombok.extern.log4j.Log4j;
 import model.Order;
 import model.OrderItem;
 import service.DaoHandler;
@@ -18,17 +19,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
+@Log4j
 @WebServlet({"/documents/orders/edit"})
 public class OrderEdit extends HttpServlet{
 
     private OrderDao orderDao;
     private OrderItemDao orderItemDao;
-//    private static Map<String, Order> editingOrders = new HashMap<>();
 
     @Override
     public void init() throws ServletException {
@@ -41,14 +40,9 @@ public class OrderEdit extends HttpServlet{
         if (Boolean.parseBoolean(request.getParameter("isNew"))) {
             // new
             request.setAttribute("isNew", true);
-//        } else if (Boolean.parseBoolean(request.getParameter("delete"))) {
-////             delete
-
         } else {
             // edit
             Order order = OrderConverter.convert(orderDao.getById(parseInt(request.getParameter("order"))).get());
-//            editingOrders.put(request.getSession().getId(), order);
-
             Collection<OrderItem> orderItems = OrderItemConverter.convert(orderItemDao.getByOrder(order.getId()));
             request.setAttribute("order", order);
             request.setAttribute("items", orderItems);
@@ -64,7 +58,9 @@ public class OrderEdit extends HttpServlet{
         if (Boolean.parseBoolean(request.getParameter("delete"))) {
             // delete
 //            orderDao.delete(parseInt(request.getParameter("order")));
-            orderDao.markDeleted(parseInt(request.getParameter("order")));
+            int orderId = parseInt(request.getParameter("order"));
+            orderDao.markDeleted(orderId);
+            log.info("the order id=" + orderId + " deleted");
         } else if (Boolean.parseBoolean(request.getParameter("isNew"))) {
             // new
             OrderDto orderDto = new OrderDto(
@@ -76,7 +72,7 @@ public class OrderEdit extends HttpServlet{
                     null // deleted
             );
             orderDao.add(orderDto);
-
+            log.info("a new order added");
         } else {
             // edit
             OrderDto orderDto = new OrderDto(
@@ -88,8 +84,8 @@ public class OrderEdit extends HttpServlet{
                     0,
                     null // deleted
             );
-
             orderDao.update(orderDto);
+            log.info("the order id=" + orderDto.getId() + " edited");
         }
 
         response.sendRedirect("/documents/orders/");

@@ -1,5 +1,6 @@
 package filters;
 
+import lombok.extern.log4j.Log4j;
 import service.Helper;
 import common.servlets.HttpFilter;
 import dao.dto.converters.SetPriceConverter;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
+@Log4j
 @WebFilter({"/documents/sets_price/", "/documents/sets_price/index.jsp"})
 public class SetPriceList implements HttpFilter {
     private SetPriceDao setPriceDao;
@@ -31,6 +33,7 @@ public class SetPriceList implements HttpFilter {
 
         Collection<SetPrice> items = SetPriceConverter.convert(setPriceDao.getList(offsetAndRowsOnPage.first, offsetAndRowsOnPage.second));
         request.setAttribute("items", items);
+        log.info("sets price list add to the request");
 
         chain.doFilter(request, response);
     }

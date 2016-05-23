@@ -1,5 +1,6 @@
 package filters;
 
+import lombok.extern.log4j.Log4j;
 import service.Helper;
 import common.servlets.HttpFilter;
 import dao.dto.PriceItemDto;
@@ -21,7 +22,7 @@ import java.util.Collection;
 /**
  *  getting the price list and sending it to the main-page
  */
-
+@Log4j
 @WebFilter({"/", "/index.jsp"})
 public class PriceItemList implements HttpFilter {
     private PriceItemDao priceItemDao;
@@ -38,11 +39,14 @@ public class PriceItemList implements HttpFilter {
         Collection<PriceItemDto> itemDtos;
         if (userPrincipal == null) {
             itemDtos = priceItemDao.getList(offsetAndRowsOnPage.first, offsetAndRowsOnPage.second);
+            log.info("got the list of price items");
         } else {
             itemDtos = priceItemDao.getListForPersonByEmail(userPrincipal.getName(), offsetAndRowsOnPage.first, offsetAndRowsOnPage.second);
+            log.info("got the list of price items for " + userPrincipal.getName());
         }
         Collection<PriceItem> items = PriceItemConverter.convert(itemDtos);
         request.setAttribute("list", items);
+        log.info("price list add to the request");
 
         chain.doFilter(request, response);
     }

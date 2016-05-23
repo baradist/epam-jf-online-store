@@ -8,6 +8,7 @@ import dao.dto.converters.PersonConverter;
 import dao.interfaces.OrderDao;
 import dao.interfaces.OrderItemDao;
 import dao.interfaces.PersonDao;
+import lombok.extern.log4j.Log4j;
 import model.Order;
 import model.OrderItem;
 import model.Person;
@@ -27,6 +28,8 @@ import java.util.Optional;
 /**
  * Created by o_grigorev on 17.05.2016.
  */
+
+@Log4j
 @WebFilter({"/basket", "/basket/", "/basket/index.jsp"})
 public class Basket implements HttpFilter {
     private OrderDao orderDao;
@@ -42,25 +45,32 @@ public class Basket implements HttpFilter {
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        // editing basket
+        log.info("editing the basket");
         String orderItemIdString = request.getParameter("orderItemId");
         if (orderItemIdString != null) {
             int orderItemId = Integer.parseInt(orderItemIdString);
             Optional<OrderItemDto> orderItemDtoOptional = orderItemDao.getById(orderItemId);
             if (orderItemDtoOptional.isPresent()) {
+                log.info("got the order item id=" + orderItemId);
                 OrderItemDto orderItemDto = orderItemDtoOptional.get();
                 if (Boolean.parseBoolean(request.getParameter("decrease"))) {
                     if (orderItemDto.getQuantity() <= 1) {
                         orderItemDao.delete(orderItemDto.getId());
+                        log.info("the order item (id=" + orderItemId + ") deleted");
                     } else {
                         orderItemDto.setQuantity(orderItemDto.getQuantity() - 1);
+                        log.info("the order item (id=" + orderItemId + ") quantity decreased to " + (orderItemDto.getQuantity() - 1));
                         orderItemDao.update(orderItemDto);
+                        log.info("the order item (id=" + orderItemId + ") updated");
                     }
                 } else if (Boolean.parseBoolean(request.getParameter("increase"))) {
                     orderItemDto.setQuantity(orderItemDto.getQuantity() + 1);
+                    log.info("the order item (id=" + orderItemId + ") quantity increased to " + (orderItemDto.getQuantity() + 1));
                     orderItemDao.update(orderItemDto);
+                    log.info("the order item (id=" + orderItemId + ") updated");
                 } else if (Boolean.parseBoolean(request.getParameter("delete"))) {
                     orderItemDao.delete(orderItemDto.getId());
+                    log.info("the order item (id=" + orderItemId + ") deleted");
                 }
             }
         }

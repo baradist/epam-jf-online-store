@@ -5,6 +5,7 @@ import dao.dto.converters.GoodConverter;
 import dao.dto.converters.ProducerConverter;
 import dao.interfaces.GoodDao;
 import dao.interfaces.ProducerDao;
+import lombok.extern.log4j.Log4j;
 import model.Good;
 import model.Producer;
 import service.DaoHandler;
@@ -17,17 +18,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import static java.lang.Integer.parseInt;
-
-@WebServlet({/*"/catalogs/goods/edit/", */"/catalogs/goods/edit"/*, "/catalogs/goods/edit/index.jsp"*/})
+@Log4j
+@WebServlet({"/catalogs/goods/edit"})
 public class GoodEdit extends HttpServlet{
 
     private GoodDao goodDao;
     private ProducerDao producerDao;
-//    private static Map<String, Good> editingGoods = new HashMap<>();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -45,21 +43,20 @@ public class GoodEdit extends HttpServlet{
         } else {
             // edit
             Good good = GoodConverter.convert(goodDao.getById(parseInt(request.getParameter("id"))).get());
-//            editingGoods.put(request.getSession().getId(), good);
 
             request.setAttribute("good", good);
             request.setAttribute("isNew", false);
         }
 
-        // noinspection InjectedReferences
         request.getRequestDispatcher("/catalogs/goods/edit/index.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (Boolean.parseBoolean(request.getParameter("delete"))) {
-            // delete
-            goodDao.delete(parseInt(request.getParameter("id")));
+            int id = parseInt(request.getParameter("id"));
+            goodDao.delete(id);
+            log.info("the good id=" + id + " deleted");
         } else if (Boolean.parseBoolean(request.getParameter("isNew"))) {
             // new
             GoodDto goodDto = new GoodDto(
@@ -68,7 +65,7 @@ public class GoodEdit extends HttpServlet{
                     request.getParameter("description")
             );
             goodDao.add(goodDto);
-
+            log.info("a new good added");
         } else {
             // edit
             GoodDto goodDto = new GoodDto(
@@ -78,8 +75,7 @@ public class GoodEdit extends HttpServlet{
                     request.getParameter("description")
             );
             goodDao.update(goodDto);
-
-//            goodDao.update(GoodConverter.convert(good));
+            log.info("the good id=" + goodDto.getId() + " edited");
         }
 
         response.sendRedirect("/catalogs/goods");

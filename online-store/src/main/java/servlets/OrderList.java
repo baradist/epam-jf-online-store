@@ -19,14 +19,10 @@ import java.util.Collection;
 @WebServlet("/orders/")
 public class OrderList extends HttpServlet {
     private OrderDao orderDao;
-//    private OrderItemDao orderItemDao;
-//    private PersonDao personDao;
 
     @Override
     public void init() throws ServletException {
-//        personDao = (PersonDao) DbInitializer.getDaoByClass(Person.class);
         orderDao = (OrderDao) DaoHandler.getDaoByClass(Order.class);
-//        orderItemDao = (OrderItemDao) DbInitializer.getDaoByClass(OrderItem.class);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package filters;
 
 import common.servlets.HttpFilter;
+import lombok.extern.log4j.Log4j;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Log4j
 @WebFilter(value = {"/*"},
         initParams = {@WebInitParam(name = "characterEncoding", value = "utf-8")})
 public class ContentTypeFilter implements HttpFilter {
@@ -24,8 +26,11 @@ public class ContentTypeFilter implements HttpFilter {
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        response.setContentType("text/html; charset=" + encoding);
+        response.setContentType("text/html;charset=" + encoding);
+        log.info("the content type set to " + "text/html;charset=" + encoding);
         request.setCharacterEncoding(encoding);
+        log.info("the encoding set to " + encoding);
+
         chain.doFilter(request, response);
     }
 }

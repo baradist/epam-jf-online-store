@@ -38,8 +38,9 @@ public class Auth extends HttpServlet {
         if (Boolean.parseBoolean(request.getParameter("logout"))) {
             try {
                 request.logout();
+                log.info("logged out");
             } catch (ServletException e) {
-                log.info("Can't log out", e);
+                log.error("Can't log out", e);
             }
             response.sendRedirect("/");
         } else if (Boolean.parseBoolean(request.getParameter("login"))) {
@@ -102,9 +103,6 @@ public class Auth extends HttpServlet {
             }
 
             LocalDate birthday = (dob.isEmpty()) ? null : Helper.convertStringToLacalDate(dob);
-            if (personDao == null) {
-                personDao = (PersonDao) DaoHandler.getDaoByClass(Person.class);
-            }
 
             if (formFilledWrong) {
                 // try again

@@ -49,20 +49,18 @@
                            aria-expanded="false">
                                 ${Documents} <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/documents/orders/">${Orders}</a></li>
                             <li><a href="/documents/invoices/">${Invoices}</a></li>
                             <li><a href="/documents/sets_price/">${SetsPrice}</a></li>
-                                <%--<li><a href="#">Another action</a></li>--%>
-                                <%--<li><a href="#">Something else here</a></li>--%>
-                                <%--<li role="separator" class="divider"></li>--%>
-                                <%--<li><a href="#">Separated link</a></li>--%>
+                            <li><a href="/documents/orders/">${Orders}</a></li>
                         </ul>
                     </li>
                 </c:if>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/orders/">${MyOrders}</a></li>
+                <c:if test="${requestScope.isLoggedIn}">
+                    <li><a href="/orders/">${MyOrders}</a></li>
+                </c:if>
                 <c:if test="${requestScope.basketQuantity > 0}">
                     <li><a href="/basket/"><img src="/basket_26.ico"></a></li>
                     <li>
@@ -75,20 +73,21 @@
 
                 <li>
                     <div class="btn-group" role="group" aria-label="...">
-                        <%--<c:choose>--%>
-                            <%--<c:when test="${sessionScope.local == ru}">--%>
+                        <c:set var="ru" value="ru" scope="page"/>
+                        <c:choose>
+                            <c:when test="${sessionScope.local eq ru}" >
                                 <form action="/localizator" method="post" class="horizontal">
                                     <input type="hidden" name="local" value="en"/>
                                     <input type="submit" value="${en_button}" class="btn btn-default">
                                 </form>
-                            <%--</c:when>--%>
-                            <%--<c:otherwise>--%>
+                            </c:when>
+                            <c:otherwise>
                                 <form action="/localizator" method="post" class="horizontal">
                                     <input type="hidden" name="local" value="ru"/>
                                     <input type="submit" value="${ru_button}" class="btn btn-default">
                                 </form>
-                            <%--</c:otherwise>--%>
-                        <%--</c:choose>--%>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </li>
                 <c:choose>

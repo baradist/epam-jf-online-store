@@ -49,7 +49,7 @@ public class BasketEdit extends HttpServlet {
         Optional<OrderDto> basket = orderDao.getPersonsBasket(personDto.getId());
         if (!basket.isPresent()) {
             OrderDto orderDto = new OrderDto("number", Instant.now(), personDto.getId(), Order.State.NEW.toString(), 0, null);
-            orderDao.add(orderDto); // TODO return orderDto
+            orderDao.add(orderDto);
             basket = orderDao.getPersonsBasket(personDto.getId());
             log.info(userPrincipal.getName() + ": new basket (id=" + basket.get());
         }
@@ -57,34 +57,26 @@ public class BasketEdit extends HttpServlet {
 
         Optional<OrderItemDto> orderItemDtoOptional = orderItemDao.get(orderDto.getId(), Integer.parseInt(request.getParameter("good")));
         if (Boolean.parseBoolean(request.getParameter("add"))) {
+            log.info("adding good to the basket");
             OrderItemDto orderItemDto;
             if (orderItemDtoOptional.isPresent()) {
                 orderItemDto = orderItemDtoOptional.get();
                 orderItemDto.setQuantity(orderItemDto.getQuantity() + 1);
                 orderItemDao.update(orderItemDto);
+                log.info("order item id=" + orderDto.getId() + " - quantity increase to " + orderItemDto.getQuantity());
             } else {
                 orderItemDto = new OrderItemDto(orderDto.getId(),
                         Integer.parseInt(request.getParameter("good")),
                         Double.parseDouble(request.getParameter("quantity")),
                         Double.parseDouble(request.getParameter("price")));
                 orderItemDao.add(orderItemDto);
+                log.info("order item added. quantity = " + request.getParameter("quantity"));
             }
-
-//        } else if (Boolean.parseBoolean(request.getParameter("decrease"))) { // TODO: hasn't used yet
-//            if (orderItemDtoOptional.isPresent()) {
-//                OrderItemDto orderItemDto = orderItemDtoOptional.get();
-//                if (orderItemDto.getQuantity() > 1) {
-//                    orderItemDto.setQuantity(orderItemDto.getQuantity() - 1);
-//                    orderItemDao.update(orderItemDto);
-//                } else {
-//                    orderItemDao.delete(orderDto.getId(), Integer.parseInt(request.getParameter("good")));
-//                }
-////            orderDao.deleteIfEmpty(orderDto.getId()); // TODO
-//            }
         }else if (Boolean.parseBoolean(request.getParameter("delete"))) {
             if (orderItemDtoOptional.isPresent()) {
                 OrderItemDto orderItemDto = orderItemDtoOptional.get();
                 orderItemDao.delete(orderItemDto.getId());
+                log.info("order item id=" + orderItemDto.getId() + " deleted");
             }
 //            orderDao.deleteIfEmpty(orderDto.getId()); // TODO
         }
