@@ -85,7 +85,7 @@
             <tr>
                 <%--// TODO disabled--%>
                 <td align="right"><input type="submit" value="${Save}" disabled></td>
-                <td align="left"><input type="${Reset}"></td>
+                <td align="left"><input type="reset" name="${Reset}"></td>
             </tr>
         </table>
         <input type="hidden" name="isNew" value="${requestScope.isNew}">
