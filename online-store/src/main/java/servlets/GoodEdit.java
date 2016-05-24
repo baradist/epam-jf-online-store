@@ -66,8 +66,8 @@ public class GoodEdit extends HttpServlet{
             // new
             GoodDto goodDto = new GoodDto(
                     request.getParameter("name"),
-                    Integer.parseInt(request.getParameter("producerId")), // TODO: choose producer
-                    request.getParameter("description")
+                    Integer.parseInt(request.getParameter("producerId")),
+                    request.getParameter("description").trim()
             );
             goodDao.add(goodDto);
             log.info("a new good added");
@@ -76,8 +76,8 @@ public class GoodEdit extends HttpServlet{
             GoodDto goodDto = new GoodDto(
                     Integer.parseInt(request.getParameter("id")),
                     request.getParameter("name"),
-                    Integer.parseInt(request.getParameter("producerId")), // TODO: choose producer
-                    request.getParameter("description")
+                    Integer.parseInt(request.getParameter("producerId")),
+                    request.getParameter("description").trim()
             );
             goodDao.update(goodDto);
             log.info("the good id=" + goodDto.getId() + " edited");

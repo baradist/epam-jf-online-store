@@ -71,7 +71,7 @@
         <tr>
             <th align="right">${Description}:</th>
             <td align="left">
-                <textarea name="description" cols="60" rows="10"> <c:if
+                <textarea name="description" cols="60" rows="10"><c:if
                         test="${!isNew}">${good.description}</c:if></textarea>
             </td>
         </tr>

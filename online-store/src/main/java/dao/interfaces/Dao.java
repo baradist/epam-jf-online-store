@@ -8,7 +8,7 @@ import java.sql.*;
 
 @FunctionalInterface
 public interface Dao {
-
+    org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Dao.class);
     Connection getConnection() throws SQLException;
 
     @SuppressWarnings("unchecked")
@@ -17,6 +17,7 @@ public interface Dao {
         try (final Connection connection = getConnection()) {
             return jdbcTemplate.apply(connection);
         } catch (SQLException e) {
+            log.error(e);
             return Exceptional.withException((E) e);
         }
     }

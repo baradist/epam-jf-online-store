@@ -1,12 +1,14 @@
 package common.functions;
 
 import common.Wrapper;
+import lombok.extern.log4j.Log4j;
 
 import java.util.Optional;
 import java.util.function.Function;
 
 @FunctionalInterface
 public interface Exceptional<T, E extends Throwable> extends Wrapper<Either<T, E>> {
+    org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Exceptional.class);
 
     static <T, E extends Throwable> Exceptional<T, E> wrap(Either<T, E> either) {
         return () -> either;
@@ -30,6 +32,7 @@ public interface Exceptional<T, E extends Throwable> extends Wrapper<Either<T, E
         if (either.isLeft()) {
             return either.left();
         } else {
+            log.error(either.right());
             throw either.right();
         }
     }
@@ -57,6 +60,7 @@ public interface Exceptional<T, E extends Throwable> extends Wrapper<Either<T, E
         if (either.isLeft()) {
             return either.left();
         } else {
+            log.error(either.right());
             throw new RuntimeException(either.right());
         }
     }
