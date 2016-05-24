@@ -37,7 +37,7 @@
             <tr>
                     <%--// TODO format date by tld function --%>
                 <td style="border: 1px solid #000;">${order.id}</td>
-                <td style="border: 1px solid #000;"><a href="/orders/item?order=${order.id}">${order.number}
+                <td style="border: 1px solid #000;"><a href="/orders/open?id=${order.id}">${order.number}
                     / ${order.date} </a></td>
                 <td style="border: 1px solid #000;">${order.state}</td>
                 <td style="border: 1px solid #000;">${order.customer.email}</td>
